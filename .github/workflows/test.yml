@@ -20,4 +20,4 @@ jobs:
       - name: Build with Gradle
         run: |
           cd Project
-          ./gradlew :core:test
+          ./gradlew :core:test --warning-mode=summary
