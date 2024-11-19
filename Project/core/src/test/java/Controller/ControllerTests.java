@@ -8,6 +8,6 @@ public class ControllerTests {
 
     @Test
     public void testAdd() {
-        assertEquals(42, controller.Add(19, 25));
+        assertEquals(42, controller.Add(19, 23));
     }
 }

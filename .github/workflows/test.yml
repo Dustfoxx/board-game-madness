@@ -17,7 +17,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
+      - name: Test with Gradle
         run: |
           cd Project
           ./gradlew :core:test --warning-mode=summary
