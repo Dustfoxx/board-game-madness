@@ -12,17 +12,24 @@ import java.util.List;
 public class Cell {
     private List<Player> players;  // List of players currently in the cell
     private List<Token> tokens;  // List of tokens currently in the cell
-    private List<Feature> features;  // List of features in the cell
+    private Feature[] features;  // Array of features in the cell
 
     /**
-     * Constructor to initialize a cell with a specified list of features.
+     * Constructor to initialize a cell with a specified array of features.
+     * This constructor requires exactly two features to be passed in the features array.
+     * If the array contains any number other than 2, an exception will be thrown.
      * 
-     * @param features The list of features to associate with this cell.
+     * @param features The array of features to associate with this cell. The array must contain exactly 2 features.
+     * @throws IllegalArgumentException If the features array does not contain exactly 2 elements.
      */
-    public Cell(List<Feature> features) {
-        this.players = new ArrayList<>();
-        this.tokens = new ArrayList<>();
-        this.features = features;
+    public Cell(Feature[] features) {
+        if (features.length == 2) {
+            this.players = new ArrayList<>();
+            this.tokens = new ArrayList<>();
+            this.features = features;
+        } else {
+            throw new IllegalArgumentException("The features array is not of size 2 but of size " + features.length);
+        }
     }
 
     /**
@@ -91,7 +98,7 @@ public class Cell {
      * 
      * @return The list of features in the cell.
      */
-    public List<Feature> getFeatures() {
+    public Feature[] getFeatures() {
         return features;
     }
 }

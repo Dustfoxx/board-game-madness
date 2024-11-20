@@ -1,8 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The Board class represents the game board, which consists of a grid of cells.
  * Each cell can hold various features that affect gameplay.
