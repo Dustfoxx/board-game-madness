@@ -1,0 +1,41 @@
+name: PR Notification
+on:
+  pull_request:
+    types: [opened, reopened]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 'Discord notification'
+        run: | 
+          curl \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            --url https://discord.com/api/webhooks/1308778856726925442/75nciTMCwmxokgdiFdDUu_rtNvUHH6CSBLgnRuochsK9m9-Cosmp_ALoqvySF8EhHkE_ \
+            -d '{
+              "embeds": [{
+                "title": "New pull request published! :fire:",
+                "description": "### [[#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}]](${{ github.event.pull_request.html_url }})",
+                "color": 3040960,
+                "fields": [
+                  {
+                    "name": "Author",
+                    "value": "${{ github.event.pull_request.user.login }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Lines changed",
+                    "value": "+${{ github.event.pull_request.additions }} / -${{ github.event.pull_request.deletions }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Changed files",
+                    "value": "${{ github.event.pull_request.changed_files }}",
+                    "inline": true
+                  }
+                ]
+              }]
+            }'
