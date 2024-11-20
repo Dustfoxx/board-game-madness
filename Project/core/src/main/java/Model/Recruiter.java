@@ -63,23 +63,23 @@ public class Recruiter extends Player {
     }
 
     /**
-     * Adds a new cell coordinates to the walked path in the end of the list.
+     * Adds the coordinates of the new step to the walked path. 
      * If the cell has already been visited, an exception is thrown.
      * 
-     * @param row The row coordinate of the cell.
-     * @param col The column coordinate of the cell.
+     * @param row The row coordinate of the new step.
+     * @param col The column coordinate of the new step.
      * @throws IllegalArgumentException If the cell has already been visited.
      */
     public void addToWalkedPath(int row, int col) {
-        int[] newCell = new int[] { row, col };
+        int[] newStep = new int[] { row, col };
         // Check if the cell has already been visited
-        for (int[] cell : walkedPath) {
-            if (cell[0] == newCell[0] && cell[1] == newCell[1]) {
+        for (int[] oldStep : walkedPath) {
+            if (oldStep[0] == newStep[0] && oldStep[1] == newStep[1]) {
                 throw new IllegalArgumentException(
-                        "The cell (" + row + ", " + col + ") already exists in the walked path.");
+                        "The new step (" + row + ", " + col + ") already exists in the walked path.");
             }
         }
-        walkedPath.add(newCell);  // Add the new cell to the walked path
+        walkedPath.add(newStep);  // Add the new step to the walked path
     }
 
     /**
