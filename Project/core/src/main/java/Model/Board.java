@@ -32,9 +32,9 @@ public class Board {
      * - Or it's done with a new Cell.addFeatures() method
      */
     private void createCells() {
-        List<Feature> features = new ArrayList<>(); // List to hold features for each cell
         for (int row = 0; row < cells.length; row++) {
             for (int column = 0; column < cells[row].length; column++) {
+                Feature[] features = new Feature[2]; // Array to hold features for each cell
                 cells[row][column] = new Cell(features); // Initialize the cell with no features
             }
         }
