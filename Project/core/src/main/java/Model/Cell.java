@@ -14,6 +14,10 @@ public class Cell {
         this.features = new ArrayList<>();
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
     public void addPlayer(Player player) {
         players.add(player);
     }
@@ -22,20 +26,22 @@ public class Cell {
         players.remove(player);
     }
 
-    public void addToken(Token token) {
-        tokens.add(token);
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public void addToken(Token newToken) {
+        for (Token token : tokens) {
+            if (token.getClass().equals(newToken.getClass())) {
+                throw new IllegalArgumentException("There is already a " + newToken.getClass() + " in this cell");
+            } else {
+                tokens.add(token);
+            }
+        }
     }
 
     public void removeToken(Token token) {
         tokens.remove(token);
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
     }
 
     public List<Feature> getFeatures() {
