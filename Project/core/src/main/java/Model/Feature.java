@@ -1,5 +1,20 @@
 package Model;
 
-public class Feature {
-
+public enum Feature {
+    BOOKSTORE,
+    BUS,
+    BILLBOARD,
+    PARROT,
+    FOUNTAIN,
+    TREE,
+    POOL,
+    UMBRELLA,
+    IDOL,
+    TORCHES,
+    GARDEN,
+    COFFEE,
+    MONKS,
+    DOGS,
+    COURIER,
+    GRAFFITI
 }
