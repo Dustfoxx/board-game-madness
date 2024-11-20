@@ -79,7 +79,7 @@ public class Recruiter extends Player {
                         "The cell (" + row + ", " + col + ") already exists in the walked path.");
             }
         }
-        walkedPath.add(new int[] { row, col });  // Add the new cell to the walked path
+        walkedPath.add(newCell);  // Add the new cell to the walked path
     }
 
     /**
