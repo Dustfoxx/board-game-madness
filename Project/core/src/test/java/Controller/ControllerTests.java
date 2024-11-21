@@ -2,6 +2,7 @@ package Controller;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class ControllerTests {
     private final Controller controller = new Controller();
@@ -17,9 +18,9 @@ public class ControllerTests {
         int[][] boardLayout = { { 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 1, 0, 0 },
                 { 0, 0, 0, 0, 0, 0 } };
-        int[][] expectedMask = {{}};
+        int[][] expectedMask = { { 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 1, 1 }, { 0, 1, 1, 1, 1, 1 },
+                { 0, 1, 1, 1, 1, 1 } };
 
-
-        assertEquals(, boardLayout);
+        assertArrayEquals(expectedMask, checkMove.getValidMoves(1, boardLayout));
     }
 }
