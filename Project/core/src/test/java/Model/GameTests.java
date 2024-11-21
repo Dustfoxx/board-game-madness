@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +34,8 @@ class GameTests {
     void testGameConstructorValidation() {
         assertThrows(IllegalArgumentException.class, () -> new Game(null, board, player1),
                 "Constructor should throw an exception if players list is null.");
+        assertThrows(IllegalArgumentException.class, () -> new Game(Collections.emptyList(), board, player1),
+                "Constructor should throw an exception if players list is empty.");
         assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), null, player1),
                 "Constructor should throw an exception if board is null.");
         assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), board, null),
