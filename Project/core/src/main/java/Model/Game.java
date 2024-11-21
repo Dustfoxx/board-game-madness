@@ -84,9 +84,8 @@ public class Game {
     public void setCurrentPlayer(Player nextPlayer) {
         if (!players.contains(nextPlayer)) {
             throw new IllegalArgumentException("Player is not part of the game.");
-        } else {
-            this.currentPlayer = nextPlayer;
         }
+        this.currentPlayer = nextPlayer;
     }
 
     /**
