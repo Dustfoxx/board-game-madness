@@ -11,7 +11,7 @@ public class RecruiterActionController {
     public boolean move(){
         return true;
     }
-
+    
     /**
      * Asks the recruiter about crossed features
      * Sets token if passed
