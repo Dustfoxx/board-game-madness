@@ -14,6 +14,12 @@ public class ControllerTests {
 
     @Test
     public void testMovementCheck() {
+        int[][] boardLayout = { { 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0 },
+                { 0, 0, 0, 0, 0, 0 } };
+        int[][] expectedMask = {{}};
 
+
+        assertEquals(, boardLayout);
     }
 }
