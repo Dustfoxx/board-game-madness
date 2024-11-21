@@ -1,5 +1,13 @@
 package Controller;
 
+import Model.Player;
+import Model.Recruiter;
+import Model.RougeAgent;
+import Model.Game;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameController {
     // Check for new turn
     // Think this would be better as view calling it to move from one turn to the
@@ -8,17 +16,37 @@ public class GameController {
     // Activate player
     // Check win
 
-    private int turnNumber = 0;
-    private int recruits = 0;
     private boolean recruiterTurn = true;
+    private Game gameState;
     private int activePlayer = 0;
-    private int[] players = { 0, 0, 0, 0, 0, 0 }; // TODO: Change to playertype
+    private Model.Player players[] = new Player[6];
+    private Recruiter recruiter = null;
+    List<RougeAgent> agents = new ArrayList<RougeAgent>();
 
-    public GameController(int recruiter, int[] agents) {
+    public GameController(Game newGame) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
+
+        gameState = newGame;
+        List<Player> gamePlayers = gameState.getPlayers();
+
+        for (int i = 0; i < gamePlayers.size(); i++) {
+            Player currPlayer = gamePlayers.get(i);
+            if (currPlayer.getClass() == Recruiter.class) {
+                recruiter = (Recruiter) currPlayer;
+            } else {
+                agents.add((RougeAgent) currPlayer);
+            }
+        }
+
+        if (recruiter == null) {
+            throw new IllegalStateException("Recruiter player not found");
+        }
+        if (agents.isEmpty()) {
+            throw new IllegalStateException("No agents found");
+        }
 
         for (int i = 0; i < players.length; i++) {
             switch (i) {
@@ -29,9 +57,9 @@ public class GameController {
                     players[i] = recruiter;
                     break;
                 default:
-                    players[i] = agents[agentIterator];
+                    players[i] = agents.get(agentIterator);
                     agentIterator++;
-                    if (agentIterator >= agents.length) {
+                    if (agentIterator >= agents.size()) {
                         agentIterator = 0;
                     }
             }
@@ -40,25 +68,27 @@ public class GameController {
 
     public void newTurn() {
         if (recruiterTurn) {
-            turnNumber++;
-            if (turnNumber >= 8) {// IDK how many turns were max
+            gameState.incrementTime();
+            if (gameState.getCurrentTime() >= 8) {// IDK how many turns were max
                 // RECRUITER WIN
+                gameState.setGameOver();
+                // Should who won exist here or in model?
+                // I think model
             }
             recruiterTurn = false;
         }
-        if (turnNumber % 2 == 1) { // Need handling for first turn but I want a better idea of how that would be
-                                   // structured
-            // recruits += player[0].getRecruits();
-            if (recruits >= 9) {
+        if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of how that
+                                                   // would be
+            // structured
+            gameState.addAmountRecruited(recruiter.getAmountRecruited());
+            if (gameState.getAmountRecruited() >= 9) {
                 // RECRUITER WIN GAME
+                gameState.setGameOver();
             }
         }
 
         activePlayer++;
-        // Activate next player. Unsure what this looks like but use function to
-        // activate like this:
-        // players[activePlayer % players.length].activatePlayer;
-        // This should loop through the player list and activate them as they play.
+        gameState.setCurrentPlayer(players[activePlayer % players.length]);
     }
 
 }

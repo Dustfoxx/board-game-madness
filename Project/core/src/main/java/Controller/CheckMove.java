@@ -3,29 +3,32 @@ package Controller;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckMove {
-    private List<int[]> checkSurroundingCells(int[] coord, int[][] board) {
-        int[] boardDims = { board.length - 1, board[0].length - 1 };
+import Model.Board;
+import Model.Cell;
+import Model.Player;
 
-        int[] validX = getCoordRange(coord[0], boardDims[0]);
-        int[] validY = getCoordRange(coord[1], boardDims[1]);
+public class CheckMove {
+    private List<int[]> checkSurroundingCells(int[] coord, Board board) {
+        int[] boardDims = board.getDims();
+
+        int[] validRows = getCoordRange(coord[0], boardDims[0]);
+        int[] validCols = getCoordRange(coord[1], boardDims[1]);
 
         List<int[]> possibleCoords = new ArrayList<int[]>();
 
-        for (int x = validX[0]; x <= validX[1]; x++) {
-            for (int y = validY[0]; y <= validY[1]; y++) {
-                if (board[coord[0]][coord[1]] == 1) {
-                    possibleCoords.add(new int[] { x, y });
+        for (int row = validRows[0]; row <= validRows[1]; row++) {
+            for (int col = validCols[0]; col <= validCols[1]; col++) {
+                if (board.getCell(coord[0], coord[1]).getClass() == "Temple") {
+                    possibleCoords.add(new int[] { row, col });
                 } else {
-                    if (x == coord[0] || y == coord[1]) {
-                        possibleCoords.add(new int[] { x, y });
-                    } else if (board[x][y] == 1) {// Should check for temple here
-                        possibleCoords.add(new int[] { x, y });
+                    if (row == coord[0] || col == coord[1]) {
+                        possibleCoords.add(new int[] { row, col });
+                    } else if (board.getCell(row, col).getClass() == "Temple") {// Should check for temple here
+                        possibleCoords.add(new int[] { row, col });
                     }
                 }
             }
         }
-
         return possibleCoords;
     }
 
@@ -44,21 +47,46 @@ public class CheckMove {
         return range;
     }
 
-    public void printBoard(int[][] board) {
-        for (int[] row : board) {
-            for (int cell : row) {
-                System.out.print(cell + " ");
+    public void printBoard(Cell[][] board) {
+        for (Cell[] row : board) {
+            for (Cell cell : row) {
+                System.out.print(cell.getClass() == "Temple" ? "0 " : "1 ");
             }
             System.out.println("\n");
         }
         System.out.println("\n");
     }
 
-    public int[][] getValidMoves(int player, int[][] board) {// In testing i will assume matrix of ones and zeros
-        // First add code to find player on board
-        // For now will use arbitrary location
+    public int[][] getValidMoves(Player player, Board board) {// In testing i will assume matrix of ones and zeros
+        int[] dims = board.getDims();
 
-        int[] coords = { 3, 3 };
+        int[] coords = null;
+        List<Player> cellPlayers = null;
+
+        // I hate this function so please if you have a better idea fix it
+        // Move through rows
+        for (int row = 0; row < dims[0]; row++) {
+            // Move through columns
+            for (int col = 0; col < dims[1]; col++) {
+                // Get players from cell
+                cellPlayers = board.getCell(row, col).getPlayers();
+                // Iterate over players
+                for (Player foundPlayer : cellPlayers) {
+                    // If player is equal save coords
+                    coords = foundPlayer.getId() == player.getId() ? new int[] { row, col } : null;
+                    // If player has been found exit loops
+                    if (coords != null) {
+                        row = dims[0];
+                        col = dims[1];
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (coords == null) {
+            throw new IllegalStateException("Player ID not found");
+        }
 
         List<int[]> firstMove = checkSurroundingCells(coords, board);
         List<int[]> secondMove = new ArrayList<int[]>();

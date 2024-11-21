@@ -7,6 +7,8 @@ package Model;
 public class Board {
 
     private Cell[][] cells; // 2D array representing the grid of cells on the board
+    private int rowsDim;
+    private int colsDim;
 
     /**
      * Constructor to initialize the game board with a specified number of rows and
@@ -18,6 +20,8 @@ public class Board {
      */
     public Board(int rows, int columns) {
         cells = new Cell[rows][columns]; // Initialize the 2D array of cells
+        rowsDim = rows;
+        colsDim = columns;
         createCells(); // Create and initialize the cells with features
     }
 
@@ -46,5 +50,14 @@ public class Board {
      */
     public Cell getCell(int row, int column) {
         return cells[row][column];
+    }
+
+    /**
+     * Returns the board dimensions.
+     * 
+     * @return The dimensions for the board.
+     */
+    public int[] getDims() {
+        return new int[] { rowsDim, colsDim };
     }
 }

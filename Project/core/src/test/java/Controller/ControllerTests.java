@@ -15,10 +15,17 @@ public class ControllerTests {
 
     @Test
     public void testMovementCheck() {
-        int[][] boardLayout = { { 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 },
+        int[][] boardLayout = {
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 1, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 1, 0, 0 },
                 { 0, 0, 0, 0, 0, 0 } };
-        int[][] expectedMask = { { 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 1, 1 }, { 0, 1, 1, 1, 1, 1 },
+        int[][] expectedMask = {
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 1, 1, 1, 0 },
+                { 0, 1, 1, 1, 1, 1 },
+                { 0, 1, 1, 1, 1, 1 },
                 { 0, 1, 1, 1, 1, 1 } };
 
         assertArrayEquals(expectedMask, checkMove.getValidMoves(1, boardLayout));
