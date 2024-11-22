@@ -21,7 +21,7 @@ public class NormalCell extends AbstractCell{
         }
 
         // Check if both features are of the same type
-        if (features[0].getClass().equals(features[1].getClass())) {
+        if (features[0] == features[1]) {
             throw new IllegalArgumentException("The features must be of different types, but both are of type " + features[0].getClass().getName());
         }
 
