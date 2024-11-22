@@ -10,12 +10,19 @@ class BoardTests {
     private Board board;
     private int rows;
     private int columns;
+    private Cell[][] cells;
 
     @BeforeEach
     void setUp() {
         rows = 3;
         columns = 3;
-        board = new Board(rows, columns); // Create a 3x3 board for testing
+        cells = new Cell[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                cells[row][column] = new NormalCell(new Feature[2]);
+            }
+        }
+        board = new Board(cells);
     }
 
     @Test
@@ -31,8 +38,6 @@ class BoardTests {
             for (int column = 0; column < columns; column++) {
                 Cell cell = board.getCell(row, column);
                 assertNotNull(cell, "Each cell should be initialized.");
-                assertNotNull(cell.getFeatures(), "Cell features should be initialized.");
-                assertEquals(2, cell.getFeatures().length, "Each cell should have space for 2 features.");
             }
         }
     }
