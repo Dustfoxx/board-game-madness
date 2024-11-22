@@ -19,7 +19,10 @@ class BoardTests {
         cells = new AbstractCell[rows][columns];
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                cells[row][column] = new NormalCell(new Feature[2]);
+                Feature[] features = new Feature[2];
+                features[0] = Feature.BILLBOARD;
+                features[1] = Feature.BOOKSTORE;
+                cells[row][column] = new NormalCell(features);
             }
         }
         board = new Board(cells);
