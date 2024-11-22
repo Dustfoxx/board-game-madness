@@ -10,13 +10,13 @@ class BoardTests {
     private Board board;
     private int rows;
     private int columns;
-    private Cell[][] cells;
+    private AbstractCell[][] cells;
 
     @BeforeEach
     void setUp() {
         rows = 3;
         columns = 3;
-        cells = new Cell[rows][columns];
+        cells = new AbstractCell[rows][columns];
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 cells[row][column] = new NormalCell(new Feature[2]);
@@ -36,7 +36,7 @@ class BoardTests {
     void testCellInitialization() {
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                Cell cell = board.getCell(row, column);
+                AbstractCell cell = board.getCell(row, column);
                 assertNotNull(cell, "Each cell should be initialized.");
             }
         }

@@ -4,7 +4,7 @@ package Model;
  * The TempleCell class represents a cell of temple type on the game board.
  * Each temple cell can hold a list of players and tokens of BrainNote type.
  */
-public class TempleCell extends Cell {
+public class TempleCell extends AbstractCell {
 
     /**
      * Constructor to initialize a temple cell.

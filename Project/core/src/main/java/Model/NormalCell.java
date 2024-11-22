@@ -4,7 +4,7 @@ package Model;
  * The NormalCell class represents a cell or normal type on the game board.
  * Each normal cell can hold a list of players, tokens, and features.
  */
-public class NormalCell extends Cell{
+public class NormalCell extends AbstractCell{
 
     private Feature[] features;  // Array of features in the cell
 

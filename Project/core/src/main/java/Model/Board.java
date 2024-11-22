@@ -5,7 +5,7 @@ package Model;
  */
 public class Board {
 
-    private Cell[][] cells; // 2D array representing the grid of cells on the board
+    private AbstractCell[][] cells; // 2D array representing the grid of cells on the board
 
     /**
      * Constructor to initialize the game board with a specified 2D array of cells.
@@ -14,7 +14,7 @@ public class Board {
      * @param cells The 2D array of cells to initialize the game board with.
      * @throws IllegalArgumentException If the grid is null, dimensions are invalid, or any cell is null.
      */
-    public Board(Cell[][] cells) {
+    public Board(AbstractCell[][] cells) {
         checkCells(cells);
         this.cells = cells;
     }
@@ -26,15 +26,15 @@ public class Board {
      * @param cells The 2D array of cells to validate.
      * @throws IllegalArgumentException If the cells array is invalid.
      */
-    private void checkCells(Cell[][] cells) {
+    private void checkCells(AbstractCell[][] cells) {
         if (cells == null || cells.length == 0 || cells[0].length == 0) {
             throw new IllegalArgumentException("The cells array must have at least one row and one column.");
         }
-        for (Cell[] row : cells) {
+        for (AbstractCell[] row : cells) {
             if (row == null) {
                 throw new IllegalArgumentException("No row in the cells array can be null.");
             }
-            for (Cell cell : row) {
+            for (AbstractCell cell : row) {
                 if (cell == null) {
                     throw new IllegalArgumentException("No cell in the grid can be null.");
                 }
@@ -49,7 +49,7 @@ public class Board {
      * @param column The column index of the cell.
      * @return The cell at the specified row and column.
      */
-    public Cell getCell(int row, int column) {
+    public AbstractCell getCell(int row, int column) {
         return cells[row][column];
     }
 }

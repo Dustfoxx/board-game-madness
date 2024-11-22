@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Cell class is an abstract class represents a single cell on the game board.
+ * The AbstractCell class is an abstract class represents a single cell on the game board.
  * Each cell keeps track of current players visiting the cell and tokens placed on the cell.
  * NormalCell and TempleCell inherit from this class and define additional behaviors.
  */
 
-public abstract class Cell {
+public abstract class AbstractCell {
 
     protected List<Player> players;  // List of players currently at the cell
     protected List<Token> tokens;  // List of tokens currently at the cell
@@ -17,7 +17,7 @@ public abstract class Cell {
     /**
      * Constructor to initialize a cell with empty lists of players and tokens.
      */
-    public Cell() {
+    public AbstractCell() {
         this.players = new ArrayList<>();
         this.tokens = new ArrayList<>();
     }
