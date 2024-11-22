@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * The Cell class is an abstract class represents a single cell on the game board.
  * Each cell keeps track of current players visiting the cell and tokens placed on the cell.
- * NormalCell and TempelCell inherit from this class and define additional behaviors.
+ * NormalCell and TempleCell inherit from this class and define additional behaviors.
  */
 
 public abstract class Cell {
