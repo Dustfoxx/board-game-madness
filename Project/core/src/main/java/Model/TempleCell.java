@@ -1,0 +1,29 @@
+package Model;
+
+/**
+ * The TempleCell class represents a cell of temple type on the game board.
+ * Each temple cell can hold a list of players and tokens of BrainNote type.
+ */
+public class TempleCell extends Cell {
+
+    /**
+     * Constructor to initialize a temple cell.
+     */
+    public TempleCell() {
+        super();
+    }
+
+    /**
+     * Adds a token to the cell and ensures it is of type BrainNote.
+     * 
+     * @param newToken The token to add to the cell.
+     * @throws IllegalArgumentException If the token is not of type BrainNote or if a BrainNote already exists.
+     */
+    @Override
+    public void addToken(Token newToken) {
+        if (!(newToken instanceof BrainNote)) {
+            throw new IllegalArgumentException("Only BrainNote tokens can be added to a TempelCell.");
+        }
+        super.addToken(newToken);
+    }
+}
