@@ -32,10 +32,16 @@ public class GameController {
         gameState = newGame;
         List<Player> gamePlayers = gameState.getPlayers();
 
+        boolean oneRecruiter = true;
         for (int i = 0; i < gamePlayers.size(); i++) {
             Player currPlayer = gamePlayers.get(i);
-            if (currPlayer.getClass() == Recruiter.class) {
+            if (currPlayer instanceof Recruiter) {
                 recruiter = (Recruiter) currPlayer;
+                gameState.setCurrentPlayer(recruiter);
+                if (!oneRecruiter) {
+                    throw new IllegalStateException("More than one recruiter");
+                }
+                oneRecruiter = false;
             } else {
                 agents.add((RougeAgent) currPlayer);
             }
@@ -89,6 +95,9 @@ public class GameController {
 
         activePlayer++;
         gameState.setCurrentPlayer(players[activePlayer % players.length]);
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            recruiterTurn = true;
+        }
     }
 
 }
