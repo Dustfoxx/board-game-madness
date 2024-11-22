@@ -16,6 +16,9 @@ class GameTests {
     private Player player1;
     private Player player2;
     private Board board;
+    private int rows;
+    private int columns;
+    private Cell[][] cells;
 
     @BeforeEach
     void setUp() {
@@ -23,7 +26,15 @@ class GameTests {
         featuresOfInterest = new Feature[3];
         player1 = new Recruiter(0, null, featuresOfInterest);
         player2 = new RougeAgent(1, null);
-        board = new Board(2,4);
+        rows = 3;
+        columns = 3;
+        cells = new Cell[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                cells[row][column] = new NormalCell(new Feature[2]);
+            }
+        }
+        board = new Board(cells);
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
