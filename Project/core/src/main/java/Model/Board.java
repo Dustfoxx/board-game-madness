@@ -2,42 +2,37 @@ package Model;
 
 /**
  * The Board class represents the game board, which consists of a grid of cells.
+ * Each cell can hold various features that affect gameplay.
  */
 public class Board {
 
     private Cell[][] cells; // 2D array representing the grid of cells on the board
 
     /**
-     * Constructor to initialize the game board with a specified 2D array of cells.
-     * Ensures that the grid is not null and all cells are valid.
+     * Constructor to initialize the game board with a specified number of rows and
+     * columns.
+     * It creates a grid of cells and initializes them.
      * 
-     * @param cells The 2D array of cells to initialize the game board with.
-     * @throws IllegalArgumentException If the grid is null, dimensions are invalid, or any cell is null.
+     * @param rows    The number of rows in the game board.
+     * @param columns The number of columns in the game board.
      */
-    public Board(Cell[][] cells) {
-        checkCells(cells);
-        this.cells = cells;
+    public Board(int rows, int columns) {
+        cells = new Cell[rows][columns]; // Initialize the 2D array of cells
+        createCells(); // Create and initialize the cells with features
     }
 
     /**
-     * Validates the 2D array of cells to ensure it is not null, has valid dimensions,
-     * and contains no null rows or cells.
-     * 
-     * @param cells The 2D array of cells to validate.
-     * @throws IllegalArgumentException If the cells array is invalid.
+     * Creates and initializes each cell on the board.
+     * Each cell is initialized with an empty list of features.
+     * TODO: In the future, the cells should be filled with features somehow:
+     * - Either in the createCells method
+     * - Or it's done with a new Cell.addFeatures() method
      */
-    private void checkCells(Cell[][] cells) {
-        if (cells == null || cells.length == 0 || cells[0].length == 0) {
-            throw new IllegalArgumentException("The cells array must have at least one row and one column.");
-        }
-        for (Cell[] row : cells) {
-            if (row == null) {
-                throw new IllegalArgumentException("No row in the cells array can be null.");
-            }
-            for (Cell cell : row) {
-                if (cell == null) {
-                    throw new IllegalArgumentException("No cell in the grid can be null.");
-                }
+    private void createCells() {
+        for (int row = 0; row < cells.length; row++) {
+            for (int column = 0; column < cells[row].length; column++) {
+                Feature[] features = new Feature[2]; // Array to hold features for each cell
+                cells[row][column] = new Cell(features); // Initialize the cell with no features
             }
         }
     }
