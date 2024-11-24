@@ -1,28 +1,70 @@
 package Controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import javax.swing.text.Position;
+import Model.Board;
+import Model.BrainFact;
+import Model.BrainNote;
+import Model.Cell;
+import Model.Feature;
+import Model.Footstep;
+import Model.Game;
+import Model.Token;
+
 public class ActionController {
-
-
     /**
-     * Lets user ask about a feature its standing on
-     * @param tile The tile standing on
-     * @return The feature asked upon
+     * Displays a set of features to the player and prompts picking
+     * 
+     * @param feature The chosen feature
+     * @return The feature picked
      */
-    public int ask(){
-        // Check features players standing on
-        // Player chooses feature through view
-        // Return requested feature
-        return 1;
+    private CompletableFuture<Feature> displayAndPickFeatures(Feature[] features) {
+        // TODO: Currently just picks first index
+        return CompletableFuture.completedFuture(features[0]);
     }
-    
+
     /**
-     * Reveals the specific time of footstep token
-     * @param cell the cell requested to reveal ?? Footstep maybe??
-     * @return True if succesful, else false
+     * Lets the user ask for a specific feature on it's current cell.
+     * 
+     * @param cell The cell containing the features
+     * @return The feature picked
      */
-    public boolean reveal(){
-        // Get timestamp from game state model 
-        // Set token on cell
-        return true;
+    public Feature ask(Cell cell) {
+        Feature[] features = cell.getFeatures();
+        CompletableFuture<Feature> featureFuture = displayAndPickFeatures(features);
+        return featureFuture.join();
+    }
+
+    /**
+     * Replaces a footstep with a brain-fact token
+     * 
+     * @param footstep   the footstep to be replaced
+     * @param board      the game of the board
+     * @param position   The position of the footstep Note: could be calculated, but
+     *                   game manager probably has it ready
+     * @param walkedPath the path walked by the recruit
+     * @return void
+     */
+    public void reveal(Footstep footstep, Board board, int[] position, List<int[]> walkedPath) {
+
+        int time = 0;
+
+        // Finds the index of the position in walked path
+        for (int i = 0; i < walkedPath.size(); i++) {
+            if (Arrays.equals(walkedPath.get(i), position)) {
+                time = i + 1;
+                break;
+            }
+        }
+
+        BrainFact brainFact = new BrainFact(time);
+
+        Cell cell = board.getCell(position[0], position[1]);
+
+        cell.addToken(brainFact);
+        cell.removeToken(footstep);
     }
 }

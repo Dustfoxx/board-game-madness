@@ -78,10 +78,9 @@ public class Cell {
         for (Token token : tokens) {
             if (token.getClass().equals(newToken.getClass())) {
                 throw new IllegalArgumentException("There is already a " + newToken.getClass() + " in this cell");
-            } else {
-                tokens.add(newToken);
             }
         }
+        tokens.add(newToken);
     }
 
     /**
