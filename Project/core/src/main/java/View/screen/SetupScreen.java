@@ -13,33 +13,37 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-
-
-
-public class MainMenuScreen implements Screen {
+public class SetupScreen implements Screen {
     private final Stage stage;
     private final Skin skin;
     private final MindMGMT game;
 
-    public MainMenuScreen(final MindMGMT game) {
+    public SetupScreen(final MindMGMT game) {
         this.game = game;
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
 
-        TextButton startButton = new TextButton("Game Start", skin);
-        startButton.setPosition(stage.getWidth() / 2 , stage.getHeight() / 2 ,Align.center);
-        startButton.setSize(100,50);
-        startButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //not sure should this in view or controller
-                game.setScreen(new SetupScreen(game));
-                dispose();
-            }
-        });
+        Table root = new Table();
+        root.setFillParent(true);
 
-        stage.addActor(startButton);
+        for (int i = 2; i <= 5; i++) {
+            final int value = i;
+            TextButton playersButton = new TextButton(String.valueOf(i) + " players", skin);
+            root.add(playersButton);
+            // root.row();
+            playersButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    //not sure should this in view or controller
+                    game.nrOfPayers = value;
+                    game.setScreen(new GameScreen(game));
+                    dispose();
+                }
+            });
+        }
+        stage.addActor(root);
         Gdx.input.setInputProcessor(stage);
     }
 

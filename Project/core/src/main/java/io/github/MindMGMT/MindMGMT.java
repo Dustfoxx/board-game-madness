@@ -9,10 +9,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends Game {
+public class MindMGMT extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
     private FitViewport viewport;
+    public int nrOfPayers;
 
     @Override
     public void create() {

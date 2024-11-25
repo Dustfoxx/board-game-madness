@@ -8,16 +8,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import Model.Player;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import io.github.MindMGMT.Main;
+import io.github.MindMGMT.MindMGMT;
+// import Model.Player;
+// import Controller.GameController;
 
 public class GameScreen implements Screen {
 
-    private final Main game;
+    // private final GameController gameController;
+    private final MindMGMT game;
     private final Stage stage;
     private final Skin skin;
     private final SpriteBatch batch;
@@ -25,8 +31,10 @@ public class GameScreen implements Screen {
     private final Image boardImage;
 
 
-    public GameScreen(Main game) {
-         this.game = game;
+    public GameScreen(MindMGMT game) {
+        // this.gameController = new GameController(game.nrOfPlayers);
+
+        this.game = game;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
@@ -51,10 +59,23 @@ public class GameScreen implements Screen {
         Table playerBar = new Table();
         root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= game.nrOfPayers; i++) {
             TextButton playerButton = new TextButton("Player " + i, skin);
             playerBar.add(playerButton).expandX();
         }
+
+        //get the player list from the game controller
+        //there is no getgame method in gamecontroller yet, and not sure if it's needed
+        // for (Player player : gameController.getGame().getPlayers()) {
+        //     String playerName = player.getName();
+        //     TextButton playerButton = new TextButton(playerName, skin);
+        //     playerBar.add(playerButton).expandX();
+
+        //     //highlight the current player
+        //     if (player.equals(gameController.getCurrentPlayer())) {
+        //         playerButton.setColor(0, 1, 0, 1);
+        //     }
+        // }
     }
 
     private void setupMainSection(Table root) {
