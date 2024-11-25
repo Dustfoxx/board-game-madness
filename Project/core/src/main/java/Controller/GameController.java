@@ -19,9 +19,17 @@ public class GameController {
     private boolean recruiterTurn = true;
     private Game gameState;
     private int activePlayer = 0;
-    private Model.Player players[] = new Player[6];
+    private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
-    List<RougeAgent> agents = new ArrayList<RougeAgent>();
+
+    /**
+     * The main gameController. Keeps an eye on victory conditions and which players
+     * are next in queue to play. This is the constructor. Currently does not track
+     * when
+     * recruits and similar have been added timewise.
+     * 
+     * @param newGame A game model object meant to describe everything for view
+     */
 
     public GameController(Game newGame) {
         // Create turn order
@@ -31,6 +39,7 @@ public class GameController {
 
         gameState = newGame;
         List<Player> gamePlayers = gameState.getPlayers();
+        List<RougeAgent> agents = new ArrayList<RougeAgent>();
 
         boolean oneRecruiter = true;
         for (int i = 0; i < gamePlayers.size(); i++) {
@@ -54,16 +63,16 @@ public class GameController {
             throw new IllegalStateException("No agents found");
         }
 
-        for (int i = 0; i < players.length; i++) {
+        for (int i = 0; i < playerTurnOrder.length; i++) {
             switch (i) {
                 case 0:
-                    players[i] = recruiter;
+                    playerTurnOrder[i] = recruiter;
                     break;
                 case 3:
-                    players[i] = recruiter;
+                    playerTurnOrder[i] = recruiter;
                     break;
                 default:
-                    players[i] = agents.get(agentIterator);
+                    playerTurnOrder[i] = agents.get(agentIterator);
                     agentIterator++;
                     if (agentIterator >= agents.size()) {
                         agentIterator = 0;
@@ -72,6 +81,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Gets called when a player has completed their actions.
+     * Decides new player and increments timer accordingly.
+     */
     public void newTurn() {
         if (recruiterTurn) {
             gameState.incrementTime();
@@ -94,7 +107,7 @@ public class GameController {
         }
 
         activePlayer++;
-        gameState.setCurrentPlayer(players[activePlayer % players.length]);
+        gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             recruiterTurn = true;
         }

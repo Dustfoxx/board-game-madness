@@ -7,6 +7,9 @@ import Model.Board;
 import Model.Cell;
 import Model.Player;
 
+//IMPORTANT:: AS OF THIS PULL REQUEST THIS FILE IS UNTESTED AS TEMPLE TILES ARE NOT ADDED
+//THIS MEANS IT WILL BE TESTED FROM A SEPARATE BRANCH BUT WILL BE DELIVERED VIA THIS ONE
+
 public class CheckMove {
     /*
      * private List<int[]> checkSurroundingCells(int[] coord, Board board) {
