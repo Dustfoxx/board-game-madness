@@ -13,7 +13,6 @@ import Model.Footstep;
 import Model.NormalCell;
 import Model.Board;
 import Model.BrainFact;
-import Model.BrainNote;
 
 public class ActionControllerTests {
     private final ActionController actionController = new ActionController();
@@ -25,7 +24,6 @@ public class ActionControllerTests {
     void setUp() {
         NormalCell[][] cells = new NormalCell[3][3];
 
-        // Initialize each cell directly with two features
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
