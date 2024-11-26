@@ -9,6 +9,7 @@ import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
 public class ActionController {
+    
     /**
      * Displays a set of features to the player and prompts picking
      * 
