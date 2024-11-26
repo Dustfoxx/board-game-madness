@@ -99,7 +99,9 @@ public class GameController {
         if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of how that
                                                    // would be
             // structured
-            gameState.addAmountRecruited(recruiter.getAmountRecruited());
+            if (recruiter.getAmountRecruited() > 0) {
+                gameState.addAmountRecruited(recruiter.getAmountRecruited());
+            }
             if (gameState.getAmountRecruited() >= 9) {
                 // RECRUITER WIN GAME
                 gameState.setGameOver();
