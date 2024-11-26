@@ -25,6 +25,18 @@ public class Game {
      * @param startingPlayer The player who will start the game.
      */
     public Game(List<Player> players, Board board, Player startingPlayer) {
+        if (players == null || players.isEmpty()) {
+            throw new IllegalArgumentException("Players list cannot be null or empty.");
+        }
+        if (board == null) {
+            throw new IllegalArgumentException("Board cannot be null.");
+        }
+        if (startingPlayer == null) {
+            throw new IllegalArgumentException("Starting player cannot be null.");
+        }
+        if (!players.contains(startingPlayer)) {
+            throw new IllegalArgumentException("Starting player must be in the players list.");
+        }
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
         this.currentTime = 1;
@@ -50,6 +62,8 @@ public class Game {
     public void setGameOver() {
         if (!gameOver) {
             this.gameOver = true;
+        } else {
+            throw new IllegalStateException("The game is already over.");
         }
     }
 
@@ -68,6 +82,9 @@ public class Game {
      * @param nextPlayer The player to become the current player.
      */
     public void setCurrentPlayer(Player nextPlayer) {
+        if (!players.contains(nextPlayer)) {
+            throw new IllegalArgumentException("Player is not part of the game.");
+        }
         this.currentPlayer = nextPlayer;
     }
 
@@ -111,6 +128,9 @@ public class Game {
      * @param newAmountRecruited The number of recruited players to add.
      */
     public void addAmountRecruited(int newAmountRecruited) {
+        if (newAmountRecruited <= 0) {
+            throw new IllegalArgumentException("Amount to add must be greater than 0.");
+        }
         this.amountRecruited += newAmountRecruited;
     }
 
@@ -127,6 +147,9 @@ public class Game {
      * Increments the mind slip count by 1.
      */
     public void incrementMindSlipCount() {
+        if (this.mindSlipCount >= 2) {
+            throw new IllegalStateException("Mind slip count cannot exceed 2.");
+        }
         this.mindSlipCount += 1;
     }
 
