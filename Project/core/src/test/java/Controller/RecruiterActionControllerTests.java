@@ -1,19 +1,17 @@
 package Controller;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import Model.Feature;
-import Model.Footstep;
 import Model.Board;
 import Model.BrainFact;
-import Model.Cell;
-
+import Model.Feature;
+import Model.Footstep;
+import Model.NormalCell;
 
 public class RecruiterActionControllerTests {
 
@@ -23,30 +21,37 @@ public class RecruiterActionControllerTests {
 
     @BeforeEach
     void setUp() {
+        NormalCell[][] cells = new NormalCell[3][3];
+
+        // Initialize each cell directly with two features
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
+            }
+        }
+        board = new Board(cells);
     }
 
-   /* @Test
-    void testAnswer() {
-        board = new Board(3, 3);
+    // Note need 
+    @Test
+    void testAnswerTrue() {
         List<int[]> walkedPath = new ArrayList<>();
         walkedPath.add(new int[]{0, 0});
         walkedPath.add(new int[]{1, 1});
 
-        Cell selectedCell = board.getCell(walkedPath.get(1)[0], walkedPath.get(1)[1]);
+        NormalCell selectedCell = (NormalCell) board.getCell(walkedPath.get(1)[0], walkedPath.get(1)[1]);
         
         assertNotNull(selectedCell);
         assert(selectedCell.getFeatures().length != 0);
         // Call the answer method
-        boolean result = actionController.answer(selectedCell.getFeatures()[0], board, walkedPath);
+        boolean result = actionController.answer(Feature.BILLBOARD, board, walkedPath);
 
-
+        assertTrue(result);
         // Recreating to make sure references work out
-        Cell verifyCell = board.getCell(1, 1);
+        NormalCell verifyCell = (NormalCell) board.getCell(walkedPath.get(0)[0], walkedPath.get(0)[1]);
 
-        assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain one token.");
+        assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain one token");
         assertTrue(verifyCell.getTokens().get(0) instanceof Footstep, "The token should be a Footstep.");
     }
-
-    */
 
 }

@@ -1,19 +1,13 @@
 package Controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import javax.swing.text.Position;
 import Model.Board;
 import Model.BrainFact;
-import Model.BrainNote;
-import Model.Cell;
 import Model.Feature;
 import Model.Footstep;
-import Model.Game;
-import Model.Token;
-
+import Model.NormalCell;
 public class ActionController {
     /**
      * Displays a set of features to the player and prompts picking
@@ -32,7 +26,7 @@ public class ActionController {
      * @param cell The cell containing the features
      * @return The feature picked
      */
-    public Feature ask(Cell cell) {
+    public Feature ask(NormalCell cell) {
         Feature[] features = cell.getFeatures();
         CompletableFuture<Feature> featureFuture = displayAndPickFeatures(features);
         return featureFuture.join();
@@ -56,15 +50,14 @@ public class ActionController {
         for (int i = 0; i < walkedPath.size(); i++) {
             if (Arrays.equals(walkedPath.get(i), position)) {
                 time = i + 1;
+                BrainFact brainFact = new BrainFact(time);
+
+                NormalCell cell = (NormalCell) board.getCell(position[0], position[1]);
+        
+                cell.addToken(brainFact);
+                cell.removeToken(footstep);
                 break;
             }
         }
-
-        BrainFact brainFact = new BrainFact(time);
-
-        Cell cell = board.getCell(position[0], position[1]);
-
-        cell.addToken(brainFact);
-        cell.removeToken(footstep);
     }
 }

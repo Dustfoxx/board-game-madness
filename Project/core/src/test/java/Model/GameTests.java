@@ -23,7 +23,16 @@ class GameTests {
         featuresOfInterest = new Feature[3];
         player1 = new Recruiter(0, null, featuresOfInterest);
         player2 = new RougeAgent(1, null);
-        board = new Board(2,4);
+
+        NormalCell[][] cells = new NormalCell[2][4];
+
+        // Initialize each cell directly with two features
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
+            }
+        }
+        board = new Board(cells);
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object

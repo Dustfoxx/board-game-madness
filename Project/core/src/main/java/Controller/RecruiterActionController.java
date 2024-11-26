@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Board;
-import Model.Cell;
 import Model.Feature;
 import Model.Footstep;
-import Model.Game;
+import Model.NormalCell;
 import Model.Token;
 
 public class RecruiterActionController {
@@ -46,19 +45,28 @@ public class RecruiterActionController {
         return viableChoices.get(0);
     }
 
+
+    /**
+     * Answer whether the recruiter has passed a specific feature
+     * Sets token if passed
+     * @param walkedPath The walked path of the recruiter
+     * @param board The game state board
+     * @param feature The feature asked about
+     * @return True if moved, else false
+     */
     public boolean answer(Feature feature, Board board, List<int[]> walkedPath) {
         List<int[]> viablePositions = new ArrayList<>();
         for (int[] row : walkedPath) {
             int x = row[0];
             int y = row[1];
-
-            Cell foundCell = board.getCell(x, y);
+            
+            NormalCell foundCell = (NormalCell) board.getCell(x, y);
             Feature[] features = foundCell.getFeatures();
 
             assert(features.length != 0);
 
             for (Feature i : features) {
-                if (i != null  && i.equals(x)) { // Check if the current feature equals x
+                if (i != null  && i == feature) { // Check if the current feature equals x
                     
                     List<Token> tokens = foundCell.getTokens();
 
@@ -70,13 +78,20 @@ public class RecruiterActionController {
             }
         }
 
-        int[] selection = answerView(viablePositions);
 
-        Cell selectedCell = board.getCell(selection[0], selection[1]);
+        if(!viablePositions.isEmpty()){
 
-        Token token = new Footstep();
+            int[] selection = answerView(viablePositions);
 
-        selectedCell.addToken(token);
-        return true;
+            NormalCell selectedCell = (NormalCell) board.getCell(selection[0], selection[1]);
+
+            Token token = new Footstep();
+
+            selectedCell.addToken(token);
+            return true;
+    }
+    else{
+        return false;
+    }
     }
 }
