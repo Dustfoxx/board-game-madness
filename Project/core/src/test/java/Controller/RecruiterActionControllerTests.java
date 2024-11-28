@@ -96,10 +96,7 @@ public class RecruiterActionControllerTests {
 
         // Assert
         assertFalse(result);
-        ;
-        assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain 1 token"); // Should still
-                                                                                                    // contain 1 due to
-                                                                                                    // the brainfact
+        assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain 1 token");
         assertTrue(verifyCell.getTokens().get(0) instanceof BrainFact, "The token should be a BrainFact");
 
     }
