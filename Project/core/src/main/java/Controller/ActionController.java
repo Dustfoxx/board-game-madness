@@ -8,6 +8,7 @@ import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
+
 public class ActionController {
     /**
      * Displays a set of features to the player and prompts picking
@@ -44,7 +45,7 @@ public class ActionController {
      */
     public void reveal(Footstep footstep, Board board, int[] position, List<int[]> walkedPath) {
         int time = 0;
-        
+
         // Finds the index of the position in walked path
         for (int i = 0; i < walkedPath.size(); i++) {
             if (Arrays.equals(walkedPath.get(i), position)) {
@@ -52,7 +53,7 @@ public class ActionController {
                 BrainFact brainFact = new BrainFact(time);
 
                 NormalCell cell = (NormalCell) board.getCell(position[0], position[1]);
-        
+
                 cell.addToken(brainFact);
                 cell.removeToken(footstep);
                 break;

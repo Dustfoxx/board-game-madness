@@ -58,17 +58,17 @@ public class RecruiterActionController {
                     List<Token> tokens = foundCell.getTokens();
 
                     Boolean valid = true;
-                    for(Token j : tokens){
-                        if(j != null && (j.getClass() == BrainFact.class || j.getClass() == Footstep.class)){
+                    for (Token j : tokens) {
+                        if (j != null && (j.getClass() == BrainFact.class || j.getClass() == Footstep.class)) {
                             valid = false;
                             break;
                         }
                     }
 
-                if(valid){
-                    viablePositions.add(new int[] { x, y });
-                  }
-                    
+                    if (valid) {
+                        viablePositions.add(new int[] { x, y });
+                    }
+
                 }
             }
         }
