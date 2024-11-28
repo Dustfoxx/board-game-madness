@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Board;
+import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
@@ -52,17 +53,22 @@ public class RecruiterActionController {
             NormalCell foundCell = (NormalCell) board.getCell(x, y);
             Feature[] features = foundCell.getFeatures();
 
-            assert (features.length != 0);
-
             for (Feature i : features) {
-                if (i != null && i == feature) { // Check if the current feature equals x
-
+                if (i != null && i == feature) {
                     List<Token> tokens = foundCell.getTokens();
 
-                    // NOTE: ASSUMES THAT ONLY ONE TOKEN CAN EXIST ON IT
-                    if (tokens.size() == 0) {
-                        viablePositions.add(new int[] { x, y });
+                    Boolean valid = true;
+                    for(Token j : tokens){
+                        if(j != null && (j.getClass() == BrainFact.class || j.getClass() == Footstep.class)){
+                            valid = false;
+                            break;
+                        }
                     }
+
+                    if(valid){
+                    viablePositions.add(new int[] { x, y });
+                  }
+                    
                 }
             }
         }
