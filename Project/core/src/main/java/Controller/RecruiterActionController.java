@@ -65,7 +65,7 @@ public class RecruiterActionController {
                         }
                     }
 
-                    if(valid){
+                if(valid){
                     viablePositions.add(new int[] { x, y });
                   }
                     

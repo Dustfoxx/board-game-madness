@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import Model.Board;
+import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
@@ -52,5 +53,29 @@ public class RecruiterActionControllerTests {
         assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain one token");
         assertTrue(verifyCell.getTokens().get(0) instanceof Footstep, "The token should be a Footstep");
     }
+
+        // Note need 
+        @Test
+        void testAnswerFullCell() { // test for checking that you cant set brainfact ontop of anoter brainfact
+            // Arrange
+            List<int[]> walkedPath = new ArrayList<>();
+            walkedPath.add(new int[]{2, 1});
+    
+            NormalCell selectedCell = (NormalCell) board.getCell(walkedPath.get(0)[0], walkedPath.get(0)[1]);
+
+            selectedCell.addToken(new BrainFact(22));
+            
+            // Call the answer method
+            boolean result = actionController.answer(Feature.BILLBOARD, board, walkedPath);
+    
+            // Recreating to make sure references work out
+            NormalCell verifyCell = (NormalCell) board.getCell(walkedPath.get(0)[0], walkedPath.get(0)[1]);
+    
+            // Assert
+            assertFalse(result);;
+            assertEquals(1, verifyCell.getTokens().size(), "The selected cell should contain 1 token"); // Should still contain 1 due to the brainfact
+            assertTrue(verifyCell.getTokens().get(0) instanceof BrainFact, "The token should be a BrainFact");
+            
+        }
 
 }
