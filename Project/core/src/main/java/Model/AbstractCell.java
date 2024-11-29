@@ -4,32 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Cell class represents a single cell on the game board.
- * Each cell can hold a list of players, tokens, and features that affect the game.
- * Players and tokens can be added or removed from the cell.
- * Features are set from the start. 
+ * The AbstractCell class is an abstract class represents a single cell on the game board.
+ * Each cell keeps track of current players visiting the cell and tokens placed on the cell.
+ * NormalCell and TempleCell inherit from this class and define additional behaviors.
  */
-public class Cell {
-    private List<Player> players;  // List of players currently in the cell
-    private List<Token> tokens;  // List of tokens currently in the cell
-    private Feature[] features;  // Array of features in the cell
+
+public abstract class AbstractCell {
+
+    protected List<Player> players;  // List of players currently at the cell
+    protected List<Token> tokens;  // List of tokens currently at the cell
 
     /**
-     * Constructor to initialize a cell with a specified array of features.
-     * This constructor requires exactly two features to be passed in the features array.
-     * If the array contains any number other than 2, an exception will be thrown.
-     * 
-     * @param features The array of features to associate with this cell. The array must contain exactly 2 features.
-     * @throws IllegalArgumentException If the features array does not contain exactly 2 elements.
+     * Constructor to initialize a cell with empty lists of players and tokens.
      */
-    public Cell(Feature[] features) {
-        if (features.length == 2) {
-            this.players = new ArrayList<>();
-            this.tokens = new ArrayList<>();
-            this.features = features;
-        } else {
-            throw new IllegalArgumentException("The features array is not of size 2 but of size " + features.length);
-        }
+    public AbstractCell() {
+        this.players = new ArrayList<>();
+        this.tokens = new ArrayList<>();
     }
 
     /**
@@ -78,10 +68,9 @@ public class Cell {
         for (Token token : tokens) {
             if (token.getClass().equals(newToken.getClass())) {
                 throw new IllegalArgumentException("There is already a " + newToken.getClass() + " in this cell");
-            } else {
-                tokens.add(newToken);
             }
         }
+        tokens.add(newToken);
     }
 
     /**
@@ -91,14 +80,5 @@ public class Cell {
      */
     public void removeToken(Token token) {
         tokens.remove(token);
-    }
-
-    /**
-     * Gets the list of features associated with this cell.
-     * 
-     * @return The list of features in the cell.
-     */
-    public Feature[] getFeatures() {
-        return features;
     }
 }
