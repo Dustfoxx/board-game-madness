@@ -5,6 +5,8 @@ package Model;
  */
 public class Board {
 
+    private int rowsDim;
+    private int colsDim;
     private AbstractCell[][] cells; // 2D array representing the grid of cells on the board
 
     /**
@@ -12,15 +14,19 @@ public class Board {
      * Ensures that the grid is not null and all cells are valid.
      * 
      * @param cells The 2D array of cells to initialize the game board with.
-     * @throws IllegalArgumentException If the grid is null, dimensions are invalid, or any cell is null.
+     * @throws IllegalArgumentException If the grid is null, dimensions are invalid,
+     *                                  or any cell is null.
      */
     public Board(AbstractCell[][] cells) {
         checkCells(cells);
         this.cells = cells;
+        rowsDim = cells.length;
+        colsDim = cells[0].length;
     }
 
     /**
-     * Validates the 2D array of cells to ensure it is not null, has valid dimensions,
+     * Validates the 2D array of cells to ensure it is not null, has valid
+     * dimensions,
      * and contains no null rows or cells.
      * 
      * @param cells The 2D array of cells to validate.
@@ -51,5 +57,14 @@ public class Board {
      */
     public AbstractCell getCell(int row, int column) {
         return cells[row][column];
+    }
+
+    /**
+     * Returns the board dimensions.
+     * 
+     * @return The dimensions for the board.
+     */
+    public int[] getDims() {
+        return new int[] { rowsDim, colsDim };
     }
 }

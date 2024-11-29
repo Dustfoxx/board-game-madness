@@ -16,6 +16,9 @@ class GameTests {
     private Player player1;
     private Player player2;
     private Board board;
+    private int rows;
+    private int columns;
+    private AbstractCell[][] cells;
 
     @BeforeEach
     void setUp() {
@@ -23,13 +26,15 @@ class GameTests {
         featuresOfInterest = new Feature[3];
         player1 = new Recruiter(0, null, featuresOfInterest);
         player2 = new RougeAgent(1, null);
-
-        NormalCell[][] cells = new NormalCell[2][4];
-
-        // Initialize each cell directly with two features
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
+        rows = 3;
+        columns = 3;
+        cells = new AbstractCell[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                Feature[] features = new Feature[2];
+                features[0] = Feature.BILLBOARD;
+                features[1] = Feature.BOOKSTORE;
+                cells[row][column] = new NormalCell(features);
             }
         }
         board = new Board(cells);
@@ -53,7 +58,7 @@ class GameTests {
         assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), board, player3),
                 "Constructor should throw an exception if startingPlayer is not in the players list.");
     }
-    
+
     @Test
     void testGameInitialization() {
         assertFalse(game.isGameOver(), "Game should not be over initially.");
@@ -70,7 +75,7 @@ class GameTests {
         game.setGameOver();
         assertTrue(game.isGameOver(), "Game should be marked as over.");
         assertThrows(IllegalStateException.class, () -> game.setGameOver(),
-        "Constructor should throw an exception if game is already over");
+                "Constructor should throw an exception if game is already over");
     }
 
     @Test
@@ -80,9 +85,9 @@ class GameTests {
         game.setCurrentPlayer(player1);
         assertEquals(player1, game.getCurrentPlayer(), "Current player should be Player 1.");
         assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(new RougeAgent(2, null)),
-            "Setting the next player to one not in the game should throw IllegalArgumentException.");
+                "Setting the next player to one not in the game should throw IllegalArgumentException.");
         assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(null),
-            "Setting the next player to null should throw an IllegalArgumentException.");
+                "Setting the next player to null should throw an IllegalArgumentException.");
     }
 
     @Test
@@ -100,9 +105,9 @@ class GameTests {
         game.addAmountRecruited(2);
         assertEquals(3, game.getAmountRecruited(), "Amount recruited should increase to 3.");
         assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(-1),
-        "Adding a negative number to the amount recruited should throw an IllegalArgumentException.");
+                "Adding a negative number to the amount recruited should throw an IllegalArgumentException.");
         assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(0),
-        "Adding zero to the amount recruited should throw an IllegalArgumentException.");
+                "Adding zero to the amount recruited should throw an IllegalArgumentException.");
     }
 
     @Test
@@ -112,7 +117,7 @@ class GameTests {
         game.incrementMindSlipCount();
         assertEquals(2, game.getMindSlipCount(), "Mind slip count should increase to 2.");
         assertThrows(IllegalStateException.class, () -> game.incrementMindSlipCount(),
-        "Increaseing the mind slip count above 2 should throw an IllegalStateException.");
+                "Increaseing the mind slip count above 2 should throw an IllegalStateException.");
     }
 
     @Test
