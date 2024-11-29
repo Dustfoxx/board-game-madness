@@ -10,34 +10,23 @@ public class Board {
     private AbstractCell[][] cells; // 2D array representing the grid of cells on the board
 
     /**
-     * Constructor to initialize the game board with a specified number of rows and
-     * columns.
-     * It creates a grid of cells and initializes them.
-     * 
-     * @param rows    The number of rows in the game board.
-     * @param columns The number of columns in the game board.
-     */
-    public Board(int rows, int columns) {
-        cells = new Cell[rows][columns]; // Initialize the 2D array of cells
-        rowsDim = rows;
-        colsDim = columns;
-        createCells(); // Create and initialize the cells with features
-    }
-  
-    /**
      * Constructor to initialize the game board with a specified 2D array of cells.
      * Ensures that the grid is not null and all cells are valid.
      * 
      * @param cells The 2D array of cells to initialize the game board with.
-     * @throws IllegalArgumentException If the grid is null, dimensions are invalid, or any cell is null.
+     * @throws IllegalArgumentException If the grid is null, dimensions are invalid,
+     *                                  or any cell is null.
      */
     public Board(AbstractCell[][] cells) {
         checkCells(cells);
         this.cells = cells;
+        rowsDim = cells.length;
+        colsDim = cells[0].length;
     }
 
     /**
-     * Validates the 2D array of cells to ensure it is not null, has valid dimensions,
+     * Validates the 2D array of cells to ensure it is not null, has valid
+     * dimensions,
      * and contains no null rows or cells.
      * 
      * @param cells The 2D array of cells to validate.
