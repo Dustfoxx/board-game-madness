@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Board;
-import Model.Cell;
+import Model.AbstractCell;
 import Model.Player;
 
 //IMPORTANT:: AS OF THIS PULL REQUEST THIS FILE IS UNTESTED AS TEMPLE TILES ARE NOT ADDED

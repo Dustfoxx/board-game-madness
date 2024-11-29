@@ -99,7 +99,7 @@ public class ControllerTests {
         playerOrder.add(players.get(0));
         playerOrder.add(players.get(1));
 
-        Board board = new Board(7, 6);
+        Board board = mock(Board.class);
 
         Game game = new Game(players, board, mockedPlayer);
         GameController gameController = new GameController(game);
@@ -118,7 +118,7 @@ public class ControllerTests {
         players.add(mock(RougeAgent.class));
         players.add(mock(Recruiter.class));
 
-        Board board = new Board(7, 6);
+        Board board = mock(Board.class);
 
         Game game = new Game(players, board, mockedPlayer);
         GameController gameController = new GameController(game);
