@@ -123,7 +123,7 @@ public class Game {
      * 
      * @return The total amount of recruits reveald so far.
      */
-    public int getTotalAmountRecruited() {
+    public int getAmountRecruited() {
         int count = 0;
         for (int[] recruits : this.recruitHistory) {
             count += recruits[1];
