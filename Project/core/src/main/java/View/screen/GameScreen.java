@@ -1,40 +1,43 @@
 package View.screen;
 
+import Controller.ActionController;
+import Controller.GameController;
+import Model.*;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Model.Player;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import io.github.MindMGMT.MindMGMT;
-// import Model.Player;
-// import Controller.GameController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreen implements Screen {
 
     // private final GameController gameController;
-    private final MindMGMT game;
+    private final MindMGMT application;
+    private final GameController gameController;
+    private final ActionController actionController;
+
     private final Stage stage;
     private final Skin skin;
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final Image boardImage;
 
+    public GameScreen(MindMGMT application) {
+        this.application = application;
+        Game game = initializeGame();
 
-    public GameScreen(MindMGMT game) {
-        // this.gameController = new GameController(game.nrOfPlayers);
+        this.gameController = new GameController(game);
+        this.actionController = new ActionController();
 
-        this.game = game;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
@@ -43,6 +46,28 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         setupUI();
+    }
+
+    private Game initializeGame() {
+        List<Player> players = new ArrayList<Player>();
+        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
+
+        for (int i = 0; i < application.nrOfPlayers; i++) {
+            players.add(i == 0 ? new Recruiter(i, "recruiter", recruiterFeatures) : new RougeAgent(i));
+        }
+
+        int rows = 6;
+        int columns = 7;
+
+        AbstractCell[][] cells = new AbstractCell[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                cells[row][column] = new NormalCell(new Feature[] { Feature.BOOKSTORE, Feature.BILLBOARD });
+            }
+        }
+
+        Board board = new Board(cells);
+        return new Game(players, board, players.get(0));
     }
 
     private void setupUI() {
@@ -59,22 +84,22 @@ public class GameScreen implements Screen {
         Table playerBar = new Table();
         root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        for (int i = 1; i <= game.nrOfPayers; i++) {
+        for (int i = 1; i <= application.nrOfPlayers; i++) {
             TextButton playerButton = new TextButton("Player " + i, skin);
             playerBar.add(playerButton).expandX();
         }
 
-        //get the player list from the game controller
-        //there is no getgame method in gamecontroller yet, and not sure if it's needed
+        // get the player list from the game controller
+        // there is no getgame method in gamecontroller yet, and not sure if it's needed
         // for (Player player : gameController.getGame().getPlayers()) {
-        //     String playerName = player.getName();
-        //     TextButton playerButton = new TextButton(playerName, skin);
-        //     playerBar.add(playerButton).expandX();
+        // String playerName = player.getName();
+        // TextButton playerButton = new TextButton(playerName, skin);
+        // playerBar.add(playerButton).expandX();
 
-        //     //highlight the current player
-        //     if (player.equals(gameController.getCurrentPlayer())) {
-        //         playerButton.setColor(0, 1, 0, 1);
-        //     }
+        // //highlight the current player
+        // if (player.equals(gameController.getCurrentPlayer())) {
+        // playerButton.setColor(0, 1, 0, 1);
+        // }
         // }
     }
 
@@ -102,7 +127,7 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        String[] actions = {"Ask", "Move", "Reveal"};
+        String[] actions = { "Ask", "Move", "Reveal" };
         for (String action : actions) {
             TextButton actionButton = new TextButton(action, skin);
             actionBar.add(actionButton).expandX();
