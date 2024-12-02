@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class Game {
     private Player currentPlayer; // The player whose turn it is
     private int currentTime; // The current time in the game
     private Board board; // The game board
-    private int amountRecruited; // The number of recruited players revealed
+    private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private int mindSlipCount; // The number of mindslips used
     private List<Player> players; // The list of players in the game
 
@@ -41,7 +42,7 @@ public class Game {
         this.currentPlayer = startingPlayer;
         this.currentTime = 1;
         this.board = board;
-        this.amountRecruited = 0;
+        this.recruitHistory = new ArrayList<>();
         this.mindSlipCount = 0;
         this.players = players;
     }
@@ -114,24 +115,37 @@ public class Game {
     }
 
     /**
-     * Gets the current number of recruited players revealed.
+     * Gets the total amount of recruits reveald so far.
      * 
-     * @return The amount of recruited players revealed.
+     * @return The total amount of recruits reveald so far.
      */
-    public int getAmountRecruited() {
-        return this.amountRecruited;
+    public int getTotalAmountRecruited() {
+        int count = 0;
+        for (int[] recruits : this.recruitHistory) {
+            count += recruits[1];
+        }
+        return count;
     }
 
     /**
-     * Adds a specified amount to the number of recruited players.
+     * Gets the history of revealed recruits.
      * 
-     * @param newAmountRecruited The number of recruited players to add.
+     * @return A list of revealed recruites as (time, amount) pairs.
      */
-    public void addAmountRecruited(int newAmountRecruited) {
-        if (newAmountRecruited <= 0) {
+    public List<int[]> getRecruitHistory() {
+        return this.recruitHistory;
+    }
+
+    /**
+     * Adds the number of recruits revealed during the current round.
+     * 
+     * @param amount The number of recruits revealed during current round.
+     */
+    public void addAmountRecruited(int amount) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Amount to add must be greater than 0.");
         }
-        this.amountRecruited += newAmountRecruited;
+        this.recruitHistory.add(new int[] { currentTime, amount });
     }
 
     /**
