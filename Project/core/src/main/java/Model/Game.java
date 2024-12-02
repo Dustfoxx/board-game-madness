@@ -13,6 +13,7 @@ public class Game {
     private Player currentPlayer; // The player whose turn it is
     private int currentTime; // The current time in the game
     private int maxTime; // The time at which the game ends
+    private int maxRecruits; // The amount recruits needed for recruiter to win
     private Board board; // The game board
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
@@ -43,6 +44,7 @@ public class Game {
         this.currentPlayer = startingPlayer;
         this.currentTime = 1;
         this.maxTime = 14;
+        this.maxRecruits = 9;
         this.board = board;
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
