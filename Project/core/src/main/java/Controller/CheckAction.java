@@ -11,7 +11,7 @@ import Model.Player;
 import Model.Recruiter;
 import Model.RougeAgent;
 
-public class CheckMove {
+public class CheckAction {
 
     /**
      * Takes player position and returns a list of all valid single step coordinates

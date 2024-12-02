@@ -16,8 +16,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-public class CheckMoveTests {
-    private final CheckMove checkMove = new CheckMove();
+public class CheckActionTests {
+    private final CheckAction checkMove = new CheckAction();
     private int rows;
     private int columns;
     private AbstractCell[][] cells;
