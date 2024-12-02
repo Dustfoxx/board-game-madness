@@ -11,12 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class GameScreen implements Screen {
 
@@ -30,11 +36,13 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final Image boardImage;
+    private String selectedFeature;
 
     public GameScreen(MindMGMT application) {
         this.application = application;
         Game game = initializeGame();
 
+        this.selectedFeature = "";
         this.gameController = new GameController(game);
         this.actionController = new ActionController();
 
@@ -108,15 +116,16 @@ public class GameScreen implements Screen {
         root.row();
         root.add(mainSection).expand().fill();
 
+        //not useful in functionality now, but useful for layout
         Table iconBar = new Table();
-        mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.15f, mainSection));
+        mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
 
         Table boardSection = new Table();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
         boardSection.add(boardImage).expand().fill();
 
         Table mindslipBar = new Table();
-        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.15f, mainSection));
+        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
 
         Table turnBar = new Table();
         mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
@@ -131,10 +140,84 @@ public class GameScreen implements Screen {
         for (String action : actions) {
             TextButton actionButton = new TextButton(action, skin);
             actionBar.add(actionButton).expandX();
-        }
+
+                actionButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        askAction();
+                    }
+                });
+            }
+    }
+
+    private void askAction() {
+        Window askActionWindow = createPopWindow("Ask Action", "Which feature do you want to ask?");
+        stage.addActor(askActionWindow);
+    }
+
+
+    private Window createPopWindow(String title, String message) {
+        Window window = new Window(title, skin);
+
+        Button closeButton = new Button(skin, "close");
+        closeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                window.remove();
+            }
+        });
+        window.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
+
+
+        Label messageLabel = new Label(message, skin);
+        window.add(messageLabel).pad(20).row();
+
+        Table buttonTable = new Table();
+
+        //TODO: get the feature from the model
+        TextButton featureButton1 = new TextButton("Feature 1", skin);
+        featureButton1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //get the selected feature
+                selectedFeature = "Feature 1";
+            }
+        });
+        buttonTable.add(featureButton1).padRight(20).padBottom(10);
+
+        //TODO: get the feature from the model
+        TextButton featureButton2 = new TextButton("Feature 2", skin);
+        featureButton2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                selectedFeature = "Feature 2";
+            }
+        });
+        buttonTable.add(featureButton2).padBottom(10);
+
+        window.add(buttonTable).colspan(2).center().row();
+
+
+        TextButton confirmButton = new TextButton("Confirm", skin);
+        confirmButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO:send the selected feature to the game controller
+                System.out.println("Feature selected"+selectedFeature);
+                window.remove();
+            }
+        });
+        window.add(confirmButton).colspan(2).padTop(10).center().row();
+
+        window.pack();
+        window.setSize(300,200);
+        window.setPosition(stage.getWidth() / 2 - window.getWidth() / 2, stage.getHeight() / 2 - window.getHeight() / 2);
+
+        return window;
     }
 
     @Override
+
     public void show() {
 
     }
