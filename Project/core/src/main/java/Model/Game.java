@@ -14,7 +14,7 @@ public class Game {
     private int currentTime; // The current time in the game
     private Board board; // The game board
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
-    private int mindSlipCount; // The number of mindslips used
+    private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
 
     /**
@@ -43,7 +43,7 @@ public class Game {
         this.currentTime = 1;
         this.board = board;
         this.recruitHistory = new ArrayList<>();
-        this.mindSlipCount = 0;
+        this.mindSlipHistory = new ArrayList<>();
         this.players = players;
     }
 
@@ -149,22 +149,30 @@ public class Game {
     }
 
     /**
-     * Gets the current number of mindslips used in the game.
+     * Gets the mind slip history.
      * 
-     * @return The number of mindslips used.
+     * @return A list of times when mind slips were used.
      */
-    public int getMindSlipCount() {
-        return this.mindSlipCount;
+    public List<Integer> getMindSlipHistory() {
+        return new ArrayList<>(this.mindSlipHistory);
     }
 
     /**
-     * Increments the mind slip count by 1.
+     * Adds a mind slip event to the mind slip history.
+     * 
+     * @param time The time at which the mind slip was used.
      */
-    public void incrementMindSlipCount() {
-        if (this.mindSlipCount >= 2) {
-            throw new IllegalStateException("Mind slip count cannot exceed 2.");
+    public void addMindSlipEvent(int time) {
+        if (time < 1 || time >= 14) {
+            throw new IllegalArgumentException("Time is out of bounds.");
         }
-        this.mindSlipCount += 1;
+        if (this.mindSlipHistory.size() >= 2) {
+            throw new IllegalStateException("Mind slip can only be used twice per game.");
+        }
+        if (this.mindSlipHistory.contains(time)) {
+            throw new IllegalStateException("Mind slip can only be used once per round.");
+        }
+        this.mindSlipHistory.add(time);
     }
 
     /**
