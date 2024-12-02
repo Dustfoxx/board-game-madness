@@ -10,10 +10,8 @@ import Model.TempleCell;
 import Model.Player;
 import Model.Recruiter;
 import Model.RougeAgent;
-import Model.Token;
-import Model.Footstep;
 
-public class CheckAction {
+public class CheckMove {
 
     /**
      * Takes player position and returns a list of all valid single step coordinates
@@ -108,11 +106,11 @@ public class CheckAction {
      * @param foundMoves allowed movement coordinates
      * @return a matrix of zeroes and ones. ones are possible movement
      */
-    private boolean[][] createMask(int rows, int cols, List<int[]> foundMoves) {
-        boolean[][] possibleMoves = new boolean[rows][cols];
+    private int[][] createMask(int rows, int cols, List<int[]> foundMoves) {
+        int[][] possibleMoves = new int[rows][cols];
 
         for (int i = 0; i < foundMoves.size(); i++) {
-            possibleMoves[foundMoves.get(i)[0]][foundMoves.get(i)[1]] = true;
+            possibleMoves[foundMoves.get(i)[0]][foundMoves.get(i)[1]] = 1;
         }
 
         return possibleMoves;
@@ -175,10 +173,10 @@ public class CheckAction {
      * 
      * @param player Agent that is being considered
      * @param board  Board that the player inhabits
-     * @return Returns a mask that contains booleans saying where a player
+     * @return Returns a mask that contains zeroes and ones saying where a player
      *         can move
      */
-    public boolean[][] getValidMoves(RougeAgent player, Board board) {
+    public int[][] getValidMoves(RougeAgent player, Board board) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
@@ -198,10 +196,10 @@ public class CheckAction {
      * @param player recruiter
      * @param board  Board that the player inhabits
      * @param type   type of mindslip, 0 for orthogonal, 1 for diagonal
-     * @return Returns a mask that contains booleans saying where a player
+     * @return Returns a mask that contains zeroes and ones saying where a player
      *         can move
      */
-    public boolean[][] getValidMoves(Recruiter player, Board board, int type) {
+    public int[][] getValidMoves(Recruiter player, Board board, int type) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
@@ -219,37 +217,4 @@ public class CheckAction {
 
         return createMask(dims[0], dims[1], firstMove);
     }
-
-    /**
-     * Returns if a player can take an ask action
-     * 
-     * @param player RougeAgent we are checking
-     * @param board  board player inhabits
-     * @return True if action is allowed, false otherwise.
-     */
-    public boolean checkAskAction(RougeAgent player, Board board) {
-        int[] playerCoord = board.getPlayerCoord(player);
-        if (board.getCell(playerCoord[0], playerCoord[1]) instanceof TempleCell) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Returns whether a player can take a reveal action
-     * 
-     * @param player player we are checking
-     * @param board  board player inhabits
-     * @return True if action is allowed, false otherwise
-     */
-    public boolean checkRevealAction(RougeAgent player, Board board) {
-        int[] playerCoord = board.getPlayerCoord(player);
-        for (Token token : board.getCell(playerCoord[0], playerCoord[1]).getTokens()) {
-            if (token instanceof Footstep) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

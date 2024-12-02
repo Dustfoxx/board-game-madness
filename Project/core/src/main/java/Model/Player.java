@@ -3,12 +3,11 @@ package Model;
 /**
  * The Player class is an abstract class representing a player in the game.
  * It contains basic information about the player, such as their ID and name.
- * RougeAgents and Recruitors inherit from this class to define additional
- * behaviors.
+ * RougeAgents and Recruitors inherit from this class to define additional behaviors.
  */
 public abstract class Player {
-    private int id; // The unique identifier for the player
-    private String name; // The name of the player
+    private int id;       // The unique identifier for the player
+    private String name;  // The name of the player
 
     /**
      * Constructor to initialize a player with a unique ID.
@@ -24,7 +23,7 @@ public abstract class Player {
     /**
      * Constructor to initialize a player with a unique ID and a specific name.
      * 
-     * @param id   The unique identifier for the player.
+     * @param id The unique identifier for the player.
      * @param name The name of the player.
      */
     public Player(int id, String name) {
