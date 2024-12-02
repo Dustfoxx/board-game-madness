@@ -17,9 +17,11 @@ public class MindMGMT extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
     private FitViewport viewport;
+    private ProgressBar progressBar;
+    private boolean hasLoaded = false;
+
     public int nrOfPayers;
     public AssetManager assets;
-    private ProgressBar progressBar;
 
     @Override
     public void create() {
@@ -42,13 +44,19 @@ public class MindMGMT extends Game {
 
     @Override
     public void render() {
+        ScreenUtils.clear(0, 0, 0, 1);
         super.render(); //important!
+
+        if (hasLoaded) {
+            return; // Only clear screen once all is loaded
+        }
+
         if (assets.update()) {
             // We are done loading
-           this.setScreen(new MainMenuScreen(this));
+            this.hasLoaded = true;
+            this.setScreen(new MainMenuScreen(this));
 
         } else {
-            ScreenUtils.clear(0, 0, 0, 1);
             batch.begin();
             progressBar.setValue(assets.getProgress());
             progressBar.draw(batch, 1f);
