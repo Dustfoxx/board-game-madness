@@ -137,7 +137,7 @@ public class Game {
      * @return A list of revealed recruites as (time, amount) pairs.
      */
     public List<int[]> getRecruitHistory() {
-        return this.recruitHistory;
+        return new ArrayList<>(this.recruitHistory); //Returns a copy for safety
     }
 
     /**
@@ -158,7 +158,7 @@ public class Game {
      * @return A list of times when mind slips were used.
      */
     public List<Integer> getMindSlipHistory() {
-        return new ArrayList<>(this.mindSlipHistory);
+        return new ArrayList<>(this.mindSlipHistory); //Returns a copy for safety
     }
 
     /**
