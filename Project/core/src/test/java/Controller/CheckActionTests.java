@@ -7,17 +7,20 @@ import Model.AbstractCell;
 import Model.Board;
 import Model.NormalCell;
 import Model.Feature;
+import Model.Footstep;
 import Model.Recruiter;
 import Model.RougeAgent;
+import Model.TempleCell;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
 public class CheckActionTests {
-    private final CheckAction checkMove = new CheckAction();
+    private final CheckAction checkAction = new CheckAction();
     private int rows;
     private int columns;
     private AbstractCell[][] cells;
@@ -36,6 +39,9 @@ public class CheckActionTests {
                 cells[row][column] = new NormalCell(features);
             }
         }
+
+        cells[0][0] = new TempleCell();
+
         board = new Board(cells);
     }
 
@@ -47,31 +53,31 @@ public class CheckActionTests {
 
         board.getCell(5, 3).addPlayer(mockedRecruiter);
 
-        int[][] mask = checkMove.getValidMoves(mockedRecruiter, board, 0);
+        boolean[][] mask = checkAction.getValidMoves(mockedRecruiter, board, 0);
 
-        int[][] expectedMask = new int[][]
+        boolean[][] expectedMask = new boolean[][]
 
-        { { 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, },
-                { 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 1, 0, 0 },
-                { 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 1, 0, 1, 1 },
-                { 0, 0, 0, 1, 0, 0 } };
+        { { false, false, false, false, false, false },
+                { false, false, false, false, false, false, },
+                { false, false, false, false, false, false },
+                { false, false, false, true, false, false },
+                { false, false, false, false, false, false },
+                { false, true, true, false, true, true },
+                { false, false, false, true, false, false } };
 
         assertArrayEquals(expectedMask, mask);
 
-        mask = checkMove.getValidMoves(mockedRecruiter, board, 1);
+        mask = checkAction.getValidMoves(mockedRecruiter, board, 1);
 
-        expectedMask = new int[][]
+        expectedMask = new boolean[][]
 
-        { { 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, },
-                { 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 1 },
-                { 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 1, 0 },
-                { 0, 0, 0, 1, 0, 0 } };
+        { { false, false, false, false, false, false },
+                { false, false, false, false, false, false, },
+                { false, false, false, false, false, false },
+                { false, true, false, false, false, true },
+                { false, false, false, false, false, false },
+                { false, false, true, false, true, false },
+                { false, false, false, true, false, false } };
 
         assertArrayEquals(expectedMask, mask);
     }
@@ -83,18 +89,49 @@ public class CheckActionTests {
 
         board.getCell(3, 3).addPlayer(mockedAgent);
 
-        int[][] mask = checkMove.getValidMoves(mockedAgent, board);
+        boolean[][] mask = checkAction.getValidMoves(mockedAgent, board);
 
-        int[][] expectedMask = new int[][]
+        boolean[][] expectedMask = new boolean[][]
 
-        { { 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 1, 0, 0, },
-                { 0, 0, 1, 1, 1, 0 },
-                { 0, 1, 1, 1, 1, 1 },
-                { 0, 0, 1, 1, 1, 0 },
-                { 0, 0, 0, 1, 0, 0 },
-                { 0, 0, 0, 0, 0, 0 } };
+        { { false, false, false, false, false, false },
+                { false, false, false, true, false, false, },
+                { false, false, true, true, true, false },
+                { false, true, true, true, true, true },
+                { false, false, true, true, true, false },
+                { false, false, false, true, false, false },
+                { false, false, false, false, false, false } };
 
         assertArrayEquals(expectedMask, mask);
+    }
+
+    @Test
+    public void testAskValidation() {
+        RougeAgent mockedAgent = mock(RougeAgent.class);
+        when(mockedAgent.getId()).thenReturn(1);
+
+        board.getCell(3, 3).addPlayer(mockedAgent);
+
+        assert checkAction.checkAskAction(mockedAgent, board);
+
+        board.getCell(0, 0).addPlayer(mockedAgent);
+        board.getCell(3, 3).removePlayer(mockedAgent);
+
+        assertEquals(false, checkAction.checkAskAction(mockedAgent, board));
+    }
+
+    @Test
+    public void testRevealValidation() {
+        RougeAgent mockedAgent = mock(RougeAgent.class);
+        when(mockedAgent.getId()).thenReturn(1);
+
+        Footstep mockedFootstep = mock(Footstep.class);
+
+        board.getCell(3, 3).addPlayer(mockedAgent);
+
+        assert !checkAction.checkRevealAction(mockedAgent, board);
+
+        board.getCell(3, 3).addToken(mockedFootstep);
+
+        assert checkAction.checkAskAction(mockedAgent, board);
     }
 }
