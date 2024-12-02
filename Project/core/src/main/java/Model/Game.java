@@ -12,6 +12,7 @@ public class Game {
     private boolean gameOver; // Indicates if the game is over
     private Player currentPlayer; // The player whose turn it is
     private int currentTime; // The current time in the game
+    private int maxTime; // The time at which the game ends
     private Board board; // The game board
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
@@ -41,6 +42,7 @@ public class Game {
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
         this.currentTime = 1;
+        this.maxTime = 14;
         this.board = board;
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
@@ -163,7 +165,7 @@ public class Game {
      * @param time The time at which the mind slip was used.
      */
     public void addMindSlipEvent(int time) {
-        if (time < 1 || time >= 14) {
+        if (time < 1 || time >= maxTime) {
             throw new IllegalArgumentException("Time is out of bounds.");
         }
         if (this.mindSlipHistory.size() >= 2) {
