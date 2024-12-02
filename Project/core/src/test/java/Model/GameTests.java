@@ -64,8 +64,8 @@ class GameTests {
         assertFalse(game.isGameOver(), "Game should not be over initially.");
         assertEquals(player1, game.getCurrentPlayer(), "Starting player should be Player 1.");
         assertEquals(1, game.getCurrentTime(), "Initial game time should be 1.");
-        assertEquals(0, game.getAmountRecruited(), "Amount recruited should start at 0.");
-        assertEquals(0, game.getMindSlipCount(), "Mind slip count should start at 0.");
+        assertEquals(0, game.getRecruitHistory().size(), "Recruit history should be empty.");
+        assertEquals(0, game.getMindSlipHistory().size(), "Mind slip history should be empty.");
         assertEquals(board, game.getBoard(), "Board should match the one passed in.");
         assertEquals(2, game.getPlayers().size(), "Game should have 2 players.");
     }
@@ -101,9 +101,9 @@ class GameTests {
     @Test
     void testAddAmountRecruited() {
         game.addAmountRecruited(1);
-        assertEquals(1, game.getAmountRecruited(), "Amount recruited should increase to 1.");
+        assertEquals(1, game.getAmountRecruited(), "Total amount recruited should increase to 1.");
         game.addAmountRecruited(2);
-        assertEquals(3, game.getAmountRecruited(), "Amount recruited should increase to 3.");
+        assertEquals(3, game.getAmountRecruited(), "Total amount recruited should increase to 3.");
         assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(-1),
                 "Adding a negative number to the amount recruited should throw an IllegalArgumentException.");
         assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(0),
@@ -111,15 +111,23 @@ class GameTests {
     }
 
     @Test
-    void testIncrementMindSlipCount() {
-        game.incrementMindSlipCount();
-        assertEquals(1, game.getMindSlipCount(), "Mind slip count should increase to 1.");
-        game.incrementMindSlipCount();
-        assertEquals(2, game.getMindSlipCount(), "Mind slip count should increase to 2.");
-        assertThrows(IllegalStateException.class, () -> game.incrementMindSlipCount(),
-                "Increaseing the mind slip count above 2 should throw an IllegalStateException.");
+    void testAddMindSlipEvent() {
+        game.addMindSlipEvent(1);
+        assertEquals(1, game.getMindSlipHistory().size(), "Mind slip history should contain 1 entry.");
+        assertTrue(game.getMindSlipHistory().contains(1), "Mind slip history should contain time 1.");
+        game.addMindSlipEvent(2);
+        assertEquals(2, game.getMindSlipHistory().size(), "Mind slip history should contain 2 entries.");
+        assertTrue(game.getMindSlipHistory().contains(2), "Mind slip history should contain time 2.");
+        assertThrows(IllegalArgumentException.class, () -> game.addMindSlipEvent(0),
+                "Adding a mind slip with a time less than 1 should throw an IllegalArgumentException.");
+        assertThrows(IllegalArgumentException.class, () -> game.addMindSlipEvent(14),
+                "Adding a mind slip with a time greater than or equal to maxTime should throw an IllegalArgumentException.");
+        assertThrows(IllegalStateException.class, () -> game.addMindSlipEvent(3),
+                "Adding a third mind slip should throw an IllegalStateException.");
+        assertThrows(IllegalStateException.class, () -> game.addMindSlipEvent(1),
+                "Adding a duplicate mind slip time should throw an IllegalStateException.");
     }
-
+    
     @Test
     void testGetPlayers() {
         List<Player> players = game.getPlayers();
