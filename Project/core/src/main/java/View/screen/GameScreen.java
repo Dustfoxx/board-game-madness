@@ -8,13 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import View.screen.GameScreenComponents.MockedGame;
 import View.screen.GameScreenComponents.PlayerBar;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+
 import io.github.MindMGMT.MindMGMT;
 // import Model.Player;
 // import Controller.GameController;
@@ -29,7 +31,10 @@ public class GameScreen implements Screen {
     private final Texture boardTexture;
     private final Image boardImage;
     private final PlayerBar playerBar;
+    private Label timeTracker;
 
+    // Mocked model variables:
+    private MockedGame mockedGame;
 
     public GameScreen(MindMGMT game) {
         // this.gameController = new GameController(game.nrOfPlayers);
@@ -40,7 +45,9 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
         this.boardTexture = new Texture("basic-board.png");
         this.boardImage = new Image(boardTexture);
-        this.playerBar = new PlayerBar(game.nrOfPayers, skin);
+        this.mockedGame = new MockedGame();
+        this.playerBar = new PlayerBar(mockedGame, game.nrOfPayers, skin);
+        this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
 
         Gdx.input.setInputProcessor(stage);
         setupUI();
@@ -77,6 +84,7 @@ public class GameScreen implements Screen {
 
         Table turnBar = new Table();
         mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
+        turnBar.add(timeTracker).expandX();
     }
 
     private void setupActionBar(Table root) {
@@ -93,7 +101,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -102,7 +109,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
-
     }
 
     @Override

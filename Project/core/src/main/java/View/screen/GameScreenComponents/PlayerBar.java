@@ -13,12 +13,14 @@ import java.util.List;
 public class PlayerBar extends Table{
 
     private final List<TextButton> playerButtons = new ArrayList<>();
-    private int currentTurn = 0; // TODO: Remove if managed elsewhere
+    private MockedGame mockedGame;
 
-    public PlayerBar (int playerAmount, Skin skin) {
+    public PlayerBar (MockedGame mockedGame, int playerAmount, Skin skin) {
+        this.mockedGame = mockedGame;
         // Buttons for each player
         // TODO: Update to use real model and not fake data
         for (int i = 0; i < playerAmount; i++) {
+            int currentTurn = mockedGame.getTurn();
             TextButton playerButton = new TextButton("Player " + (i + 1), skin);
             if (i == currentTurn) {
                 playerButton.setColor(Color.GREEN);
@@ -35,9 +37,13 @@ public class PlayerBar extends Table{
         nextTurnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                int currentTurn = mockedGame.getTurn();
                 playerButtons.get(currentTurn).setColor(Color.WHITE);
-                currentTurn = (currentTurn + 1) % playerAmount;
-                playerButtons.get(currentTurn).setColor(Color.GREEN);
+                if (currentTurn == playerAmount - 1) {
+                    mockedGame.setTime(mockedGame.getTime() + 1);
+                }
+                mockedGame.setTurn((currentTurn + 1) % playerAmount);
+                playerButtons.get(mockedGame.getTurn()).setColor(Color.GREEN);
             }
         });
 
