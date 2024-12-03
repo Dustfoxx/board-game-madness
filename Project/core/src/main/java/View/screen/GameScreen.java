@@ -20,14 +20,7 @@ import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
 import java.util.ArrayList;
 import java.util.List;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class GameScreen implements Screen {
 
@@ -228,6 +221,7 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        application.drawBackground();
         stage.act(delta);
         stage.draw();
         updatePlayerButtonStates();
