@@ -1,5 +1,7 @@
 package View.screen.GameScreenComponents;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -11,20 +13,16 @@ import Controller.GameController;
 import Model.Game;
 import Model.Player;
 
-import java.util.ArrayList;
+public class PlayerBar extends Table {
 
-public class PlayerBar extends Table{
-
-    private final ArrayList<TextButton> playerButtons = new ArrayList<>();
     private GameController gameController;
 
-    public PlayerBar (GameController gameController, Skin skin) {
+    public PlayerBar(GameController gameController, Skin skin) {
         this.gameController = gameController;
 
         // Create buttons for each player
         for (Player player : gameController.getGame().getPlayers()) {
             TextButton playerButton = new TextButton(player.getName(), skin);
-            playerButtons.add(playerButton);
             this.add(playerButton).expandX();
         }
 
@@ -42,21 +40,20 @@ public class PlayerBar extends Table{
 
     public void update() {
         Game game = gameController.getGame();
-        if (game.getPlayers() != null) {
-            for (Player player : game.getPlayers()) {
-                int currentPlayerIndex = game.getPlayers().indexOf(player);
-                if (player == game.getCurrentPlayer()) {
-                    playerButtons.get(currentPlayerIndex).setColor(Color.GREEN);
-                    playerButtons.get(currentPlayerIndex).getColor().a = 1f;
+        List<Player>  players = game.getPlayers();
+        Player currentPlayer = game.getCurrentPlayer();
+        if (players != null) {
+            for (Player player : players) {
+                int playerIndex = players.indexOf(player);
+                TextButton playerButton = (TextButton) this.getChildren().get(playerIndex);
+                if (player == currentPlayer) {
+                    playerButton.setColor(Color.GREEN);
+                    playerButton.getColor().a = 1f;
                 } else {
-                    playerButtons.get(currentPlayerIndex).setColor(Color.WHITE);
-                    playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
+                    playerButton.setColor(Color.WHITE);
+                    playerButton.getColor().a = 0.3f;
                 }
             }
         }
-    }
-
-    public ArrayList<TextButton> getPlayerButtons() {
-        return this.playerButtons;
     }
 }
