@@ -1,6 +1,7 @@
 package View.screen;
 
 import Controller.ActionController;
+import Controller.CheckAction;
 import Controller.GameController;
 import Model.*;
 import com.badlogic.gdx.Screen;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -30,17 +33,19 @@ public class GameScreen implements Screen {
     private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
-
+    private final Game game;
     private final Stage stage;
     private final Skin skin;
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final Image boardImage;
     private String selectedFeature;
+    private final Array<TextButton> actionButtons = new Array<TextButton>();
+    private final Array<TextButton> playerButtons = new Array<TextButton>();
 
     public GameScreen(MindMGMT application) {
         this.application = application;
-        Game game = initializeGame();
+        game = initializeGame();
 
         this.selectedFeature = "";
         this.gameController = new GameController(game);
@@ -94,6 +99,7 @@ public class GameScreen implements Screen {
 
         for (int i = 1; i <= application.nrOfPlayers; i++) {
             TextButton playerButton = new TextButton("Player " + i, skin);
+            playerButtons.add(playerButton);
             playerBar.add(playerButton).expandX();
         }
 
@@ -139,12 +145,14 @@ public class GameScreen implements Screen {
         String[] actions = { "Ask", "Move", "Reveal" };
         for (String action : actions) {
             TextButton actionButton = new TextButton(action, skin);
+            actionButtons.add(actionButton);
             actionBar.add(actionButton).expandX();
 
                 actionButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         askAction();
+                        gameController.newTurn();
                     }
                 });
             }
@@ -153,6 +161,29 @@ public class GameScreen implements Screen {
     private void askAction() {
         Window askActionWindow = createPopWindow("Ask Action", "Which feature do you want to ask?");
         stage.addActor(askActionWindow);
+    }
+
+
+    void updateButtonStates(){
+        for(TextButton textButton : actionButtons){
+            textButton.getColor().a = 0.4f;
+            textButton.setDisabled(true);
+     }
+    }
+
+    private void updatePlayerButtonStates() {
+        if(game.getPlayers() != null){
+        for(Player player : game.getPlayers()){
+            int currentPlayerIndex = game.getPlayers().indexOf(player);
+            if(player == game.getCurrentPlayer()){
+                playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
+            }
+            else{
+                playerButtons.get(currentPlayerIndex).getColor().a = 1f;
+            }
+
+        }
+    }
     }
 
 
@@ -204,6 +235,7 @@ public class GameScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 // TODO:send the selected feature to the game controller
                 System.out.println("Feature selected"+selectedFeature);
+                gameController.newTurn();
                 window.remove();
             }
         });
@@ -224,10 +256,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
+        updatePlayerButtonStates();
 
     }
 
