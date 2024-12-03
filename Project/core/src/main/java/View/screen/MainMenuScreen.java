@@ -21,9 +21,11 @@ public class MainMenuScreen implements Screen {
         this.application = application;
         stage = new Stage(new ScreenViewport());
 
-        TextButton startButton = new TextButton("Game Start", application.skin);
-        startButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
-        startButton.setSize(100, 50);
+        TextButton startButton = new TextButton("Start Game", application.skin);
+        startButton.setSize(300, 100);
+        startButton.setPosition(
+            (stage.getWidth() - startButton.getWidth()) / 2,
+            (stage.getHeight() - startButton.getHeight()) / 2);
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
