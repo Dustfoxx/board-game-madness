@@ -46,6 +46,9 @@
 			"up": "button",
 			"down": "button-pressed",
 			"over": "button-highlighted"
+		},
+		"close": {
+			"up": "plus"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
