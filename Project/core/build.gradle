@@ -7,6 +7,7 @@ dependencies {
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+  implementation "com.opencsv:opencsv:4.1"
 	testImplementation(platform('org.junit:junit-bom:5.11.3'))
 	testImplementation('org.junit.jupiter:junit-jupiter')
   testImplementation "org.mockito:mockito-core:3.+"

@@ -2,14 +2,15 @@ package View.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Model.Player;
+import Model.Board;
+import Model.RougeAgent;
+import View.buildingBlocks.VisualBoard;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,7 +30,6 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final Image boardImage;
-
 
     public GameScreen(MindMGMT game) {
         // this.gameController = new GameController(game.nrOfPlayers);
@@ -64,17 +64,17 @@ public class GameScreen implements Screen {
             playerBar.add(playerButton).expandX();
         }
 
-        //get the player list from the game controller
-        //there is no getgame method in gamecontroller yet, and not sure if it's needed
+        // get the player list from the game controller
+        // there is no getgame method in gamecontroller yet, and not sure if it's needed
         // for (Player player : gameController.getGame().getPlayers()) {
-        //     String playerName = player.getName();
-        //     TextButton playerButton = new TextButton(playerName, skin);
-        //     playerBar.add(playerButton).expandX();
+        // String playerName = player.getName();
+        // TextButton playerButton = new TextButton(playerName, skin);
+        // playerBar.add(playerButton).expandX();
 
-        //     //highlight the current player
-        //     if (player.equals(gameController.getCurrentPlayer())) {
-        //         playerButton.setColor(0, 1, 0, 1);
-        //     }
+        // //highlight the current player
+        // if (player.equals(gameController.getCurrentPlayer())) {
+        // playerButton.setColor(0, 1, 0, 1);
+        // }
         // }
     }
 
@@ -86,9 +86,15 @@ public class GameScreen implements Screen {
         Table iconBar = new Table();
         mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.15f, mainSection));
 
-        Table boardSection = new Table();
+        Board board = new Board("assets/board-data.csv");
+        board.getCell(0, 0).addPlayer(new RougeAgent(1));
+        board.getCell(0, 5).addPlayer(new RougeAgent(2));
+        board.getCell(6, 0).addPlayer(new RougeAgent(3));
+        board.getCell(6, 5).addPlayer(new RougeAgent(4));
+        VisualBoard visualBoard = new VisualBoard(board);
+        Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
-        boardSection.add(boardImage).expand().fill();
+        // boardSection.add(boardImage).expand().fill();
 
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.15f, mainSection));
@@ -102,7 +108,7 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        String[] actions = {"Ask", "Move", "Reveal"};
+        String[] actions = { "Ask", "Move", "Reveal" };
         for (String action : actions) {
             TextButton actionButton = new TextButton(action, skin);
             actionBar.add(actionButton).expandX();

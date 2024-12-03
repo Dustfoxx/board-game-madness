@@ -1,5 +1,9 @@
 package Model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +24,45 @@ public class Board {
      *                                  or any cell is null.
      */
     public Board(AbstractCell[][] cells) {
+        checkCells(cells);
+        this.cells = cells;
+        rowsDim = cells.length;
+        colsDim = cells[0].length;
+    }
+
+    /**
+     * Constructor using a csv file to create the board with features
+     * 
+     * @param csvFileName The csvfile that is used to create the board
+     */
+    public Board(String csvFileName) {
+        List<List<String>> records = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                records.add(Arrays.asList(values));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        int[] dimensions = new int[] { records.size(), records.get(0).size() };
+
+        AbstractCell[][] cells = new AbstractCell[dimensions[0]][dimensions[1]];
+
+        for (int i = 0; i < dimensions[0]; i++) {
+            for (int j = 0; j < dimensions[1]; j++) {
+                if (records.get(i).get(j) == "") {
+                    cells[i][j] = new TempleCell();
+                } else {
+                    String[] featureStrings = records.get(i).get(j).split(":");
+                    Feature[] features = new Feature[] { Feature.valueOf(featureStrings[0]),
+                            Feature.valueOf(featureStrings[1]) };
+                    cells[i][j] = new NormalCell(features);
+                }
+            }
+        }
         checkCells(cells);
         this.cells = cells;
         rowsDim = cells.length;
