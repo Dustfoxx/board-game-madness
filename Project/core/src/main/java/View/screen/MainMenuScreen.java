@@ -21,11 +21,19 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final MindMGMT application) {
         this.application = application;
         stage = new Stage(new ScreenViewport());
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        Skin skin = application.assets.get("metalui/metal-ui.json", Skin.class);
 
-        TextButton startButton = new TextButton("Game Start",
-                application.assets.get("metalui/metal-ui.json", Skin.class));
-        startButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
-        startButton.setSize(100, 50);
+        TextButton startButton = new TextButton("Game Start", skin);
+        TextButton quitButton = new TextButton("Quit " + width + " " + height, skin);
+
+        startButton.setPosition(width / 2, height / (2 - 0.15f), Align.center);
+        quitButton.setPosition(width / 2, height / (2 + 0.15f), Align.center);
+
+        startButton.setSize(width * 0.1f, height * 0.05f);
+        quitButton.setSize(width * 0.1f, height * 0.05f);
+
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -35,7 +43,15 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        quitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+
         stage.addActor(startButton);
+        stage.addActor(quitButton);
         Gdx.input.setInputProcessor(stage);
     }
 

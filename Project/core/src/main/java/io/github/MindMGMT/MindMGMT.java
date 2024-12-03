@@ -54,6 +54,10 @@ public class MindMGMT extends Game {
         if (assets.update()) {
             // We are done loading
             this.hasLoaded = true;
+            assets.get("metalui/metal-ui.json", Skin.class)
+                .getFont("font")
+                .getData()
+                .setScale(2f);
             this.setScreen(new MainMenuScreen(this));
 
         } else {

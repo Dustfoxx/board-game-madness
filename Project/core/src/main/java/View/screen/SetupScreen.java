@@ -1,5 +1,6 @@
 package View.screen;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -21,14 +22,43 @@ public class SetupScreen implements Screen {
     public SetupScreen(final MindMGMT application) {
         this.application = application;
         stage = new Stage(new ScreenViewport());
+        setupUI();
+    }
 
+    private void startGame(int nrOfPlayers) {
+        application.nrOfPlayers = nrOfPlayers;
+        application.setScreen(new GameScreen(application));
+        dispose();
+    }
+
+    private void setupUI() {
         Table root = new Table();
+        root.debug();
         root.setFillParent(true);
+
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+
+        Skin skin = application.assets.get("metalui/metal-ui.json", Skin.class);
+        TextButton backButton = new TextButton("Back", skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+               application.setScreen(new MainMenuScreen(application));
+               dispose();
+            }
+        });
+        root.add(backButton).width(width * 0.1f).height(height * 0.05f);
+
+        root.row().height(height * 0.05f);
+        root.add(new Image()); // Creating empty cell
+        root.row().height(height * 0.05f);
+        root.add(new Image()); // Creating empty cell
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
-            TextButton playersButton = new TextButton(i + " players", application.assets.get("metalui/metal-ui.json", Skin.class));
-            root.add(playersButton);
+            TextButton playersButton = new TextButton(i + " players", skin);
+            root.add(playersButton).width(width * 0.1f).height(height * 0.05f);
             playersButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -36,14 +66,10 @@ public class SetupScreen implements Screen {
                 }
             });
         }
+
+        root.add(new Image()).width(width * 0.1f); // Creating empty cell
         stage.addActor(root);
         Gdx.input.setInputProcessor(stage);
-    }
-
-    private void startGame(int nrOfPlayers) {
-        application.nrOfPlayers = nrOfPlayers;
-        application.setScreen(new GameScreen(application));
-        dispose();
     }
 
     @Override
