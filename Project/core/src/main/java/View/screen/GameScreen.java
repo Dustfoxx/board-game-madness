@@ -70,6 +70,7 @@ public class GameScreen implements Screen {
 
     private void setupPlayerBar(Table root) {
         root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
+
     }
 
     private void setupMainSection(Table root) {
@@ -126,19 +127,22 @@ public class GameScreen implements Screen {
     }
 
     private Window createPopWindow(String title, String message) {
-        Window window = new Window(title, skin);
+        Window askWindow = new Window(title, skin);
+        askWindow.setMovable(false);
+        askWindow.setResizable(false);
+        askWindow.setModal(true);
 
         Button closeButton = new Button(skin, "close");
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                window.remove();
+                askWindow.remove();
             }
         });
-        window.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
+        askWindow.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
 
         Label messageLabel = new Label(message, skin);
-        window.add(messageLabel).pad(20).row();
+        askWindow.add(messageLabel).pad(20).row();
 
         Table buttonTable = new Table();
 
@@ -163,7 +167,7 @@ public class GameScreen implements Screen {
         });
         buttonTable.add(featureButton2).padBottom(10);
 
-        window.add(buttonTable).colspan(2).center().row();
+        askWindow.add(buttonTable).colspan(2).center().row();
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
@@ -172,17 +176,17 @@ public class GameScreen implements Screen {
                 // TODO:send the selected feature to the game controller
                 System.out.println("Feature selected" + selectedFeature);
                 gameController.newTurn();
-                window.remove();
+                askWindow.remove();
             }
         });
-        window.add(confirmButton).colspan(2).padTop(10).center().row();
+        askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
 
-        window.pack();
-        window.setSize(300, 200);
-        window.setPosition(stage.getWidth() / 2 - window.getWidth() / 2,
-                stage.getHeight() / 2 - window.getHeight() / 2);
+        askWindow.pack();
+        askWindow.setSize(300, 200);
+        askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
+                stage.getHeight() / 2 - askWindow.getHeight() / 2);
 
-        return window;
+        return askWindow;
     }
 
     @Override
