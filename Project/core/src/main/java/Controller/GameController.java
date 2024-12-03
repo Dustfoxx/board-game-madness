@@ -107,6 +107,10 @@ public class GameController {
         return new Game(players, board, players.get(0));
     }
 
+    public Game getGame() {
+        return this.gameState;
+    }
+
     /**
      * Gets called when a player has completed their actions.
      * Decides new player and increments timer accordingly.
