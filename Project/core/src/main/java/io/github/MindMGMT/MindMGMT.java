@@ -20,7 +20,7 @@ public class MindMGMT extends Game {
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
 
-    public int nrOfPayers;
+    public int nrOfPlayers;
     public AssetManager assets;
 
     @Override

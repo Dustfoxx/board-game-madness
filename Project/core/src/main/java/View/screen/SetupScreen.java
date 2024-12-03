@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class SetupScreen implements Screen {
     private final Stage stage;
-    private final MindMGMT game;
+    private final MindMGMT application;
 
-    public SetupScreen(final MindMGMT game) {
-        this.game = game;
+    public SetupScreen(final MindMGMT application) {
+        this.application = application;
         stage = new Stage(new ScreenViewport());
 
         Table root = new Table();
@@ -27,7 +27,7 @@ public class SetupScreen implements Screen {
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
-            TextButton playersButton = new TextButton(i + " players", game.assets.get("metalui/metal-ui.json", Skin.class));
+            TextButton playersButton = new TextButton(i + " players", application.assets.get("metalui/metal-ui.json", Skin.class));
             root.add(playersButton);
             playersButton.addListener(new ChangeListener() {
                 @Override
@@ -41,8 +41,8 @@ public class SetupScreen implements Screen {
     }
 
     private void startGame(int nrOfPlayers) {
-        game.nrOfPayers = nrOfPlayers;
-        game.setScreen(new GameScreen(game));
+        application.nrOfPlayers = nrOfPlayers;
+        application.setScreen(new GameScreen(application));
         dispose();
     }
 
