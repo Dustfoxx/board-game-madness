@@ -7,44 +7,53 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import Controller.GameController;
+import Model.Game;
+import Model.Player;
+
 import java.util.ArrayList;
 
 public class PlayerBar extends Table{
 
     private final ArrayList<TextButton> playerButtons = new ArrayList<>();
-    private MockedGame mockedGame;
+    private GameController gameController;
 
-    public PlayerBar (MockedGame mockedGame, int playerAmount, Skin skin) {
-        this.mockedGame = mockedGame;
-        // Buttons for each player
-        // TODO: Update to use real model and not fake data
-        for (int i = 0; i < playerAmount; i++) {
-            int currentTurn = mockedGame.getTurn();
-            TextButton playerButton = new TextButton("Player " + (i + 1), skin);
-            if (i == currentTurn) {
-                playerButton.setColor(Color.GREEN);
-            }
+    public PlayerBar (GameController gameController, Skin skin) {
+        this.gameController = gameController;
+
+        // Create buttons for each player
+        for (Player player : gameController.getGame().getPlayers()) {
+            TextButton playerButton = new TextButton(player.getName(), skin);
             playerButtons.add(playerButton);
             this.add(playerButton).expandX();
         }
 
         // Button for simulating that it's the next players turn
-        // TODO: Remove button below
         TextButton nextTurnButton = new TextButton("Next turn", skin);
         nextTurnButton.setColor(Color.MAGENTA);
         this.add(nextTurnButton);
         nextTurnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int currentTurn = mockedGame.getTurn();
-                playerButtons.get(currentTurn).setColor(Color.WHITE);
-                if (currentTurn == playerAmount - 1) {
-                    mockedGame.setTime(mockedGame.getTime() + 1);
-                }
-                mockedGame.setTurn((currentTurn + 1) % playerAmount);
-                playerButtons.get(mockedGame.getTurn()).setColor(Color.GREEN);
+                gameController.newTurn();
             }
         });
+    }
+
+    public void update() {
+        Game game = gameController.getGame();
+        if (game.getPlayers() != null) {
+            for (Player player : game.getPlayers()) {
+                int currentPlayerIndex = game.getPlayers().indexOf(player);
+                if (player == game.getCurrentPlayer()) {
+                    playerButtons.get(currentPlayerIndex).setColor(Color.GREEN);
+                    playerButtons.get(currentPlayerIndex).getColor().a = 1f;
+                } else {
+                    playerButtons.get(currentPlayerIndex).setColor(Color.WHITE);
+                    playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
+                }
+            }
+        }
     }
 
     public ArrayList<TextButton> getPlayerButtons() {
