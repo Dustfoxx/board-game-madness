@@ -2,6 +2,7 @@ package View.screen.GameScreenComponents;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,6 +22,7 @@ public class PlayerBar extends Table{
         for (int i = 0; i < playerAmount; i++) {
             int currentTurn = mockedGame.getTurn();
             TextButton playerButton = new TextButton("Player " + (i + 1), skin);
+            playerButton.setTouchable(Touchable.disabled);
             if (i == currentTurn) {
                 playerButton.setColor(Color.GREEN);
             }
