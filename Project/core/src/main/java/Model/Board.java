@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.List;
+
 /**
  * The Board class represents the game board, which consists of a grid of cells.
  */
@@ -57,6 +59,32 @@ public class Board {
      */
     public AbstractCell getCell(int row, int column) {
         return cells[row][column];
+    }
+
+    /**
+     * Gets the coordinates of a given player
+     * 
+     * @param player player to be found
+     * @return coordinates if found, otherwise null
+     */
+    public int[] getPlayerCoord(Player player) {
+        // I hate this function so please if you have a better idea fix it
+        // Move through rows
+        for (int row = 0; row < rowsDim; row++) {
+            // Move through columns
+            for (int col = 0; col < colsDim; col++) {
+                // Get players from cell
+                List<Player> cellPlayers = getCell(row, col).getPlayers();
+                // Iterate over players
+                for (Player foundPlayer : cellPlayers) {
+                    // If player is equal save coords
+                    if (foundPlayer.getId() == player.getId()) {
+                        return new int[] { row, col };
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

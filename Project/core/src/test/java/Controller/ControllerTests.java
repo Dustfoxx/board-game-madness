@@ -25,12 +25,6 @@ public class ControllerTests {
     }
 
     @Test
-    public void testMovementCheck() {
-        // Needs rewriting with classes
-        // Left for later when temple class is available
-    }
-
-    @Test
     public void testNoRecruiter() {
         List<Player> players = new ArrayList<Player>();
         Player mockedPlayer = mock(RougeAgent.class);
