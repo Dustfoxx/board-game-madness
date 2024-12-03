@@ -70,28 +70,6 @@ public class GameScreen implements Screen {
         setupUI();
     }
 
-    private Game initializeGame() {
-        List<Player> players = new ArrayList<Player>();
-        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
-
-        for (int i = 0; i < application.nrOfPlayers; i++) {
-            players.add(i == 0 ? new Recruiter(i, "recruiter", recruiterFeatures) : new RougeAgent(i));
-        }
-
-        int rows = 6;
-        int columns = 7;
-
-        AbstractCell[][] cells = new AbstractCell[rows][columns];
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                cells[row][column] = new NormalCell(new Feature[] { Feature.BOOKSTORE, Feature.BILLBOARD });
-            }
-        }
-
-        Board board = new Board(cells);
-        return new Game(players, board, players.get(0));
-    }
-
     private void setupUI() {
         Table root = new Table();
         root.setFillParent(true);
