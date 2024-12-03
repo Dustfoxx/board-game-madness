@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import View.screen.GameScreenComponents.MockedGame;
+import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
 import java.util.ArrayList;
@@ -22,10 +24,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class GameScreen implements Screen {
 
@@ -33,20 +35,23 @@ public class GameScreen implements Screen {
     private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
-    private final Game game;
     private final Stage stage;
     private final Skin skin;
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final Image boardImage;
-    private String selectedFeature;
+    private final PlayerBar playerBar;
+    private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
-    private final Array<TextButton> playerButtons = new Array<TextButton>();
+    private final ArrayList<TextButton> playerButtons;
+
+    // Mocked model variables:
+    private MockedGame mockedGame;
+    private String selectedFeature;
+
 
     public GameScreen(MindMGMT application) {
         this.application = application;
-        game = initializeGame();
-
         this.selectedFeature = "";
         this.gameController = new GameController(application.nrOfPlayers);
         this.actionController = new ActionController();
@@ -56,31 +61,13 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
         this.boardTexture = new Texture("basic-board.png");
         this.boardImage = new Image(boardTexture);
+        this.mockedGame = new MockedGame();
+        this.playerBar = new PlayerBar(mockedGame, application.nrOfPlayers, skin);
+        this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
+        this.playerButtons = playerBar.getPlayerButtons();
 
         Gdx.input.setInputProcessor(stage);
         setupUI();
-    }
-
-    private Game initializeGame() {
-        List<Player> players = new ArrayList<Player>();
-        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
-
-        for (int i = 0; i < application.nrOfPlayers; i++) {
-            players.add(i == 0 ? new Recruiter(i, "recruiter", recruiterFeatures) : new RougeAgent(i));
-        }
-
-        int rows = 6;
-        int columns = 7;
-
-        AbstractCell[][] cells = new AbstractCell[rows][columns];
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                cells[row][column] = new NormalCell(new Feature[] { Feature.BOOKSTORE, Feature.BILLBOARD });
-            }
-        }
-
-        Board board = new Board(cells);
-        return new Game(players, board, players.get(0));
     }
 
     private void setupUI() {
@@ -94,14 +81,9 @@ public class GameScreen implements Screen {
     }
 
     private void setupPlayerBar(Table root) {
-        Table playerBar = new Table();
-        root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        for (int i = 1; i <= application.nrOfPlayers; i++) {
-            TextButton playerButton = new TextButton("Player " + i, skin);
-            playerButtons.add(playerButton);
-            playerBar.add(playerButton).expandX();
-        }
+        root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
+        
     }
 
     private void setupMainSection(Table root) {
@@ -122,6 +104,7 @@ public class GameScreen implements Screen {
 
         Table turnBar = new Table();
         mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
+        turnBar.add(timeTracker).expandX();
     }
 
     private void setupActionBar(Table root) {
@@ -158,6 +141,7 @@ public class GameScreen implements Screen {
     }
 
     private void updatePlayerButtonStates() {
+        Game game = gameController.getGame();
         if (game.getPlayers() != null) {
             for (Player player : game.getPlayers()) {
                 int currentPlayerIndex = game.getPlayers().indexOf(player);
@@ -234,7 +218,6 @@ public class GameScreen implements Screen {
     @Override
 
     public void show() {
-
     }
 
     @Override
