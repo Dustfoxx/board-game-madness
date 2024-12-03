@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,10 +21,10 @@ public class PlayerBar extends Table {
     public PlayerBar(GameController gameController, Skin skin) {
         this.gameController = gameController;
 
-        // Create buttons for each player
+        // Create labels for each player
         for (Player player : gameController.getGame().getPlayers()) {
-            TextButton playerButton = new TextButton(player.getName(), skin);
-            this.add(playerButton).expandX();
+            Label playerLabel = new Label(player.getName(), skin, "colored");
+            this.add(playerLabel).expandX();
         }
 
         // Button for simulating that it's the next players turn
@@ -45,13 +46,13 @@ public class PlayerBar extends Table {
         if (players != null) {
             for (Player player : players) {
                 int playerIndex = players.indexOf(player);
-                TextButton playerButton = (TextButton) this.getChildren().get(playerIndex);
+                Label playerLabel = (Label) this.getChildren().get(playerIndex);
                 if (player == currentPlayer) {
-                    playerButton.setColor(Color.GREEN);
-                    playerButton.getColor().a = 1f;
+                    playerLabel.setColor(Color.GREEN);
+                    playerLabel.getColor().a = 1f;
                 } else {
-                    playerButton.setColor(Color.WHITE);
-                    playerButton.getColor().a = 0.3f;
+                    playerLabel.setColor(Color.WHITE);
+                    playerLabel.getColor().a = 0.3f;
                 }
             }
         }
