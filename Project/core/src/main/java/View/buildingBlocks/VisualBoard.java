@@ -13,7 +13,7 @@ public class VisualBoard {
 
     public VisualBoard(Board boardInfo) {
         int[] dimensions = boardInfo.getDims();
-        board.setDebug(true);
+        // board.setDebug(true);
         board.setBackground(new TextureRegionDrawable(new TextureRegion(bg)));
 
         for (int i = 0; i < dimensions[0]; i++) {
