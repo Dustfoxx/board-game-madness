@@ -8,11 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerBar extends Table{
 
-    private final List<TextButton> playerButtons = new ArrayList<>();
+    private final ArrayList<TextButton> playerButtons = new ArrayList<>();
     private MockedGame mockedGame;
 
     public PlayerBar (MockedGame mockedGame, int playerAmount, Skin skin) {
@@ -46,19 +45,9 @@ public class PlayerBar extends Table{
                 playerButtons.get(mockedGame.getTurn()).setColor(Color.GREEN);
             }
         });
+    }
 
-        //get the player list from the game controller
-        //there is no getgame method in gamecontroller yet, and not sure if it's needed
-        // for (Player player : gameController.getGame().getPlayers()) {
-        //     String playerName = player.getName();
-        //     TextButton playerButton = new TextButton(playerName, skin);
-        //     playerBar.add(playerButton).expandX();
-
-        //     //highlight the current player
-        //     if (player.equals(gameController.getCurrentPlayer())) {
-        //         playerButton.setColor(0, 1, 0, 1);
-        //     }
-        // }
-
+    public ArrayList<TextButton> getPlayerButtons() {
+        return this.playerButtons;
     }
 }
