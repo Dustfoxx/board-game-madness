@@ -16,20 +16,21 @@ import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen implements Screen {
     private final Stage stage;
-    private final MindMGMT game;
+    private final MindMGMT application;
 
-    public MainMenuScreen(final MindMGMT game) {
-        this.game = game;
+    public MainMenuScreen(final MindMGMT application) {
+        this.application = application;
         stage = new Stage(new ScreenViewport());
 
-        TextButton startButton = new TextButton("Game Start", game.assets.get("metalui/metal-ui.json", Skin.class));
-        startButton.setPosition(stage.getWidth() / 2 , stage.getHeight() / 2 ,Align.center);
-        startButton.setSize(100,50);
+        TextButton startButton = new TextButton("Game Start",
+        application.assets.get("metalui/metal-ui.json", Skin.class));
+        startButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        startButton.setSize(100, 50);
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //not sure should this in view or controller
-                game.setScreen(new SetupScreen(game));
+                // not sure should this in view or controller
+                application.setScreen(new SetupScreen(application));
                 dispose();
             }
         });
@@ -45,7 +46,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-         ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(Color.BLACK);
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
@@ -77,4 +78,3 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
     }
 }
-
