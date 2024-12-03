@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
         this.boardTexture = new Texture("basic-board.png");
         this.boardImage = new Image(boardTexture);
-        this.playerBar = new PlayerBar(gameController, skin);
+        this.playerBar = new PlayerBar(gameController);
         this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
 
         Gdx.input.setInputProcessor(stage);
