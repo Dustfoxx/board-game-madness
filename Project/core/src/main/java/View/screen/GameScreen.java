@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
         game = initializeGame();
 
         this.selectedFeature = "";
-        this.gameController = new GameController(game);
+        this.gameController = new GameController(application.nrOfPlayers);
         this.actionController = new ActionController();
 
         this.batch = new SpriteBatch();
@@ -102,19 +102,6 @@ public class GameScreen implements Screen {
             playerButtons.add(playerButton);
             playerBar.add(playerButton).expandX();
         }
-
-        // get the player list from the game controller
-        // there is no getgame method in gamecontroller yet, and not sure if it's needed
-        // for (Player player : gameController.getGame().getPlayers()) {
-        // String playerName = player.getName();
-        // TextButton playerButton = new TextButton(playerName, skin);
-        // playerBar.add(playerButton).expandX();
-
-        // //highlight the current player
-        // if (player.equals(gameController.getCurrentPlayer())) {
-        // playerButton.setColor(0, 1, 0, 1);
-        // }
-        // }
     }
 
     private void setupMainSection(Table root) {
@@ -122,7 +109,7 @@ public class GameScreen implements Screen {
         root.row();
         root.add(mainSection).expand().fill();
 
-        //not useful in functionality now, but useful for layout
+        // not useful in functionality now, but useful for layout
         Table iconBar = new Table();
         mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
 
@@ -148,14 +135,14 @@ public class GameScreen implements Screen {
             actionButtons.add(actionButton);
             actionBar.add(actionButton).expandX();
 
-                actionButton.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        askAction();
-                        gameController.newTurn();
-                    }
-                });
-            }
+            actionButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    askAction();
+                    gameController.newTurn();
+                }
+            });
+        }
     }
 
     private void askAction() {
@@ -163,29 +150,26 @@ public class GameScreen implements Screen {
         stage.addActor(askActionWindow);
     }
 
-
-    void updateButtonStates(){
-        for(TextButton textButton : actionButtons){
+    void updateButtonStates() {
+        for (TextButton textButton : actionButtons) {
             textButton.getColor().a = 0.4f;
             textButton.setDisabled(true);
-     }
+        }
     }
 
     private void updatePlayerButtonStates() {
-        if(game.getPlayers() != null){
-        for(Player player : game.getPlayers()){
-            int currentPlayerIndex = game.getPlayers().indexOf(player);
-            if(player == game.getCurrentPlayer()){
-                playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
-            }
-            else{
-                playerButtons.get(currentPlayerIndex).getColor().a = 1f;
-            }
+        if (game.getPlayers() != null) {
+            for (Player player : game.getPlayers()) {
+                int currentPlayerIndex = game.getPlayers().indexOf(player);
+                if (player == game.getCurrentPlayer()) {
+                    playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
+                } else {
+                    playerButtons.get(currentPlayerIndex).getColor().a = 1f;
+                }
 
+            }
         }
     }
-    }
-
 
     private Window createPopWindow(String title, String message) {
         Window window = new Window(title, skin);
@@ -199,24 +183,23 @@ public class GameScreen implements Screen {
         });
         window.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
 
-
         Label messageLabel = new Label(message, skin);
         window.add(messageLabel).pad(20).row();
 
         Table buttonTable = new Table();
 
-        //TODO: get the feature from the model
+        // TODO: get the feature from the model
         TextButton featureButton1 = new TextButton("Feature 1", skin);
         featureButton1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //get the selected feature
+                // get the selected feature
                 selectedFeature = "Feature 1";
             }
         });
         buttonTable.add(featureButton1).padRight(20).padBottom(10);
 
-        //TODO: get the feature from the model
+        // TODO: get the feature from the model
         TextButton featureButton2 = new TextButton("Feature 2", skin);
         featureButton2.addListener(new ChangeListener() {
             @Override
@@ -228,13 +211,12 @@ public class GameScreen implements Screen {
 
         window.add(buttonTable).colspan(2).center().row();
 
-
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // TODO:send the selected feature to the game controller
-                System.out.println("Feature selected"+selectedFeature);
+                System.out.println("Feature selected" + selectedFeature);
                 gameController.newTurn();
                 window.remove();
             }
@@ -242,8 +224,9 @@ public class GameScreen implements Screen {
         window.add(confirmButton).colspan(2).padTop(10).center().row();
 
         window.pack();
-        window.setSize(300,200);
-        window.setPosition(stage.getWidth() / 2 - window.getWidth() / 2, stage.getHeight() / 2 - window.getHeight() / 2);
+        window.setSize(300, 200);
+        window.setPosition(stage.getWidth() / 2 - window.getWidth() / 2,
+                stage.getHeight() / 2 - window.getHeight() / 2);
 
         return window;
     }
