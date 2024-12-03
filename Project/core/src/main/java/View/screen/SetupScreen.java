@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -27,7 +26,7 @@ public class SetupScreen implements Screen {
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
-            TextButton playersButton = new TextButton(i + " players", application.assets.get("metalui/metal-ui.json", Skin.class));
+            TextButton playersButton = new TextButton(i + " players", application.skin);
             root.add(playersButton);
             playersButton.addListener(new ChangeListener() {
                 @Override

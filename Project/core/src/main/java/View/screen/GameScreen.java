@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
 
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
-        this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
+        this.skin = application.skin;
         this.boardTexture = new Texture("basic-board.png");
         this.boardImage = new Image(boardTexture);
         this.mockedGame = new MockedGame();

@@ -20,6 +20,7 @@ public class MindMGMT extends Game {
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
 
+    public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
 
@@ -40,6 +41,7 @@ public class MindMGMT extends Game {
     private void loadAssets() {
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
+        assets.load("comicui/comic-ui.json", Skin.class);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class MindMGMT extends Game {
         if (assets.update()) {
             // We are done loading
             this.hasLoaded = true;
+            this.skin = assets.get("comicui/comic-ui.json", Skin.class);
             this.setScreen(new MainMenuScreen(this));
 
         } else {
