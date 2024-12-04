@@ -75,8 +75,8 @@ public class GameController {
     }
 
     private Game initializeGame(int playerAmount, Csv boardCsv) {
-        if (playerAmount <= 0) {
-            throw new IllegalArgumentException("Must be more than 2 players");
+        if (playerAmount <= 1) {
+            throw new IllegalArgumentException("Must be more than 1 player");
         }
         List<Player> players = new ArrayList<Player>();
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };

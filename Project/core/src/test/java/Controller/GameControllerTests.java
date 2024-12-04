@@ -16,10 +16,10 @@ public class GameControllerTests {
 
     @BeforeEach
     void setUp() {
-        String[][] boardData = new String[][]{
-            new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
-            new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
-            new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
+        String[][] boardData = new String[][] {
+                new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
+                new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
+                new String[] { "BILLBOARD:BUS", "BILLBOARD:BUS", "BILLBOARD:BUS" },
         };
         boardCsv = mock(Csv.class);
         when(boardCsv.getData()).thenReturn(boardData);
@@ -39,18 +39,18 @@ public class GameControllerTests {
     }
 
     @Test
-    public void testNoAgents() {
+    public void testOnePlayer() {
         // Arrange
         int nrOfPlayers = 1;
 
         // Act
-        Throwable exception = assertThrows(IllegalStateException.class,
-            () -> {
-                final GameController controller = new GameController(nrOfPlayers, boardCsv);
-            });
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+                () -> {
+                    final GameController controller = new GameController(nrOfPlayers, boardCsv);
+                });
 
         // Assert
-        assertEquals("No agents found", exception.getMessage());
+        assertEquals("Must be more than 1 player", exception.getMessage());
     }
 
     @Test
@@ -60,12 +60,12 @@ public class GameControllerTests {
 
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-            () -> {
-                final GameController controller = new GameController(nrOfPlayers, boardCsv);
-            });
+                () -> {
+                    final GameController controller = new GameController(nrOfPlayers, boardCsv);
+                });
 
         // Assert
-        assertEquals("Must be more than 2 players", exception.getMessage());
+        assertEquals("Must be more than 1 player", exception.getMessage());
     }
 
     @Test
@@ -75,8 +75,7 @@ public class GameControllerTests {
         GameController controller = new GameController(nrOfPlayers, boardCsv);
         List<Player> players = controller.getGame().getPlayers();
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
-            players.get(0), players.get(1), players.get(2), players.get(0), players.get(1), players.get(2)
-        ));
+                players.get(0), players.get(1), players.get(2), players.get(0), players.get(1), players.get(2)));
         List<Player> actualOrder = new ArrayList<>();
 
         // Act
