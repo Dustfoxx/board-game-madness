@@ -20,17 +20,10 @@ import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
 import java.util.ArrayList;
 import java.util.List;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class GameScreen implements Screen {
-
     // private final GameController gameController;
     private final MindMGMT application;
     private final GameController gameController;
@@ -44,7 +37,7 @@ public class GameScreen implements Screen {
     private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final ArrayList<TextButton> playerButtons;
-
+    private final SettingWindow settingWindow;
     // Mocked model variables:
     private MockedGame mockedGame;
     private String selectedFeature;
@@ -65,7 +58,7 @@ public class GameScreen implements Screen {
         this.playerBar = new PlayerBar(mockedGame, application.nrOfPlayers, skin);
         this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
         this.playerButtons = playerBar.getPlayerButtons();
-
+        this.settingWindow = new SettingWindow(skin, stage, application);
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }
@@ -75,14 +68,28 @@ public class GameScreen implements Screen {
         root.setFillParent(true);
         stage.addActor(root);
 
+        setupSettings(root);
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
     }
 
+    private void setupSettings(Table root) {
+        TextButton settingButton = new TextButton("Settings", skin);
+        root.add(settingButton).expandX().top().right().row();
+        settingButton.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent event, Actor actor) {
+            //TODO: add some logic to pause the game in game controller
+            stage.addActor(settingWindow);
+        }
+    });
+
+    }
+
     private void setupPlayerBar(Table root) {
 
-        root.add(playerBar).expandX().fillX().top().height(stage.getViewport().getWorldHeight() * 0.1f);
+        root.add(playerBar).expandX().fillX().height(stage.getViewport().getWorldHeight() * 0.1f);
 
     }
 
@@ -129,7 +136,7 @@ public class GameScreen implements Screen {
     }
 
     private void askAction() {
-        Window askActionWindow = createPopWindow("Ask Action", "Which feature do you want to ask?");
+        Window askActionWindow = createAskActionWindow("Ask Action", "Which feature do you want to ask?");
         stage.addActor(askActionWindow);
     }
 
@@ -155,7 +162,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private Window createPopWindow(String title, String message) {
+    private Window createAskActionWindow(String title, String message) {
         Window askWindow = new Window(title, skin);
         askWindow.setMovable(false);
         askWindow.setResizable(false);
@@ -237,6 +244,10 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+
+        if (settingWindow != null) {
+        settingWindow.updateSize();
+        }
 
     }
 
