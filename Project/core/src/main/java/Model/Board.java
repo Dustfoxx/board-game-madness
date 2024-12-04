@@ -36,7 +36,7 @@ public class Board {
      * @param boardCsv The Csv data that is used to create the board
      */
     public Board(Csv boardCsv) {
-        String[][] boardData = boardCsv.data;
+        String[][] boardData = boardCsv.getData();
         int[] dimensions = new int[] { boardData.length, boardData[0].length };
 
         AbstractCell[][] cells = new AbstractCell[dimensions[0]][dimensions[1]];

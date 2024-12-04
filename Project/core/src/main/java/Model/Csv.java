@@ -3,7 +3,7 @@ package Model;
 import com.badlogic.gdx.files.FileHandle;
 
 public class Csv {
-    public String[][] data;
+    private String[][] data;
 
     public Csv(FileHandle file) {
         String text = file.readString();
@@ -16,6 +16,7 @@ public class Csv {
             String[] cells = rows[i].split(",");
             System.arraycopy(cells, 0, data[i], 0, nCols);
         }
-
     }
+
+    public String[][] getData() { return data; }
 }
