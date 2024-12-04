@@ -1,9 +1,7 @@
 package View.screen;
 
 import Controller.ActionController;
-import Controller.CheckAction;
 import Controller.GameController;
-import Model.*;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,12 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import View.screen.GameScreenComponents.MockedGame;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import java.util.ArrayList;
 import java.util.List;
 import View.screen.GameScreenComponents.SettingWindow;
@@ -36,10 +37,7 @@ public class GameScreen implements Screen {
     private final PlayerBar playerBar;
     private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
-    private final ArrayList<TextButton> playerButtons;
     private final SettingWindow settingWindow;
-    // Mocked model variables:
-    private MockedGame mockedGame;
     private String selectedFeature;
 
 
@@ -54,10 +52,8 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
         this.boardTexture = new Texture("basic-board.png");
         this.boardImage = new Image(boardTexture);
-        this.mockedGame = new MockedGame();
-        this.playerBar = new PlayerBar(mockedGame, application.nrOfPlayers, skin);
-        this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
-        this.playerButtons = playerBar.getPlayerButtons();
+        this.playerBar = new PlayerBar(gameController);
+        this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
         Gdx.input.setInputProcessor(stage);
         setupUI();
@@ -88,9 +84,7 @@ public class GameScreen implements Screen {
     }
 
     private void setupPlayerBar(Table root) {
-
         root.add(playerBar).expandX().fillX().height(stage.getViewport().getWorldHeight() * 0.1f);
-
     }
 
     private void setupMainSection(Table root) {
@@ -129,7 +123,6 @@ public class GameScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     askAction();
-                    gameController.newTurn();
                 }
             });
         }
@@ -144,21 +137,6 @@ public class GameScreen implements Screen {
         for (TextButton textButton : actionButtons) {
             textButton.getColor().a = 0.4f;
             textButton.setDisabled(true);
-        }
-    }
-
-    private void updatePlayerButtonStates() {
-        Game game = gameController.getGame();
-        if (game.getPlayers() != null) {
-            for (Player player : game.getPlayers()) {
-                int currentPlayerIndex = game.getPlayers().indexOf(player);
-                if (player == game.getCurrentPlayer()) {
-                    playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
-                } else {
-                    playerButtons.get(currentPlayerIndex).getColor().a = 1f;
-                }
-
-            }
         }
     }
 
@@ -237,8 +215,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
-        updatePlayerButtonStates();
-
+        playerBar.update();
     }
 
     @Override
