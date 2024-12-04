@@ -224,6 +224,8 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
+        // System.out.println(gameController.getGame().getBoard().getCell(2,
+        // 1).getPlayers()); TODO remove
         playerBar.update();
     }
 

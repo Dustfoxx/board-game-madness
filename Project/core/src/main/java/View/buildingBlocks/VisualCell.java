@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -13,7 +14,7 @@ import Model.Feature;
 import Model.NormalCell;
 import Model.Player;
 
-public class VisualCell {
+public class VisualCell extends Actor {
     private Table cell = new Table();
 
     private Dictionary<Feature, Integer> features = new Hashtable<>();
