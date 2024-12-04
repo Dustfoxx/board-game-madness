@@ -136,6 +136,11 @@
 		"font": "font",
 		"fontColor": "black",
 		"background": "page"
+	},
+	"colored": {
+        "font": "font",
+        "fontColor": "black",
+        "background": "rect"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
