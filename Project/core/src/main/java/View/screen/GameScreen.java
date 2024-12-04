@@ -26,7 +26,6 @@ import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class GameScreen implements Screen {
-    // private final GameController gameController;
     private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
@@ -34,7 +33,6 @@ public class GameScreen implements Screen {
     private final Skin skin;
     private final SpriteBatch batch;
     private final Texture boardTexture;
-    private final Image boardImage;
     private final PlayerBar playerBar;
     private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
@@ -47,19 +45,21 @@ public class GameScreen implements Screen {
     public GameScreen(MindMGMT application) {
         this.application = application;
         this.selectedFeature = "";
-        this.gameController = new GameController(application.nrOfPlayers);
-        this.actionController = new ActionController();
 
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
-        this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
-        this.boardTexture = new Texture("basic-board.png");
-        this.boardImage = new Image(boardTexture);
+        this.skin = application.assets.get("metalui/metal-ui.json", Skin.class);
+        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         this.mockedGame = new MockedGame();
         this.playerBar = new PlayerBar(mockedGame, application.nrOfPlayers, skin);
         this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
         this.playerButtons = playerBar.getPlayerButtons();
         this.settingWindow = new SettingWindow(skin, stage, application);
+
+        Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
+        this.gameController = new GameController(application.nrOfPlayers, boardCsv);
+        this.actionController = new ActionController();
+
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }
@@ -105,7 +105,7 @@ public class GameScreen implements Screen {
 
         // TODO: Change so that the players are not hardcoded but chosen positions at
         // the start of the game
-        Board board = new Board("assets/board-data.csv");
+        Board board = gameController.getGame().getBoard();
         board.getCell(0, 0).addPlayer(new RougeAgent(1));
         board.getCell(0, 5).addPlayer(new RougeAgent(2));
         board.getCell(6, 0).addPlayer(new RougeAgent(3));

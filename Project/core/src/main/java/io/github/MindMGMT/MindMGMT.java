@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -47,6 +48,7 @@ public class MindMGMT extends Game {
         assets.load("board-data.csv", Csv.class);
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
+        assets.load("basic-board.png", Texture.class);
     }
 
     @Override

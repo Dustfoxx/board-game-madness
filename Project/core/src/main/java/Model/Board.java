@@ -18,7 +18,7 @@ public class Board {
     /**
      * Constructor to initialize the game board with a specified 2D array of cells.
      * Ensures that the grid is not null and all cells are valid.
-     * 
+     *
      * @param cells The 2D array of cells to initialize the game board with.
      * @throws IllegalArgumentException If the grid is null, dimensions are invalid,
      *                                  or any cell is null.
@@ -32,31 +32,21 @@ public class Board {
 
     /**
      * Constructor using a csv file to create the board with features
-     * 
-     * @param csvFileName The csvfile that is used to create the board
+     *
+     * @param boardCsv The Csv data that is used to create the board
      */
-    public Board(String csvFileName) {
-        List<List<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                records.add(Arrays.asList(values));
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        int[] dimensions = new int[] { records.size(), records.get(0).size() };
+    public Board(Csv boardCsv) {
+        String[][] boardData = boardCsv.data;
+        int[] dimensions = new int[] { boardData.length, boardData[0].length };
 
         AbstractCell[][] cells = new AbstractCell[dimensions[0]][dimensions[1]];
 
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
-                if (records.get(i).get(j) == "") {
+                if (boardData[i][j].isEmpty()) {
                     cells[i][j] = new TempleCell();
                 } else {
-                    String[] featureStrings = records.get(i).get(j).split(":");
+                    String[] featureStrings = boardData[i][j].split(":");
                     Feature[] features = new Feature[] { Feature.valueOf(featureStrings[0]),
                             Feature.valueOf(featureStrings[1]) };
                     cells[i][j] = new NormalCell(features);
@@ -73,7 +63,7 @@ public class Board {
      * Validates the 2D array of cells to ensure it is not null, has valid
      * dimensions,
      * and contains no null rows or cells.
-     * 
+     *
      * @param cells The 2D array of cells to validate.
      * @throws IllegalArgumentException If the cells array is invalid.
      */
@@ -95,7 +85,7 @@ public class Board {
 
     /**
      * Gets the cell at the specified row and column.
-     * 
+     *
      * @param row    The row index of the cell.
      * @param column The column index of the cell.
      * @return The cell at the specified row and column.
@@ -106,7 +96,7 @@ public class Board {
 
     /**
      * Gets the coordinates of a given player
-     * 
+     *
      * @param player player to be found
      * @return coordinates if found, otherwise null
      */
@@ -132,7 +122,7 @@ public class Board {
 
     /**
      * Returns the board dimensions.
-     * 
+     *
      * @return The dimensions for the board.
      */
     public int[] getDims() {
