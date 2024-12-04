@@ -162,21 +162,18 @@ public class Game {
     }
 
     /**
-     * Adds a mind slip event to the mind slip history.
+     * Adds a mind slip event to the mind slip history based on current time.
      * 
-     * @param time The time at which the mind slip was used.
      */
-    public void addMindSlipEvent(int time) {
-        if (time < 1 || time >= maxTime) {
-            throw new IllegalArgumentException("Time is out of bounds.");
-        }
+    public void addMindSlipEvent() {
+
         if (this.mindSlipHistory.size() >= 2) {
             throw new IllegalStateException("Mind slip can only be used twice per game.");
         }
-        if (this.mindSlipHistory.contains(time)) {
+        if (this.mindSlipHistory.contains(currentTime)) {
             throw new IllegalStateException("Mind slip can only be used once per round.");
         }
-        this.mindSlipHistory.add(time);
+        this.mindSlipHistory.add(currentTime);
     }
 
     /**
