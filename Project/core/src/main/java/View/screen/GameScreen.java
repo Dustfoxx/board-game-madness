@@ -1,9 +1,7 @@
 package View.screen;
 
 import Controller.ActionController;
-import Controller.CheckAction;
 import Controller.GameController;
-import Model.*;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,19 +10,22 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import View.screen.GameScreenComponents.MockedGame;
+import Model.Board;
+import Model.Csv;
+import Model.RougeAgent;
+import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class GameScreen implements Screen {
-    // private final GameController gameController;
     private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
@@ -32,33 +33,29 @@ public class GameScreen implements Screen {
     private final Skin skin;
     private final SpriteBatch batch;
     private final Texture boardTexture;
-    private final Image boardImage;
     private final PlayerBar playerBar;
     private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
-    private final ArrayList<TextButton> playerButtons;
     private final SettingWindow settingWindow;
-    // Mocked model variables:
-    private MockedGame mockedGame;
     private String selectedFeature;
-
 
     public GameScreen(MindMGMT application) {
         this.application = application;
         this.selectedFeature = "";
-        this.gameController = new GameController(application.nrOfPlayers);
-        this.actionController = new ActionController();
 
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
         this.skin = application.skin;
-        this.boardTexture = new Texture("basic-board.png");
-        this.boardImage = new Image(boardTexture);
-        this.mockedGame = new MockedGame();
-        this.playerBar = new PlayerBar(mockedGame, application.nrOfPlayers, skin);
-        this.timeTracker = new Label(String.valueOf(mockedGame.getTime()), skin);
-        this.playerButtons = playerBar.getPlayerButtons();
+        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
+
+        Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
+        this.gameController = new GameController(application.nrOfPlayers, boardCsv);
+        this.actionController = new ActionController();
+
+        this.playerBar = new PlayerBar(gameController);
+        this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
+
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }
@@ -78,19 +75,17 @@ public class GameScreen implements Screen {
         TextButton settingButton = new TextButton("Settings", skin);
         root.add(settingButton).expandX().top().right().row();
         settingButton.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent event, Actor actor) {
-            //TODO: add some logic to pause the game in game controller
-            stage.addActor(settingWindow);
-        }
-    });
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO: add some logic to pause the game in game controller
+                stage.addActor(settingWindow);
+            }
+        });
 
     }
 
     private void setupPlayerBar(Table root) {
-
         root.add(playerBar).expandX().fillX().height(stage.getViewport().getWorldHeight() * 0.1f);
-
     }
 
     private void setupMainSection(Table root) {
@@ -102,9 +97,17 @@ public class GameScreen implements Screen {
         Table iconBar = new Table();
         mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
 
-        Table boardSection = new Table();
+        // TODO: Change so that the players are not hardcoded but chosen positions at
+        // the start of the game
+        Board board = gameController.getGame().getBoard();
+        board.getCell(0, 0).addPlayer(new RougeAgent(1));
+        board.getCell(0, 5).addPlayer(new RougeAgent(2));
+        board.getCell(6, 0).addPlayer(new RougeAgent(3));
+        board.getCell(6, 5).addPlayer(new RougeAgent(4));
+        VisualBoard visualBoard = new VisualBoard(board);
+        Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
-        boardSection.add(boardImage).expand().fill();
+        // boardSection.add(boardImage).expand().fill();
 
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
@@ -129,7 +132,6 @@ public class GameScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     askAction();
-                    gameController.newTurn();
                 }
             });
         }
@@ -144,21 +146,6 @@ public class GameScreen implements Screen {
         for (TextButton textButton : actionButtons) {
             textButton.getColor().a = 0.4f;
             textButton.setDisabled(true);
-        }
-    }
-
-    private void updatePlayerButtonStates() {
-        Game game = gameController.getGame();
-        if (game.getPlayers() != null) {
-            for (Player player : game.getPlayers()) {
-                int currentPlayerIndex = game.getPlayers().indexOf(player);
-                if (player == game.getCurrentPlayer()) {
-                    playerButtons.get(currentPlayerIndex).getColor().a = 0.3f;
-                } else {
-                    playerButtons.get(currentPlayerIndex).getColor().a = 1f;
-                }
-
-            }
         }
     }
 
@@ -237,8 +224,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
-        updatePlayerButtonStates();
-
+        playerBar.update();
     }
 
     @Override
@@ -246,7 +232,7 @@ public class GameScreen implements Screen {
         stage.getViewport().update(width, height, true);
 
         if (settingWindow != null) {
-        settingWindow.updateSize();
+            settingWindow.updateSize();
         }
 
     }
