@@ -1,55 +1,81 @@
 package View.screen.GameScreenComponents;
 
+import java.util.List;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import java.util.ArrayList;
+import Controller.GameController;
+import Model.Game;
+import Model.Player;
 
-public class PlayerBar extends Table{
+/**
+ * Represents a UI component that displays the players and whos turn it is.
+ * This class extends the {@link Table} class to organize and layout its child
+ * actors.
+ */
+public class PlayerBar extends Table {
 
-    private final ArrayList<TextButton> playerButtons = new ArrayList<>();
-    private MockedGame mockedGame;
+    private final GameController gameController;
 
-    public PlayerBar (MockedGame mockedGame, int playerAmount, Skin skin) {
-        this.mockedGame = mockedGame;
-        // Buttons for each player
-        // TODO: Update to use real model and not fake data
-        for (int i = 0; i < playerAmount; i++) {
-            int currentTurn = mockedGame.getTurn();
-            TextButton playerButton = new TextButton("Player " + (i + 1), skin);
-            playerButton.setTouchable(Touchable.disabled);
-            if (i == currentTurn) {
-                playerButton.setColor(Color.GREEN);
-            }
-            playerButtons.add(playerButton);
-            this.add(playerButton).expandX();
+    /**
+     * Constructs a PlayerBar.
+     *
+     * @param gameController the {@link GameController} that manages game logic
+     */
+    public PlayerBar(GameController gameController) {
+
+        this.gameController = gameController;
+        Skin skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
+
+        // Create a label for each player and add it to the table
+        for (Player player : gameController.getGame().getPlayers()) {
+            Label playerLabel = new Label(player.getName(), skin, "colored");
+            this.add(playerLabel).expandX(); // Expand each label equally along the X-axis
         }
 
-        // Button for simulating that it's the next players turn
-        // TODO: Remove button below
-        TextButton nextTurnButton = new TextButton("Next turn", skin);
+        // Create a button to simulate advancing to the next player's turn - TODO: Remove when not useful anymore
+        TextButton nextTurnButton = new TextButton("Next Turn", skin);
         nextTurnButton.setColor(Color.MAGENTA);
         this.add(nextTurnButton);
+
+        // Add an event listener to handle button clicks
         nextTurnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int currentTurn = mockedGame.getTurn();
-                playerButtons.get(currentTurn).setColor(Color.WHITE);
-                if (currentTurn == playerAmount - 1) {
-                    mockedGame.setTime(mockedGame.getTime() + 1);
-                }
-                mockedGame.setTurn((currentTurn + 1) % playerAmount);
-                playerButtons.get(mockedGame.getTurn()).setColor(Color.GREEN);
+                gameController.newTurn();
             }
         });
     }
 
-    public ArrayList<TextButton> getPlayerButtons() {
-        return this.playerButtons;
+    /**
+     * Updates the PlayerBar to visually indicate the current player by
+     * highlighting its label in green and dimming the others.
+     */
+    public void update() {
+
+        Game game = gameController.getGame();
+        List<Player> players = game.getPlayers();
+        Player currentPlayer = game.getCurrentPlayer();
+
+        if (players != null) {
+            for (Player player : players) {
+                int playerIndex = players.indexOf(player);
+                Label playerLabel = (Label) this.getChildren().get(playerIndex);
+                if (player == currentPlayer) {
+                    playerLabel.setColor(Color.GREEN);
+                    playerLabel.getColor().a = 1f;
+                } else {
+                    playerLabel.setColor(Color.WHITE);
+                    playerLabel.getColor().a = 0.3f;
+                }
+            }
+        }
     }
 }
