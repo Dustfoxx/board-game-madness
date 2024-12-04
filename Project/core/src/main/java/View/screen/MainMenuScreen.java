@@ -23,7 +23,7 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
 
         TextButton startButton = new TextButton("Game Start",
-                application.assets.get("metalui/metal-ui.json", Skin.class));
+        application.assets.get("metalui/metal-ui.json", Skin.class));
         startButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
         startButton.setSize(100, 50);
         startButton.addListener(new ChangeListener() {

@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,9 +12,11 @@ public class Game {
     private boolean gameOver; // Indicates if the game is over
     private Player currentPlayer; // The player whose turn it is
     private int currentTime; // The current time in the game
+    private int maxTime; // The time at which the game ends
+    private int maxRecruits; // The amount recruits needed for recruiter to win
     private Board board; // The game board
-    private int amountRecruited; // The number of recruited players revealed
-    private int mindSlipCount; // The number of mindslips used
+    private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
+    private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
 
     /**
@@ -40,9 +43,11 @@ public class Game {
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
         this.currentTime = 1;
+        this.maxTime = 14;
+        this.maxRecruits = 9;
         this.board = board;
-        this.amountRecruited = 0;
-        this.mindSlipCount = 0;
+        this.recruitHistory = new ArrayList<>();
+        this.mindSlipHistory = new ArrayList<>();
         this.players = players;
     }
 
@@ -114,43 +119,61 @@ public class Game {
     }
 
     /**
-     * Gets the current number of recruited players revealed.
+     * Gets the total amount of recruits reveald so far.
      * 
-     * @return The amount of recruited players revealed.
+     * @return The total amount of recruits reveald so far.
      */
     public int getAmountRecruited() {
-        return this.amountRecruited;
+        int count = 0;
+        for (int[] recruits : this.recruitHistory) {
+            count += recruits[1];
+        }
+        return count;
     }
 
     /**
-     * Adds a specified amount to the number of recruited players.
+     * Gets the history of revealed recruits.
      * 
-     * @param newAmountRecruited The number of recruited players to add.
+     * @return A list of revealed recruites as (time, amount) pairs.
      */
-    public void addAmountRecruited(int newAmountRecruited) {
-        if (newAmountRecruited <= 0) {
+    public List<int[]> getRecruitHistory() {
+        return new ArrayList<>(this.recruitHistory); //Returns a copy for safety
+    }
+
+    /**
+     * Adds the number of recruits revealed during the current round.
+     * 
+     * @param amount The number of recruits revealed during current round.
+     */
+    public void addAmountRecruited(int amount) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Amount to add must be greater than 0.");
         }
-        this.amountRecruited += newAmountRecruited;
+        this.recruitHistory.add(new int[] { currentTime, amount });
     }
 
     /**
-     * Gets the current number of mindslips used in the game.
+     * Gets the mind slip history.
      * 
-     * @return The number of mindslips used.
+     * @return A list of times when mind slips were used.
      */
-    public int getMindSlipCount() {
-        return this.mindSlipCount;
+    public List<Integer> getMindSlipHistory() {
+        return new ArrayList<>(this.mindSlipHistory); //Returns a copy for safety
     }
 
     /**
-     * Increments the mind slip count by 1.
+     * Adds a mind slip event to the mind slip history based on current time.
+     * 
      */
-    public void incrementMindSlipCount() {
-        if (this.mindSlipCount >= 2) {
-            throw new IllegalStateException("Mind slip count cannot exceed 2.");
+    public void addMindSlipEvent() {
+
+        if (this.mindSlipHistory.size() >= 2) {
+            throw new IllegalStateException("Mind slip can only be used twice per game.");
         }
-        this.mindSlipCount += 1;
+        if (this.mindSlipHistory.contains(currentTime)) {
+            throw new IllegalStateException("Mind slip can only be used once per round.");
+        }
+        this.mindSlipHistory.add(currentTime);
     }
 
     /**
