@@ -50,7 +50,22 @@ public class GameControllerTests {
             });
 
         // Assert
-        assertEquals("Myst be more than 2 players", exception.getMessage());
+        assertEquals("No agents found", exception.getMessage());
+    }
+
+    @Test
+    public void testNoPlayers() {
+        // Arrange
+        int nrOfPlayers = 0;
+
+        // Act
+        Throwable exception = assertThrows(IllegalArgumentException.class,
+            () -> {
+                final GameController controller = new GameController(nrOfPlayers, boardCsv);
+            });
+
+        // Assert
+        assertEquals("Must be more than 2 players", exception.getMessage());
     }
 
     @Test
