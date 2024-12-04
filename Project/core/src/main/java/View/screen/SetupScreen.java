@@ -66,6 +66,7 @@ public class SetupScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        application.drawBackground();
         stage.act();
         stage.draw();
     }
