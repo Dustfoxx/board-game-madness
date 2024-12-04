@@ -15,6 +15,7 @@ import Model.Board;
 import Model.Csv;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
+import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -135,6 +136,9 @@ public class GameScreen implements Screen {
                 }
             });
         }
+        AskButton askButton = new AskButton("Ask", skin, stage, selectedFeature, gameController);
+        actionButtons.add(askButton);
+        actionBar.add(askButton);
     }
 
     private void askAction() {
