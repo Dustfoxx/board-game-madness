@@ -1,7 +1,13 @@
 package io.github.MindMGMT;
 
+import Model.Csv;
+import View.loader.CsvLoader;
 import View.screen.MainMenuScreen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -38,8 +44,11 @@ public class MindMGMT extends Game {
     }
 
     private void loadAssets() {
+        assets.setLoader(Csv.class, new CsvLoader(new InternalFileHandleResolver()));
+        assets.load("board-data.csv", Csv.class);
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
+        assets.load("basic-board.png", Texture.class);
     }
 
     @Override
