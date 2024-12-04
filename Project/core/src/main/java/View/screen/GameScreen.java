@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 
         this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport(), batch);
-        this.skin = application.assets.get("metalui/metal-ui.json", Skin.class);
+        this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
 
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);

@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen implements Screen {
     private final Stage stage;
@@ -22,10 +20,10 @@ public class MainMenuScreen implements Screen {
         this.application = application;
         stage = new Stage(new ScreenViewport());
 
-        TextButton startButton = new TextButton("Game Start",
-        application.assets.get("metalui/metal-ui.json", Skin.class));
-        startButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
-        startButton.setSize(100, 50);
+        TextButton startButton = new TextButton("Start Game", application.skin);
+        startButton.setPosition(
+            (stage.getWidth() - startButton.getWidth()) / 2,
+            (stage.getHeight() - startButton.getHeight()) / 2);
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
