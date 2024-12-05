@@ -1,5 +1,5 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "r.lsp.promptToInstall": false
+    "java.debug.settings.onBuildFailureProceed": true
 }

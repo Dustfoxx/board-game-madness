@@ -28,6 +28,10 @@ public class MainMenuScreen implements Screen {
         TextButton startButton = new TextButton("Game Start", skin);
         TextButton quitButton = new TextButton("Quit " + width + " " + height, skin);
 
+        TextButton startButton = new TextButton("Start Game", application.skin);
+        startButton.setPosition(
+            (stage.getWidth() - startButton.getWidth()) / 2,
+            (stage.getHeight() - startButton.getHeight()) / 2);
         startButton.setPosition(width / 2, height / (2 - 0.15f), Align.center);
         quitButton.setPosition(width / 2, height / (2 + 0.15f), Align.center);
 

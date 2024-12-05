@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class SetupScreen implements Screen {
@@ -35,6 +35,12 @@ public class SetupScreen implements Screen {
         Table root = new Table();
         root.debug();
         root.setFillParent(true);
+        root.setDebug(true);
+
+        Label question = new Label("How many players?", application.skin, "narration");
+        question.setFontScale(2);
+        root.add(question).colspan(2).padBottom(40);
+        root.row();
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
@@ -57,6 +63,8 @@ public class SetupScreen implements Screen {
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
+            TextButton playersButton = new TextButton(i + " players", application.skin);
+            root.add(playersButton).pad(20);
             TextButton playersButton = new TextButton(i + " players", skin);
             root.add(playersButton).width(width * 0.1f).height(height * 0.05f);
             playersButton.addListener(new ChangeListener() {
@@ -65,6 +73,10 @@ public class SetupScreen implements Screen {
                     startGame(value);
                 }
             });
+            // Start a new row for last 2 buttons
+            if (i == 3) {
+                root.row();
+            }
         }
 
         root.add(new Image()).width(width * 0.1f); // Creating empty cell

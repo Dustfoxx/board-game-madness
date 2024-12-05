@@ -1,7 +1,13 @@
 package io.github.MindMGMT;
 
+import Model.Csv;
+import View.loader.CsvLoader;
 import View.screen.MainMenuScreen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +26,7 @@ public class MindMGMT extends Game {
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
 
+    public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
 
@@ -38,8 +45,12 @@ public class MindMGMT extends Game {
     }
 
     private void loadAssets() {
+        assets.setLoader(Csv.class, new CsvLoader(new InternalFileHandleResolver()));
+        assets.load("board-data.csv", Csv.class);
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
+        assets.load("comicui/comic-ui.json", Skin.class);
+        assets.load("basic-board.png", Texture.class);
     }
 
     @Override
@@ -54,6 +65,7 @@ public class MindMGMT extends Game {
         if (assets.update()) {
             // We are done loading
             this.hasLoaded = true;
+            this.skin = assets.get("comicui/comic-ui.json", Skin.class);
             assets.get("metalui/metal-ui.json", Skin.class)
                 .getFont("font")
                 .getData()
