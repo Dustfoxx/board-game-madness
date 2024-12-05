@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
         askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
 
         askWindow.pack();
-        askWindow.setSize(300, 200);
+        askWindow.setSize(500, 200);
         askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
                 stage.getHeight() / 2 - askWindow.getHeight() / 2);
 
