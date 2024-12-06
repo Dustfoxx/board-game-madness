@@ -6,11 +6,9 @@ import View.screen.MainMenuScreen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -22,26 +20,22 @@ public class MindMGMT extends Game {
     private Stage stage;
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
-    private ScreenViewport viewport;
 
-    public Texture backgroundTexture;
-    public Image backgroundImage;
     public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
 
     @Override
     public void create() {
-        viewport = new ScreenViewport();
+        ScreenViewport viewport = new ScreenViewport();
         stage = new Stage(viewport);
         assets = new AssetManager();
-        backgroundImage = new Image();
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
-        progressBar.setX(viewport.getWorldWidth()/2);
-        progressBar.setY(viewport.getWorldHeight()/2);
-        progressBar.setWidth(viewport.getWorldWidth());
-        progressBar.setHeight(viewport.getWorldHeight());
+        progressBar.setX(viewport.getCamera().viewportWidth/2);
+        progressBar.setY(viewport.getCamera().viewportHeight/2);
+        progressBar.setWidth(viewport.getCamera().viewportWidth/2);
+        progressBar.setHeight(viewport.getCamera().viewportHeight/2);
         stage.addActor(progressBar);
     }
 
@@ -70,12 +64,6 @@ public class MindMGMT extends Game {
 
         if (assets.update()) {
             // We are done loading
-            backgroundImage = new Image(assets.get("watercolor-sunset.png", Texture.class));
-            backgroundImage.setSize(stage.getWidth(), stage.getHeight());
-            stage.clear();
-            stage.addActor(backgroundImage);
-            stage.act();
-            stage.draw();
 
             this.hasLoaded = true;
             this.skin = assets.get("comicui/comic-ui.json", Skin.class);

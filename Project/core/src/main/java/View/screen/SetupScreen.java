@@ -1,6 +1,8 @@
 package View.screen;
 
+import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Align;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,12 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class SetupScreen implements Screen {
-    private final Stage stage;
+    private final MindMGMTStage stage;
     private final MindMGMT application;
 
     public SetupScreen(final MindMGMT application) {
         this.application = application;
-        stage = new Stage(new ScreenViewport());
+        stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         setupUI();
     }
 
@@ -35,30 +37,16 @@ public class SetupScreen implements Screen {
         Table root = new Table();
         root.debug();
         root.setFillParent(true);
-        root.setDebug(true);
+
+        float width = stage.getWidth();
+        float height = stage.getHeight();
 
         Label question = new Label("How many players?", application.skin, "narration");
         question.setFontScale(2);
         root.add(question).colspan(2).padBottom(40);
         root.row();
 
-        float width = stage.getWidth();
-        float height = stage.getHeight();
-
-        TextButton backButton = new TextButton("Back", application.skin);
-        backButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-               application.setScreen(new MainMenuScreen(application));
-               dispose();
-            }
-        });
-        root.add(backButton).width(width * 0.1f).height(height * 0.05f);
-
         root.row().height(height * 0.05f);
-        root.add(new Image()); // Creating empty cell
-        root.row().height(height * 0.05f);
-        root.add(new Image()); // Creating empty cell
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
@@ -76,7 +64,17 @@ public class SetupScreen implements Screen {
             }
         }
 
-        root.add(new Image()).width(width * 0.1f); // Creating empty cell
+        root.row();
+
+        TextButton backButton = new TextButton("Back", application.skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                application.setScreen(new MainMenuScreen(application));
+                dispose();
+            }
+        });
+        root.add(backButton).width(width * 0.1f).height(height * 0.05f);
         stage.addActor(root);
         Gdx.input.setInputProcessor(stage);
     }
