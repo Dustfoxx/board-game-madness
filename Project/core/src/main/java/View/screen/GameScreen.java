@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
         askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
 
         askWindow.pack();
-        askWindow.setSize(300, 200);
+        askWindow.setSize(500, 200);
         askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
                 stage.getHeight() / 2 - askWindow.getHeight() / 2);
 
@@ -222,6 +222,7 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        application.drawBackground();
         stage.act(delta);
         stage.draw();
         playerBar.update();
