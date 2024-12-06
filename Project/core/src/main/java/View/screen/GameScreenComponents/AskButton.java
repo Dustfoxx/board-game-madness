@@ -11,6 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Controller.GameController;
+import Model.AbstractCell;
+import Model.Feature;
+import Model.NormalCell;
+import Model.Player;
 
 public class AskButton extends TextButton {
 
@@ -18,12 +22,16 @@ public class AskButton extends TextButton {
     Skin skin;
     String selectedFeature;
     GameController gameController;
+    NormalCell cell;
 
-    public AskButton(String name, Skin skin, Stage stage, String selectedFeature, GameController gameController) {
+    public AskButton(String name, Skin skin, Stage stage, String selectedFeature, GameController gameController,
+            NormalCell cell) {
 
         super(name, skin);
-        this.stage = stage; 
+        this.stage = stage;
         this.skin = skin;
+        this.gameController = gameController;
+        this.cell = cell;
 
         this.addListener(new ChangeListener() {
             @Override
@@ -62,32 +70,24 @@ public class AskButton extends TextButton {
         Table buttonTable = new Table();
 
         // Create a button for the first feature
-        // TODO: get the feature from the model
-        TextButton featureButton1 = new TextButton("Feature 1", skin);
-        featureButton1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // get the selected feature
-                selectedFeature = "Feature 1";
-            }
-        });
-        buttonTable.add(featureButton1).padRight(20).padBottom(10);
 
-        // Create a button for the second feature
-        // TODO: get the feature from the model
-        TextButton featureButton2 = new TextButton("Feature 2", skin);
-        featureButton2.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                selectedFeature = "Feature 2";
-            }
-        });
-        buttonTable.add(featureButton2).padBottom(10);
+        Feature[] features = cell.getFeatures();
+
+        for (Feature feature : features) {
+            String featureName = feature.name();
+            TextButton featureButton = new TextButton(featureName, skin);
+            featureButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    selectedFeature = featureName;
+                }
+            });
+            buttonTable.add(featureButton).padRight(20).padBottom(10);
+        }
 
         // Add feature buttons to the window
         askWindow.add(buttonTable).colspan(2).center().row();
 
-        
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
@@ -101,7 +101,7 @@ public class AskButton extends TextButton {
         askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
 
         askWindow.pack();
-        askWindow.setSize(300, 200);
+        askWindow.setSize(500, 200);
         askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
                 stage.getHeight() / 2 - askWindow.getHeight() / 2);
 
