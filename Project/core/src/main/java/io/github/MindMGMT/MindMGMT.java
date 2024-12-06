@@ -4,9 +4,7 @@ import Model.Csv;
 import View.loader.CsvLoader;
 import View.screen.MainMenuScreen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
@@ -26,6 +24,7 @@ public class MindMGMT extends Game {
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
 
+    public Texture backgroundTexture;
     public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
@@ -34,7 +33,7 @@ public class MindMGMT extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        viewport = new FitViewport(640,480);
+        viewport = new FitViewport(800,450);
         assets = new AssetManager();
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
@@ -50,6 +49,7 @@ public class MindMGMT extends Game {
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
         assets.load("comicui/comic-ui.json", Skin.class);
+        assets.load("watercolor-sunset.png", Texture.class);
         assets.load("basic-board.png", Texture.class);
     }
 
@@ -66,10 +66,7 @@ public class MindMGMT extends Game {
             // We are done loading
             this.hasLoaded = true;
             this.skin = assets.get("comicui/comic-ui.json", Skin.class);
-            assets.get("metalui/metal-ui.json", Skin.class)
-                .getFont("font")
-                .getData()
-                .setScale(2f);
+            this.backgroundTexture = assets.get("watercolor-sunset.png", Texture.class);
             this.setScreen(new MainMenuScreen(this));
 
         } else {
@@ -78,6 +75,15 @@ public class MindMGMT extends Game {
             progressBar.draw(batch, 1f);
             batch.end();
         }
+    }
+
+    public void drawBackground() {
+        batch.begin();
+        if (backgroundTexture != null) {
+            batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight()
+            );
+        }
+        batch.end();
     }
 
     @Override
