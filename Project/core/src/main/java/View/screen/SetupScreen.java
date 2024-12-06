@@ -42,11 +42,10 @@ public class SetupScreen implements Screen {
         root.add(question).colspan(2).padBottom(40);
         root.row();
 
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
+        float width = stage.getWidth();
+        float height = stage.getHeight();
 
-        Skin skin = application.assets.get("metalui/metal-ui.json", Skin.class);
-        TextButton backButton = new TextButton("Back", skin);
+        TextButton backButton = new TextButton("Back", application.skin);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -65,8 +64,6 @@ public class SetupScreen implements Screen {
             final int value = i;
             TextButton playersButton = new TextButton(i + " players", application.skin);
             root.add(playersButton).pad(20);
-            TextButton playersButton = new TextButton(i + " players", skin);
-            root.add(playersButton).width(width * 0.1f).height(height * 0.05f);
             playersButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -94,7 +91,6 @@ public class SetupScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        application.drawBackground();
         stage.act();
         stage.draw();
     }

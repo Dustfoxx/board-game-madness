@@ -8,39 +8,41 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class MindMGMT extends Game {
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private FitViewport viewport;
+    private Stage stage;
     private ProgressBar progressBar;
     private boolean hasLoaded = false;
+    private ScreenViewport viewport;
 
     public Texture backgroundTexture;
+    public Image backgroundImage;
     public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        viewport = new FitViewport(800,450);
+        viewport = new ScreenViewport();
+        stage = new Stage(viewport);
         assets = new AssetManager();
+        backgroundImage = new Image();
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
         progressBar.setX(viewport.getWorldWidth()/2);
         progressBar.setY(viewport.getWorldHeight()/2);
         progressBar.setWidth(viewport.getWorldWidth());
         progressBar.setHeight(viewport.getWorldHeight());
+        stage.addActor(progressBar);
     }
 
     private void loadAssets() {
@@ -56,39 +58,41 @@ public class MindMGMT extends Game {
     @Override
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
-        super.render(); //important!
 
         if (hasLoaded) {
+            stage.act();
+            stage.draw();
+            super.render();
             return; // Only clear screen once all is loaded
+        } else {
+            super.render();
         }
 
         if (assets.update()) {
             // We are done loading
+            backgroundImage = new Image(assets.get("watercolor-sunset.png", Texture.class));
+            backgroundImage.setSize(stage.getWidth(), stage.getHeight());
+            stage.clear();
+            stage.addActor(backgroundImage);
+            stage.act();
+            stage.draw();
+
             this.hasLoaded = true;
             this.skin = assets.get("comicui/comic-ui.json", Skin.class);
-            this.backgroundTexture = assets.get("watercolor-sunset.png", Texture.class);
+            this.skin.getFont("button")
+                .getData()
+                .setScale(0.8f);
             this.setScreen(new MainMenuScreen(this));
 
         } else {
-            batch.begin();
             progressBar.setValue(assets.getProgress());
-            progressBar.draw(batch, 1f);
-            batch.end();
+            stage.act();
+            stage.draw();
         }
-    }
-
-    public void drawBackground() {
-        batch.begin();
-        if (backgroundTexture != null) {
-            batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight()
-            );
-        }
-        batch.end();
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
+        stage.dispose();
     }
 }

@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen implements Screen {
     private final Stage stage;
@@ -21,22 +19,10 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final MindMGMT application) {
         this.application = application;
         stage = new Stage(new ScreenViewport());
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
-        Skin skin = application.assets.get("metalui/metal-ui.json", Skin.class);
-
-        TextButton startButton = new TextButton("Game Start", skin);
-        TextButton quitButton = new TextButton("Quit " + width + " " + height, skin);
+        Gdx.input.setInputProcessor(stage);
 
         TextButton startButton = new TextButton("Start Game", application.skin);
-        startButton.setPosition(
-            (stage.getWidth() - startButton.getWidth()) / 2,
-            (stage.getHeight() - startButton.getHeight()) / 2);
-        startButton.setPosition(width / 2, height / (2 - 0.15f), Align.center);
-        quitButton.setPosition(width / 2, height / (2 + 0.15f), Align.center);
-
-        startButton.setSize(width * 0.1f, height * 0.05f);
-        quitButton.setSize(width * 0.1f, height * 0.05f);
+        TextButton quitButton = new TextButton("Quit", application.skin);
 
         startButton.addListener(new ChangeListener() {
             @Override
@@ -56,7 +42,22 @@ public class MainMenuScreen implements Screen {
 
         stage.addActor(startButton);
         stage.addActor(quitButton);
-        Gdx.input.setInputProcessor(stage);
+    }
+    private void setupUI() {
+        float width = stage.getWidth();
+        float height = stage.getHeight();
+        TextButton startButton = (TextButton) stage.getActors().get(0);
+        TextButton quitButton = (TextButton) stage.getActors().get(1);
+
+        startButton.setPosition(
+            (width - startButton.getWidth()) / 2,
+            (height - startButton.getHeight()) / (2 - 0.15f));
+        quitButton.setPosition(
+            (width - quitButton.getWidth()) / 2,
+            (height - quitButton.getHeight()) / (2 + 0.15f));
+
+        startButton.setSize(width * 0.1f, height * 0.05f);
+        quitButton.setSize(width * 0.1f, height * 0.05f);
     }
 
     @Override
@@ -69,7 +70,6 @@ public class MainMenuScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        application.drawBackground();
         stage.act();
         stage.draw();
     }
@@ -77,6 +77,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        setupUI();
     }
 
     @Override
