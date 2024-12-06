@@ -2,6 +2,7 @@ package View.screen.GameScreenComponents;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -75,6 +76,7 @@ public class AskButton extends TextButton {
         // Create a button for the first feature
 
         Feature[] features = cell.getFeatures();
+        ImageButton[] selectedButton = {null}; // To track the currently selected button
 
         for (Feature feature : features) {
             VisualCell visualCell = new VisualCell(cell);
@@ -86,12 +88,24 @@ public class AskButton extends TextButton {
             buttonStyle.up = drawable;
             buttonStyle.down = drawable.tint(Color.BROWN);
             ImageButton featureButton = new ImageButton(buttonStyle);
-
-            featureButton.setSize(10, 10);
+            stage.addActor(featureButton);
 
             featureButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    // Resize previously selected button back to normal
+                    if (selectedButton[0] != null) {
+                        selectedButton[0].setSize(100, 100); // Reset size
+                        // selectedButton[0].addAction(Action.fadeIn());
+                    }
+
+                    // Set the newly selected button
+                    selectedButton[0] = featureButton;
+                    selectedFeature = feature.name();
+
+                    // Increase the size of the selected button
+                    featureButton.setSize(120, 120); // New size for the selected button
+
                     selectedFeature = feature.name();
                 }
             });
