@@ -1,20 +1,23 @@
 package View.screen.GameScreenComponents;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Controller.GameController;
-import Model.AbstractCell;
 import Model.Feature;
 import Model.NormalCell;
-import Model.Player;
+import View.buildingBlocks.VisualCell;
 
 public class AskButton extends TextButton {
 
@@ -74,15 +77,25 @@ public class AskButton extends TextButton {
         Feature[] features = cell.getFeatures();
 
         for (Feature feature : features) {
-            String featureName = feature.name();
-            TextButton featureButton = new TextButton(featureName, skin);
+            VisualCell visualCell = new VisualCell(cell);
+            TextureRegion featureTexture = visualCell.fetchFeature(feature);
+            TextureRegionDrawable drawable = new TextureRegionDrawable(featureTexture);
+            drawable.setMinWidth(100);
+            drawable.setMinHeight(100);
+            ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+            buttonStyle.up = drawable;
+            buttonStyle.down = drawable.tint(Color.BROWN);
+            ImageButton featureButton = new ImageButton(buttonStyle);
+
+            featureButton.setSize(10, 10);
+
             featureButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    selectedFeature = featureName;
+                    selectedFeature = feature.name();
                 }
             });
-            buttonTable.add(featureButton).padRight(20).padBottom(10);
+            buttonTable.add(featureButton).padRight(20).padBottom(5);
         }
 
         // Add feature buttons to the window
@@ -101,7 +114,7 @@ public class AskButton extends TextButton {
         askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
 
         askWindow.pack();
-        askWindow.setSize(500, 200);
+        askWindow.setSize(500, 300);
         askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
                 stage.getHeight() / 2 - askWindow.getHeight() / 2);
 

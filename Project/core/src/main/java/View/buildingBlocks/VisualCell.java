@@ -58,7 +58,7 @@ public class VisualCell {
         features.put(Feature.GRAFFITI, 15);
     }
 
-    private TextureRegion fetchFeature(Feature feature) {
+    public TextureRegion fetchFeature(Feature feature) {
         int sideSize = 873 / 4;
         return new TextureRegion(featuresImg,
                 sideSize * (features.get(feature) % 4),
