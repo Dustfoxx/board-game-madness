@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
     private final MindMGMT application;
@@ -34,7 +35,8 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private final Texture boardTexture;
     private final PlayerBar playerBar;
-    private Label timeTracker;
+    private final TurnBar turnBar;
+    //private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final SettingWindow settingWindow;
     private String selectedFeature;
@@ -53,7 +55,8 @@ public class GameScreen implements Screen {
         this.actionController = new ActionController();
 
         this.playerBar = new PlayerBar(gameController);
-        this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
+        this.turnBar=new TurnBar(gameController);
+        //this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
 
         Gdx.input.setInputProcessor(stage);
@@ -112,9 +115,8 @@ public class GameScreen implements Screen {
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
 
-        Table turnBar = new Table();
         mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
-        turnBar.add(timeTracker).expandX();
+
     }
 
     private void setupActionBar(Table root) {
