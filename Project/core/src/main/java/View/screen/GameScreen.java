@@ -91,10 +91,9 @@ public class GameScreen implements Screen {
         Table mainSection = new Table();
         root.row();
         root.add(mainSection).expand().fill();
-
-        // not useful in functionality now, but useful for layout
-        Table iconBar = new Table();
-        mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
+        
+        Table mindslipBar = new Table();
+        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
 
         // TODO: Change so that the players are not hardcoded but chosen positions at
         // the start of the game
@@ -105,14 +104,11 @@ public class GameScreen implements Screen {
         board.getCell(6, 5).addPlayer(new RougeAgent(4));
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();
-        mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
+        mainSection.add(boardSection).expandY().width(Value.percentWidth(0.5f, mainSection));
+
         // boardSection.add(boardImage).expand().fill();
 
-        Table mindslipBar = new Table();
-        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
-
-        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
-
+        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.3f, mainSection));
     }
 
     private void setupActionBar(Table root) {
