@@ -58,22 +58,20 @@ public class TurnBar extends Table{
         String turnString = (turn > 9) ? String.valueOf(turn) : "0" + turn;
         Table turnRow = new Table();
         turnRow.setDebug(true);
-        turnRow.align(Align.right);
-
-        Label turnLabel = new Label(turnString + ":00", skin, "half-tone");
-        turnLabel.setAlignment(Align.center);
-        turnRow.add(turnLabel).expandX().fillX().pad(5);
+        turnRow.align(Align.center);
 
         // Recruits/Mindslip
+        Label actionLabel = new Label("Mindslip", skin, "big");
+        actionLabel.setAlignment(Align.center);
+        turnRow.add(actionLabel).expandX().pad(5);
 
-        // Label actionLabel = new Label("Mindslip", skin, "half-tone");
-        // actionLabel.setAlignment(Align.left);
-        // turnRow.add(actionLabel).expandX().fillX().pad(5);
+        Label turnLabel = new Label(turnString + ":00", skin, "big");
+        turnLabel.setAlignment(Align.center);
+        turnRow.add(turnLabel).expandX().pad(5);
 
         if (!revealedTurns.contains(turnRow)) {
             revealedTurnsInt.add(turn);
-
-            pastTurn.add(turnRow).expandX().fillX().pad(5);
+            pastTurn.add(turnRow).expandX();
             pastTurn.row();
             revealedTurns.add(turnRow);
         }
