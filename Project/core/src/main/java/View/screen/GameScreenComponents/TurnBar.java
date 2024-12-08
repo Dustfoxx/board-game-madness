@@ -60,10 +60,16 @@ public class TurnBar extends Table{
         turnRow.setDebug(true);
         turnRow.align(Align.center);
 
-        // Recruits/Mindslip
-        Label actionLabel = new Label("Mindslip", skin, "big");
-        actionLabel.setAlignment(Align.center);
-        turnRow.add(actionLabel).expandX().pad(5);
+        // Mindslip/Recruits
+        Label msLabel = new Label("Mindslip", skin, "big");
+        msLabel.setAlignment(Align.center);
+        turnRow.add(msLabel).expandX().pad(5);
+
+        //TODO: Maybe we can add a picture of the recruited
+        int unreveleadRecruits = gameController.getGame().getAmountRecruited();
+        Label recruitedLabel = new Label(String.valueOf(unreveleadRecruits), skin, "big");
+        recruitedLabel.setAlignment(Align.center);
+        turnRow.add(recruitedLabel).expandX().pad(5);
 
         Label turnLabel = new Label(turnString + ":00", skin, "big");
         turnLabel.setAlignment(Align.center);
