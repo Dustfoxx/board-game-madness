@@ -18,10 +18,6 @@ import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import View.screen.GameScreenComponents.TurnBar;
@@ -228,6 +224,7 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
         playerBar.update();
+        turnBar.updateTurnbar();
     }
 
     @Override
