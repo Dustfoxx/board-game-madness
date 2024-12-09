@@ -2,6 +2,7 @@ package View.screen;
 
 import Controller.ActionController;
 import Controller.GameController;
+import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,9 +27,8 @@ public class GameScreen implements Screen {
     private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
-    private final Stage stage;
+    private final MindMGMTStage stage;
     private final Skin skin;
-    private final SpriteBatch batch;
     private final Texture boardTexture;
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
@@ -41,18 +41,15 @@ public class GameScreen implements Screen {
         this.application = application;
         this.selectedFeature = "";
 
-        this.batch = new SpriteBatch();
-        this.stage = new Stage(new ScreenViewport(), batch);
+        this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
 
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(application.nrOfPlayers, boardCsv);
         this.actionController = new ActionController();
-
-        this.playerBar = new PlayerBar(gameController);
+        this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar=new TurnBar(gameController,skin);
-        //this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
 
         Gdx.input.setInputProcessor(stage);
@@ -136,13 +133,6 @@ public class GameScreen implements Screen {
         stage.addActor(askActionWindow);
     }
 
-    void updateButtonStates() {
-        for (TextButton textButton : actionButtons) {
-            textButton.getColor().a = 0.4f;
-            textButton.setDisabled(true);
-        }
-    }
-
     private Window createAskActionWindow(String title, String message) {
         Window askWindow = new Window(title, skin);
         askWindow.setMovable(false);
@@ -159,6 +149,7 @@ public class GameScreen implements Screen {
         askWindow.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
 
         Label messageLabel = new Label(message, skin);
+        messageLabel.setFontScale(2f);
         askWindow.add(messageLabel).pad(20).row();
 
         Table buttonTable = new Table();
@@ -216,7 +207,6 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        application.drawBackground();
         stage.act(delta);
         stage.draw();
         playerBar.update();
@@ -250,7 +240,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
         skin.dispose();
         stage.dispose();
         boardTexture.dispose();
