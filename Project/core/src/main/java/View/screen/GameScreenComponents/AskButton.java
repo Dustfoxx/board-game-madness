@@ -27,8 +27,7 @@ public class AskButton extends TextButton {
     GameController gameController;
     NormalCell cell;
 
-    public AskButton(Skin skin, Stage stage, String selectedFeature, GameController gameController,
-            NormalCell cell) {
+    public AskButton(Skin skin, Stage stage, GameController gameController, NormalCell cell) {
 
         super("Ask", skin);
         this.stage = stage;

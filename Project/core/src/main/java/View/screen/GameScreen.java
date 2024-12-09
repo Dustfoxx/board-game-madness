@@ -36,14 +36,11 @@ public class GameScreen implements Screen {
     private final Texture boardTexture;
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
-    //private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final SettingWindow settingWindow;
-    private String selectedFeature;
 
     public GameScreen(MindMGMT application) {
         this.application = application;
-        this.selectedFeature = "";
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
@@ -81,7 +78,6 @@ public class GameScreen implements Screen {
                 stage.addActor(settingWindow);
             }
         });
-
     }
 
     private void setupPlayerBar(Table root) {
@@ -121,14 +117,13 @@ public class GameScreen implements Screen {
         AbstractCell cell = gameController.getGame().getBoard().getCell(0, 0);
         if (cell.getClass().equals(NormalCell.class)) {
             NormalCell normalCell = (NormalCell) cell;
-            AskButton askButton = new AskButton(skin, stage, selectedFeature, gameController, normalCell);
+            AskButton askButton = new AskButton(skin, stage, gameController, normalCell);
             actionButtons.add(askButton);
             actionBar.add(askButton);
         }
     }
 
     @Override
-
     public void show() {
     }
 
