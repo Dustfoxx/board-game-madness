@@ -46,8 +46,7 @@ public class MainMenuScreen implements Screen {
         float width = stage.getCamera().viewportWidth;
         float height = stage.getCamera().viewportHeight;
 
-        startButton.setSize(width * 0.1f, height * 0.05f);
-        quitButton.setSize(width * 0.1f, height * 0.05f);
+        quitButton.setSize(startButton.getWidth(), startButton.getHeight());
 
         startButton.setPosition(
             (width - startButton.getWidth()) / 2,
