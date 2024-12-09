@@ -31,13 +31,14 @@ public class AskWindow extends Window {
         this.setResizable(false);
         this.setModal(true);
         this.buttonTable = new Table(); // Create a table for the feature buttons
+        this.add(buttonTable).colspan(2).center().row();
 
         // Create a button for closing the window
         Button closeButton = new Button(skin, "close");
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                actor.getParent().remove();
+                actor.getParent().remove(); // Closes the window
             }
         });
 
@@ -52,16 +53,19 @@ public class AskWindow extends Window {
         Feature[] features = cell.getFeatures();
 
         for (Feature feature : features) {
+            // Get the feature image
             VisualCell visualCell = new VisualCell(cell);
             TextureRegion featureTexture = visualCell.fetchFeature(feature);
+            // Create an ImageButton based on the feature image
             TextureRegionDrawable drawable = new TextureRegionDrawable(featureTexture);
             drawable.setMinWidth(100);
             drawable.setMinHeight(100);
             ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
             buttonStyle.up = drawable;
-            buttonStyle.down = drawable.tint(Color.BROWN);
+            buttonStyle.down = drawable.tint(Color.BROWN); // Tint the button when it's pressed
             ImageButton featureButton = new ImageButton(buttonStyle);
 
+            // Update the selected feature when the button is pressed
             featureButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -72,20 +76,16 @@ public class AskWindow extends Window {
             buttonTable.add(featureButton).padRight(20).padBottom(5);
         }
 
-        // Add feature buttons to the window
-        this.add(buttonTable).colspan(2).center().row();
-
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // TODO: Send the selected feature to the game controller
                 System.out.println("Feature selected" + selectedFeature);
-                actor.getParent().remove();
+                actor.getParent().remove(); // Closes the window
             }
         });
         this.add(confirmButton).colspan(2).padTop(10).center().row();
-
         this.pack();
         this.setSize(500, 300);
     }
@@ -94,12 +94,14 @@ public class AskWindow extends Window {
     public void draw(Batch batch, float parentAlpha) {
         // Reset size for all ImageButtons
         for (Actor actor : this.buttonTable.getChildren()) {
-            ((ImageButton)actor).setSize(100, 100);
+            ((ImageButton) actor).setSize(100, 100);
         }
+
         // Increase the size of the selected button
         if (selectedFeatureButton != null) {
             selectedFeatureButton.setSize(120, 120);
-        } 
+        }
+
         super.draw(batch, parentAlpha); // Important
     }
 }
