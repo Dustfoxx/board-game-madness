@@ -31,11 +31,10 @@ public class TurnBar extends Table {
      * @param gameController The GameController that manages game state.
      */
 
-    public TurnBar(GameController gameController) {
+    public TurnBar(GameController gameController,Skin skin) {
         this.setDebug(true); // Enables debug mode for visualizing layout borders
         this.gameController = gameController;
-        skin = new Skin(Gdx.files.internal("comicui/comic-ui.json"));
-
+        this.skin = skin;
         // Table for displaying the turn clock
         Table turnClock = new Table();
         this.add(turnClock).expandX().fillX().top().row();

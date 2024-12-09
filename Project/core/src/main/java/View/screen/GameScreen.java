@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
         this.actionController = new ActionController();
 
         this.playerBar = new PlayerBar(gameController);
-        this.turnBar=new TurnBar(gameController);
+        this.turnBar=new TurnBar(gameController,skin);
         //this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
 
@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
         Table mainSection = new Table();
         root.row();
         root.add(mainSection).expand().fill();
-        
+
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
 
