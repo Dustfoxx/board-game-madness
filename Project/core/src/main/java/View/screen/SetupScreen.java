@@ -70,7 +70,7 @@ public class SetupScreen implements Screen {
                 dispose();
             }
         });
-        root.add(backButton).width(width * 0.1f).height(height * 0.05f);
+        root.add(backButton).colspan(2).width(width * 0.1f).height(height * 0.05f);
         stage.addActor(root);
         Gdx.input.setInputProcessor(stage);
     }
