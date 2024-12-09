@@ -1,15 +1,12 @@
 package View.screen;
 
 import View.buildingBlocks.MindMGMTStage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.Align;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -35,7 +32,6 @@ public class SetupScreen implements Screen {
 
     private void setupUI() {
         Table root = new Table();
-        root.debug();
         root.setFillParent(true);
 
         float width = stage.getWidth();
