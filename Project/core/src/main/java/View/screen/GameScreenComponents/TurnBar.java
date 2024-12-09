@@ -1,7 +1,6 @@
 package View.screen.GameScreenComponents;
 
 import java.util.Set;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -97,15 +96,15 @@ public class TurnBar extends Table {
         turnRow.align(Align.center);
 
         // Mindslip/Recruits (Placeholder for additional data display)
-        // TODO: Replace "mindSlip" with actual data
 
-        Label msLabel = new Label("Mindslip", skin, "big");
-        msLabel.setAlignment(Align.center);
-        turnRow.add(msLabel).expandX().pad(5);
-
+        if(gameController.getGame().getMindSlipHistory().contains(turn)){
+            Label msLabel = new Label("Mindslip", skin, "big");
+            msLabel.setAlignment(Align.center);
+            turnRow.add(msLabel).expandX().pad(5);
+        }
 
         // Add recruited information
-        int unrevealedRecruits = gameController.getGame().getRecruitHistory().get(turn - 1)[1];
+        int unrevealedRecruits = gameController.getGame().getRecruitHistory().get(turn)[1];
         Label recruitedLabel = new Label(String.valueOf(unrevealedRecruits), skin, "big");
         recruitedLabel.setAlignment(Align.center);
         turnRow.add(recruitedLabel).expandX().pad(5);
