@@ -1,5 +1,6 @@
 package View.screen.GameScreenComponents;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,18 +14,11 @@ import Model.NormalCell;
 
 public class AskButton extends TextButton {
 
-    Stage stage;
-    Skin skin;
-    String selectedFeature;
-    GameController gameController;
-    AbstractCell cell;
+    private AbstractCell cell;
 
-    public AskButton(Skin skin, Stage stage, GameController gameController) {
+    public AskButton(GameController gameController, Skin skin) {
 
         super("Ask", skin);
-        this.stage = stage;
-        this.skin = skin;
-        this.gameController = gameController;
 
         // TODO: This should probbly be in controller
         this.cell = gameController.getGame().getBoard().getCell(0, 0);
@@ -33,8 +27,11 @@ public class AskButton extends TextButton {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 NormalCell normalCell = (NormalCell) cell;
-                AskWindow askActionWindow = new AskWindow(skin, normalCell, stage);
-                stage.addActor(askActionWindow);
+                AskWindow askActionWindow = new AskWindow(skin, normalCell);
+                askActionWindow.setPosition(
+                    Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
+                    Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);                
+                actor.getStage().addActor(askActionWindow);
             }
         });
     }

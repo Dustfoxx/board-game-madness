@@ -13,10 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Model.AbstractCell;
 import Model.Board;
 import Model.Csv;
-import Model.NormalCell;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
@@ -113,7 +111,7 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        AskButton askButton = new AskButton(skin, stage, gameController);
+        AskButton askButton = new AskButton(gameController, skin);
         actionButtons.add(askButton);
         actionBar.add(askButton);
     }

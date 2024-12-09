@@ -3,7 +3,6 @@ package View.screen.GameScreenComponents;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,8 +22,8 @@ public class AskWindow extends Window {
 
     String selectedFeature;
 
-    public AskWindow(Skin skin, NormalCell cell, Stage stage) {
-        super("this", skin);
+    public AskWindow(Skin skin, NormalCell cell) {
+        super("Ask Window", skin);
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
@@ -63,7 +62,6 @@ public class AskWindow extends Window {
             buttonStyle.up = drawable;
             buttonStyle.down = drawable.tint(Color.BROWN);
             ImageButton featureButton = new ImageButton(buttonStyle);
-            stage.addActor(featureButton);
 
             featureButton.addListener(new ChangeListener() {
                 @Override
@@ -103,9 +101,6 @@ public class AskWindow extends Window {
 
         this.pack();
         this.setSize(500, 300);
-        this.setPosition(stage.getWidth() / 2 - this.getWidth() / 2,
-                stage.getHeight() / 2 - this.getHeight() / 2);
-
     }
 
     @Override
