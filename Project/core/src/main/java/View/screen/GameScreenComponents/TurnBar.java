@@ -105,7 +105,7 @@ public class TurnBar extends Table {
 
 
         // Add recruited information
-        int unrevealedRecruits = gameController.getGame().getAmountRecruited();
+        int unrevealedRecruits = gameController.getGame().getRecruitHistory().get(turn - 1)[1];
         Label recruitedLabel = new Label(String.valueOf(unrevealedRecruits), skin, "big");
         recruitedLabel.setAlignment(Align.center);
         turnRow.add(recruitedLabel).expandX().pad(5);
