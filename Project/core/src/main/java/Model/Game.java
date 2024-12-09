@@ -9,6 +9,13 @@ import java.util.List;
  */
 public class Game {
 
+    public enum gameStates {
+        PREGAME,
+        ONGOING,
+        ENDGAME
+    } // Enum defining different gameStates
+
+    private gameStates gameState; // Indicates which state the game is in
     private boolean gameOver; // Indicates if the game is over
     private Player currentPlayer; // The player whose turn it is
     private int currentTime; // The current time in the game
@@ -18,6 +25,8 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
+    private boolean movement;
+    private boolean action;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -49,6 +58,9 @@ public class Game {
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
+        this.gameState = gameStates.PREGAME;
+        this.action = false;
+        this.movement = true;
     }
 
     /**
@@ -67,6 +79,7 @@ public class Game {
     public void setGameOver() {
         if (!gameOver) {
             this.gameOver = true;
+            setGameState(gameStates.ENDGAME);
         } else {
             throw new IllegalStateException("The game is already over.");
         }
@@ -137,7 +150,7 @@ public class Game {
      * @return A list of revealed recruites as (time, amount) pairs.
      */
     public List<int[]> getRecruitHistory() {
-        return new ArrayList<>(this.recruitHistory); //Returns a copy for safety
+        return new ArrayList<>(this.recruitHistory); // Returns a copy for safety
     }
 
     /**
@@ -158,7 +171,7 @@ public class Game {
      * @return A list of times when mind slips were used.
      */
     public List<Integer> getMindSlipHistory() {
-        return new ArrayList<>(this.mindSlipHistory); //Returns a copy for safety
+        return new ArrayList<>(this.mindSlipHistory); // Returns a copy for safety
     }
 
     /**
@@ -184,4 +197,78 @@ public class Game {
     public List<Player> getPlayers() {
         return this.players;
     }
+
+    /**
+     * Gets the current gamestate
+     * 
+     * @return The corresponding enum for the current state of the game
+     */
+    public gameStates getGameState() {
+        return this.gameState;
+    }
+
+    /**
+     * Sets the gameState
+     * 
+     * @param newState the new state of the game
+     */
+    public void setGameState(gameStates newState) {
+        switch (newState) {
+            case PREGAME:
+                if (this.gameState == gameStates.ONGOING) {
+                    throw new IllegalStateException("Cannot go from ONGOING to PREGAME states of game");
+                }
+                break;
+            case ONGOING:
+                if (this.gameState == gameStates.ENDGAME) {
+                    throw new IllegalStateException("Cannot go from ENDGAME to ONGOING states of game");
+                }
+                break;
+            case ENDGAME:
+                if (this.gameState == gameStates.PREGAME) {
+                    throw new IllegalStateException("Cannot go from PREGAME to ENDGAME states of game");
+                }
+                break;
+        }
+        this.gameState = newState;
+    }
+
+    /**
+     * Getter for movement variable
+     * 
+     * @return if player can move or not
+     */
+    public boolean getUsedMovement() {
+        return this.movement;
+    }
+
+    /**
+     * Getter for action variable
+     * 
+     * @return if player can use an action still or not
+     */
+    public boolean getUsedAction() {
+        return this.action;
+    }
+
+    /**
+     * sets the movement variable
+     * 
+     * @param value true if player should be able to move and false if they have
+     *              just moved
+     */
+    public void setUseMovement(boolean value) {
+        this.movement = value;
+    }
+
+    /**
+     * Sets the action variable. Different from what they are allowed to do, this is
+     * meant to indicate if they have used an action this turn or not
+     * 
+     * @param value true if player can make an action, false if they have used one.
+     */
+    public void setUseAction(boolean value) {
+        this.action = value;
+    }
+
 }

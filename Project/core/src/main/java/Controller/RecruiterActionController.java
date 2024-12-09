@@ -12,14 +12,6 @@ import Model.Token;
 
 public class RecruiterActionController {
 
-    /**
-     * Moves the recruiter
-     * 
-     */
-    public boolean move() {
-        return true;
-    }
-
     public boolean mindSlip() {
         // Check Valid Mindslip moves
 

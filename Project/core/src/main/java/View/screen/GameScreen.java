@@ -100,10 +100,6 @@ public class GameScreen implements Screen {
         // TODO: Change so that the players are not hardcoded but chosen positions at
         // the start of the game
         Board board = gameController.getGame().getBoard();
-        board.getCell(0, 0).addPlayer(new RougeAgent(1));
-        board.getCell(0, 5).addPlayer(new RougeAgent(2));
-        board.getCell(6, 0).addPlayer(new RougeAgent(3));
-        board.getCell(6, 5).addPlayer(new RougeAgent(4));
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));

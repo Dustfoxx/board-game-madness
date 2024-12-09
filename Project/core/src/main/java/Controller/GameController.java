@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import Model.Game.gameStates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +99,46 @@ public class GameController {
      * Decides new player and increments timer accordingly.
      */
     public void newTurn() {
+        switch (gameState.getGameState()) {
+            case PREGAME:
+                preGameLogic();
+                break;
+            case ONGOING:
+                ongoingLogic();
+                break;
+            case ENDGAME:
+
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    private void preGameLogic() {
+        if (recruiterTurn) {
+            gameState.incrementTime();
+            if (gameState.getCurrentTime() > 5) {
+                recruiterTurn = false;
+                gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
+                                                                           // next player
+            }
+        }
+
+        List<Player> players = gameState.getPlayers();
+        int currentIndex = players.indexOf(gameState.getCurrentPlayer());
+        // If we are at the end of players, set game to started
+        if (currentIndex == players.size() - 1) {
+            gameState.setCurrentPlayer(recruiter);
+            gameState.setGameState(gameStates.ONGOING);
+        } else {
+            // Set player to next rogue agent so they can place
+            gameState.setCurrentPlayer(players.get(currentIndex + 1));
+        }
+    }
+
+    private void ongoingLogic() {
         if (recruiterTurn) {
             gameState.incrementTime();
             if (gameState.getCurrentTime() >= 8) {// IDK how many turns were max
@@ -108,7 +149,8 @@ public class GameController {
             }
             recruiterTurn = false;
         }
-        if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of how that
+        if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of
+                                                   // how that
                                                    // would be
             // structured
             if (recruiter.getAmountRecruited() > 0) {

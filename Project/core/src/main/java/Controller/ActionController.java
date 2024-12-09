@@ -8,8 +8,27 @@ import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
+import Model.Player;
 
 public class ActionController {
+
+    public enum Actions {
+        MOVE,
+        ASK,
+        REVEAL,
+        CAPTURE,
+        MINDSLIP
+    }
+
+    // Proposed function:
+
+    public void actionHandler(Actions action) {
+        // Runs proper action from here
+        // Allows centralized control over if the turn should switch.
+        // Otherwise all action functions must modify model to match which actions have
+        // been taken
+    }
+
     /**
      * Displays a set of features to the player and prompts picking
      * 
@@ -59,5 +78,33 @@ public class ActionController {
                 break;
             }
         }
+    }
+
+    /**
+     * Places a player on the board. Mask
+     * decides valid spots
+     * 
+     * @param player       the player that is being placed
+     * @param board        the board it is being placed on
+     * @param validityMask the mask defining valid positions. Null if all options
+     *                     are valid
+     * @param coords       coordinates the player will be placed on
+     * @return boolean defining if the action was successful or not
+     */
+    public boolean movePlayer(Player player, Board board, boolean[][] validityMask, int[] coords) {
+        // Did player choose a valid location?
+        if (validityMask != null) {
+            if (validityMask[coords[0]][coords[1]]) {
+                return false;
+            }
+        }
+        // If player on board
+        int[] playerCoords = board.getPlayerCoord(player);
+        if (playerCoords != null) {
+            board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+        }
+        // Add player to new cell
+        board.getCell(coords[0], coords[1]).addPlayer(player);
+        return true;
     }
 }
