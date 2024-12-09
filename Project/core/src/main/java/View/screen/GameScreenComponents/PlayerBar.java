@@ -36,7 +36,6 @@ public class PlayerBar extends Table {
 
         // Create a label for each player and add it to the table
         for (Player player : gameController.getGame().getPlayers()) {
-            Label.LabelStyle labelStyle = new Label.LabelStyle(skin.getFont("button"), Color.BLACK);
             Label playerLabel = new Label(player.getName(), skin, "narration");
             playerLabel.setFontScale(2f);
             this.add(playerLabel).expandX(); // Expand each label equally along the X-axis
