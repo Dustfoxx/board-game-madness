@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -61,8 +62,8 @@ public class PlayerBar extends Table {
      * Updates the PlayerBar to visually indicate the current player by
      * highlighting its label in green and dimming the others.
      */
-    public void update() {
-
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
         Game game = gameController.getGame();
         List<Player> players = game.getPlayers();
         Player currentPlayer = game.getCurrentPlayer();
@@ -72,11 +73,14 @@ public class PlayerBar extends Table {
                 int playerIndex = players.indexOf(player);
                 Label playerLabel = (Label) this.getChildren().get(playerIndex);
                 if (player == currentPlayer) {
+                    playerLabel.setColor(Color.GREEN);
                     playerLabel.getColor().a = 1f;
                 } else {
+                    playerLabel.setColor(Color.WHITE);
                     playerLabel.getColor().a = 0.3f;
                 }
             }
         }
+        super.draw(batch, parentAlpha); // Important
     }
 }
