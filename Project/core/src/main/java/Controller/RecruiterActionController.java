@@ -3,11 +3,13 @@ package Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
+import Model.Player;
 import Model.Token;
 
 public class RecruiterActionController {
@@ -16,8 +18,13 @@ public class RecruiterActionController {
      * Moves the recruiter
      * 
      */
-    public boolean move() {
-        return true;
+    public void move(Board board, Player recruiter, int[] newPosition) {
+        AbstractCell newCellPosition = board.getCell(newPosition[0], newPosition[1]);
+        int[] currentPosition = board.getPlayerCoord(recruiter);
+        
+        AbstractCell previousCellPosition = board.getCell(currentPosition[0], currentPosition[1]);
+        previousCellPosition.removePlayer(recruiter);
+        newCellPosition.addPlayer(recruiter);
     }
 
     public boolean mindSlip() {

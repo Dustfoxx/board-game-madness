@@ -1,5 +1,7 @@
 package View.buildingBlocks;
 
+import java.lang.reflect.Array;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -37,7 +39,8 @@ public class VisualBoard {
                         System.out.println(row);
                         System.out.println(col);
 
-                        boardInfo.getCell(row, col).addPlayer(new RougeAgent(2));
+                        boardInfo.getCell(row, col).addPlayer(new RougeAgent(1));
+                        cell.UpdateCell();
                     }
                 });
                 board.add(cellTable).uniform();
@@ -49,4 +52,6 @@ public class VisualBoard {
     public Table getVisualBoard() {
         return this.board;
     }
+
+
 }

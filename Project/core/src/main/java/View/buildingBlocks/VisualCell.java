@@ -3,11 +3,17 @@ package View.buildingBlocks;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
 import Model.Feature;
@@ -17,20 +23,26 @@ import Model.Player;
 public class VisualCell extends Actor {
     private Table cell = new Table();
 
+    AbstractCell abstractCell;
+
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture playersImg = new Texture("players_tmp.png");
 
     public VisualCell(AbstractCell cellInfo) {
+        abstractCell = cellInfo;
         initDict();
         if (cellInfo instanceof NormalCell) {
             NormalCell convertedCell = (NormalCell) cellInfo;
             Feature[] features = convertedCell.getFeatures();
             cell.add(new Image(fetchFeature(features[0]))).uniform();
             cell.add(new Image(fetchFeature(features[1]))).uniform();
+
+            
         }
         cell.row();
+
         for (Player player : cellInfo.getPlayers()) {
             cell.add(new Image(fetchPlayer(player.getId()))).uniform();
         }
@@ -74,4 +86,24 @@ public class VisualCell extends Actor {
                 0,
                 sideSize, sideSize);
     }
+
+
+    public void UpdateCell() {
+
+        
+        if (abstractCell instanceof NormalCell) {
+            NormalCell convertedCell = (NormalCell) abstractCell;
+            Feature[] features = convertedCell.getFeatures();
+            cell.add(new Image(fetchFeature(features[0]))).uniform();
+            cell.add(new Image(fetchFeature(features[1]))).uniform();
+        }
+        cell.row();
+
+        for (Player player : abstractCell.getPlayers()) {
+            cell.add(new Image(fetchPlayer(player.getId()))).uniform();
+        }
+    }
+
+
+    
 }
