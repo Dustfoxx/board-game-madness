@@ -1,25 +1,15 @@
 package View.screen.GameScreenComponents;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Controller.GameController;
 import Model.AbstractCell;
-import Model.Feature;
 import Model.NormalCell;
-import View.buildingBlocks.VisualCell;
 
 public class AskButton extends TextButton {
 
@@ -37,15 +27,16 @@ public class AskButton extends TextButton {
         this.gameController = gameController;
 
         // TODO: This should probbly be in controller
-        this.cell = gameController.getGame().getBoard().getCell(2, 2);
-        
+        this.cell = gameController.getGame().getBoard().getCell(0, 0);
+
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Window askActionWindow = createAskActionWindow("Ask Action", "Which feature do you want to ask about?");
+                NormalCell normalCell = (NormalCell) cell;
+                AskWindow askActionWindow = new AskWindow(skin, normalCell, stage);
                 stage.addActor(askActionWindow);
             }
-        });        
+        });
     }
 
     @Override
@@ -57,106 +48,18 @@ public class AskButton extends TextButton {
             return null;
         }
     }
-    
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         // Enable the button
         if (cell.getClass().equals(NormalCell.class)) {
             this.setDisabled(false);
-        // Disable the button
+            // Disable the button
         } else {
             this.setColor(0.8f, 0.8f, 0.8f, 1f);
             this.setDisabled(true);
-        } 
+        }
         super.draw(batch, parentAlpha); // Important
     }
 
-    // Create a new window
-    private Window createAskActionWindow(String title, String message) {
-        // Create the window
-        Window askWindow = new Window(title, skin);
-        askWindow.setMovable(false);
-        askWindow.setResizable(false);
-        askWindow.setModal(true);
-
-        // Create a button for closing the window
-        Button closeButton = new Button(skin, "close");
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                askWindow.remove();
-            }
-        });
-
-        // Add the close button to the window
-        askWindow.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
-
-        // Add the message to the window
-        Label messageLabel = new Label(message, skin);
-        askWindow.add(messageLabel).pad(20).row();
-
-        // Create a table for the feature buttons
-        Table buttonTable = new Table();
-
-        // Create a button for the first feature
-        NormalCell normalCell = (NormalCell) cell;
-        Feature[] features = normalCell.getFeatures();
-        ImageButton[] selectedButton = {null}; // To track the currently selected button
-
-        for (Feature feature : features) {
-            VisualCell visualCell = new VisualCell(cell);
-            TextureRegion featureTexture = visualCell.fetchFeature(feature);
-            TextureRegionDrawable drawable = new TextureRegionDrawable(featureTexture);
-            drawable.setMinWidth(100);
-            drawable.setMinHeight(100);
-            ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
-            buttonStyle.up = drawable;
-            buttonStyle.down = drawable.tint(Color.BROWN);
-            ImageButton featureButton = new ImageButton(buttonStyle);
-            stage.addActor(featureButton);
-
-            featureButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    // Resize previously selected button back to normal
-                    if (selectedButton[0] != null) {
-                        selectedButton[0].setSize(100, 100); // Reset size
-                        // selectedButton[0].addAction(Action.fadeIn());
-                    }
-
-                    // Set the newly selected button
-                    selectedButton[0] = featureButton;
-                    selectedFeature = feature.name();
-
-                    // Increase the size of the selected button
-                    featureButton.setSize(120, 120); // New size for the selected button
-
-                    selectedFeature = feature.name();
-                }
-            });
-            buttonTable.add(featureButton).padRight(20).padBottom(5);
-        }
-
-        // Add feature buttons to the window
-        askWindow.add(buttonTable).colspan(2).center().row();
-
-        TextButton confirmButton = new TextButton("Confirm", skin);
-        confirmButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // TODO:send the selected feature to the game controller
-                System.out.println("Feature selected" + selectedFeature);
-                gameController.newTurn();
-                askWindow.remove();
-            }
-        });
-        askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
-
-        askWindow.pack();
-        askWindow.setSize(500, 300);
-        askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
-                stage.getHeight() / 2 - askWindow.getHeight() / 2);
-
-        return askWindow;
-    }
 }
