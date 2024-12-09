@@ -19,12 +19,9 @@ import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import View.screen.GameScreenComponents.SettingWindow;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
     private final MindMGMT application;
@@ -34,7 +31,8 @@ public class GameScreen implements Screen {
     private final Skin skin;
     private final Texture boardTexture;
     private final PlayerBar playerBar;
-    private Label timeTracker;
+    private final TurnBar turnBar;
+    //private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final SettingWindow settingWindow;
     private String selectedFeature;
@@ -50,9 +48,8 @@ public class GameScreen implements Screen {
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(application.nrOfPlayers, boardCsv);
         this.actionController = new ActionController();
-
         this.playerBar = new PlayerBar(gameController, skin);
-        this.timeTracker = new Label(String.valueOf(gameController.getGame().getCurrentTime()), skin);
+        this.turnBar=new TurnBar(gameController,skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
 
         Gdx.input.setInputProcessor(stage);
@@ -92,9 +89,8 @@ public class GameScreen implements Screen {
         root.row();
         root.add(mainSection).expand().fill();
 
-        // not useful in functionality now, but useful for layout
-        Table iconBar = new Table();
-        mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
+        Table mindslipBar = new Table();
+        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
 
         // TODO: Change so that the players are not hardcoded but chosen positions at
         // the start of the game
@@ -105,15 +101,11 @@ public class GameScreen implements Screen {
         board.getCell(6, 5).addPlayer(new RougeAgent(4));
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();
-        mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
+        mainSection.add(boardSection).expandY().width(Value.percentWidth(0.5f, mainSection));
+
         // boardSection.add(boardImage).expand().fill();
 
-        Table mindslipBar = new Table();
-        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
-
-        Table turnBar = new Table();
-        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
-        turnBar.add(timeTracker).expandX();
+        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.3f, mainSection));
     }
 
     private void setupActionBar(Table root) {
@@ -218,6 +210,7 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
         playerBar.update();
+        turnBar.updateTurnbar();
     }
 
     @Override
