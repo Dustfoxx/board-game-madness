@@ -99,11 +99,11 @@ public class TurnBar extends Table {
 
         // Mindslip/Recruits (Placeholder for additional data display)
         // TODO: Replace "mindSlip" with actual data
-        if (mindSlip) {
-            Label msLabel = new Label("Mindslip", skin, "big");
-            msLabel.setAlignment(Align.center);
-            turnRow.add(msLabel).expandX().pad(5);
-        }
+
+        Label msLabel = new Label("Mindslip", skin, "big");
+        msLabel.setAlignment(Align.center);
+        turnRow.add(msLabel).expandX().pad(5);
+
 
         // Add recruited information
         int unrevealedRecruits = gameController.getGame().getAmountRecruited();
