@@ -12,10 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import Model.AbstractCell;
 import Model.Board;
 import Model.Csv;
+import Model.NormalCell;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
+import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -113,7 +117,7 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        String[] actions = { "Ask", "Move", "Reveal" };
+        String[] actions = {"Move", "Reveal" };
         for (String action : actions) {
             TextButton actionButton = new TextButton(action, skin);
             actionButtons.add(actionButton);
@@ -125,6 +129,14 @@ public class GameScreen implements Screen {
                     askAction();
                 }
             });
+        }
+        // Create an Ask-button if the cell is not a temple
+        AbstractCell cell = gameController.getGame().getBoard().getCell(0, 0);
+        if (cell.getClass().equals(NormalCell.class)) {
+            NormalCell normalCell = (NormalCell) cell;
+            AskButton askButton = new AskButton("Ask", skin, stage, selectedFeature, gameController, normalCell);
+            actionButtons.add(askButton);
+            actionBar.add(askButton);
         }
     }
 
