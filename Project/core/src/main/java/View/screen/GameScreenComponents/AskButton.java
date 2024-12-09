@@ -1,6 +1,7 @@
 package View.screen.GameScreenComponents;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Controller.GameController;
+import Model.AbstractCell;
 import Model.Feature;
 import Model.NormalCell;
 import View.buildingBlocks.VisualCell;
@@ -25,23 +27,48 @@ public class AskButton extends TextButton {
     Skin skin;
     String selectedFeature;
     GameController gameController;
-    NormalCell cell;
+    AbstractCell cell;
 
-    public AskButton(Skin skin, Stage stage, GameController gameController, NormalCell cell) {
+    public AskButton(Skin skin, Stage stage, GameController gameController) {
 
         super("Ask", skin);
         this.stage = stage;
         this.skin = skin;
         this.gameController = gameController;
-        this.cell = cell;
 
+        // TODO: This should probbly be in controller
+        this.cell = gameController.getGame().getBoard().getCell(2, 2);
+        
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Window askActionWindow = createAskActionWindow("Ask Action", "Which feature do you want to ask about?");
                 stage.addActor(askActionWindow);
             }
-        });
+        });        
+    }
+
+    @Override
+    public Actor hit(float x, float y, boolean touchable) {
+        // This override prevents the button from being clickable when disabled
+        if (cell.getClass().equals(NormalCell.class)) {
+            return super.hit(x, y, touchable);
+        } else {
+            return null;
+        }
+    }
+    
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        // Enable the button
+        if (cell.getClass().equals(NormalCell.class)) {
+            this.setDisabled(false);
+        // Disable the button
+        } else {
+            this.setColor(0.8f, 0.8f, 0.8f, 1f);
+            this.setDisabled(true);
+        } 
+        super.draw(batch, parentAlpha); // Important
     }
 
     // Create a new window
@@ -72,8 +99,8 @@ public class AskButton extends TextButton {
         Table buttonTable = new Table();
 
         // Create a button for the first feature
-
-        Feature[] features = cell.getFeatures();
+        NormalCell normalCell = (NormalCell) cell;
+        Feature[] features = normalCell.getFeatures();
         ImageButton[] selectedButton = {null}; // To track the currently selected button
 
         for (Feature feature : features) {

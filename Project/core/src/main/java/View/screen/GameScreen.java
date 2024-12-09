@@ -113,14 +113,9 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        // Create an Ask-button if the cell is not a temple
-        AbstractCell cell = gameController.getGame().getBoard().getCell(0, 0);
-        if (cell.getClass().equals(NormalCell.class)) {
-            NormalCell normalCell = (NormalCell) cell;
-            AskButton askButton = new AskButton(skin, stage, gameController, normalCell);
-            actionButtons.add(askButton);
-            actionBar.add(askButton);
-        }
+        AskButton askButton = new AskButton(skin, stage, gameController);
+        actionButtons.add(askButton);
+        actionBar.add(askButton);
     }
 
     @Override
