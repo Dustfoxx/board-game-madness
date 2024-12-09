@@ -17,13 +17,12 @@ import Model.Feature;
 import Model.NormalCell;
 import View.buildingBlocks.VisualCell;
 
-
 public class AskWindow extends Window {
 
     String selectedFeature;
 
     public AskWindow(Skin skin, NormalCell cell) {
-        super("Ask Window", skin);
+        super("Ask Win", skin);
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
@@ -34,7 +33,7 @@ public class AskWindow extends Window {
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                remove();
+                actor.getParent().remove();
             }
         });
 
@@ -94,17 +93,12 @@ public class AskWindow extends Window {
             public void changed(ChangeEvent event, Actor actor) {
                 // TODO: Send the selected feature to the game controller
                 System.out.println("Feature selected" + selectedFeature);
-                remove();
+                actor.getParent().remove();
             }
         });
         this.add(confirmButton).colspan(2).padTop(10).center().row();
 
         this.pack();
         this.setSize(500, 300);
-    }
-
-    @Override
-    public boolean remove() {
-        return super.remove();
     }
 }
