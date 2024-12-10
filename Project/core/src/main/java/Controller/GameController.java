@@ -107,7 +107,7 @@ public class GameController {
                 ongoingLogic();
                 break;
             case ENDGAME:
-
+                // Save stats?
                 break;
 
             default:
@@ -141,7 +141,7 @@ public class GameController {
     private void ongoingLogic() {
         if (recruiterTurn) {
             gameState.incrementTime();
-            if (gameState.getCurrentTime() >= 8) {// IDK how many turns were max
+            if (gameState.getCurrentTime() >= 14) {// IDK how many turns were max
                 // RECRUITER WIN
                 gameState.setGameOver();
                 // Should who won exist here or in model?

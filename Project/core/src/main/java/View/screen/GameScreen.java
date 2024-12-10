@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import Model.Board;
 import Model.Csv;
-import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
@@ -97,8 +96,6 @@ public class GameScreen implements Screen {
         Table iconBar = new Table();
         mainSection.add(iconBar).expandY().fillY().width(Value.percentWidth(0.1f, mainSection));
 
-        // TODO: Change so that the players are not hardcoded but chosen positions at
-        // the start of the game
         Board board = gameController.getGame().getBoard();
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();

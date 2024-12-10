@@ -4,13 +4,10 @@ import Model.Csv;
 import View.loader.CsvLoader;
 import View.screen.MainMenuScreen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -18,8 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
+ * platforms.
+ */
 public class MindMGMT extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
@@ -36,12 +35,12 @@ public class MindMGMT extends Game {
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
-        viewport = new FitViewport(800,450);
+        viewport = new FitViewport(800, 450);
         assets = new AssetManager();
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
-        progressBar.setX(viewport.getWorldWidth()/2);
-        progressBar.setY(viewport.getWorldHeight()/2);
+        progressBar.setX(viewport.getWorldWidth() / 2);
+        progressBar.setY(viewport.getWorldHeight() / 2);
         progressBar.setWidth(viewport.getWorldWidth());
         progressBar.setHeight(viewport.getWorldHeight());
     }
@@ -59,7 +58,7 @@ public class MindMGMT extends Game {
     @Override
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
-        super.render(); //important!
+        super.render(); // important!
 
         if (hasLoaded) {
             return; // Only clear screen once all is loaded
@@ -83,8 +82,7 @@ public class MindMGMT extends Game {
     public void drawBackground() {
         batch.begin();
         if (backgroundTexture != null) {
-            batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight()
-            );
+            batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         }
         batch.end();
     }
