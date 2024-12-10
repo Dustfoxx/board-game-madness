@@ -9,9 +9,11 @@ import java.util.HashSet;
 import Controller.GameController;
 
 /**
- * The TurnBar class represents a UI component that displays the current turn and tracks
+ * The TurnBar class represents a UI component that displays the current turn
+ * and tracks
  * previous turns in a game.
- * This class is responsible for updating the turn display and managing revealed turns.
+ * This class is responsible for updating the turn display and managing revealed
+ * turns.
  */
 
 public class TurnBar extends Table {
@@ -30,7 +32,7 @@ public class TurnBar extends Table {
      * @param gameController The GameController that manages game state.
      */
 
-    public TurnBar(GameController gameController,Skin skin) {
+    public TurnBar(GameController gameController, Skin skin) {
         this.setDebug(true); // Enables debug mode for visualizing layout borders
         this.gameController = gameController;
         this.skin = skin;
@@ -57,7 +59,8 @@ public class TurnBar extends Table {
     }
 
     /**
-     * Updates the turn bar by refreshing the current turn display and revealing past turns.
+     * Updates the turn bar by refreshing the current turn display and revealing
+     * past turns.
      * Reveals additional turns based on the current turn number.
      */
     public void updateTurnbar() {
@@ -97,7 +100,7 @@ public class TurnBar extends Table {
 
         // Mindslip/Recruits (Placeholder for additional data display)
 
-        if(gameController.getGame().getMindSlipHistory().contains(turn)){
+        if (gameController.getGame().getMindSlipHistory().contains(turn)) {
             Label msLabel = new Label("Mindslip", skin, "big");
             msLabel.setAlignment(Align.center);
             turnRow.add(msLabel).expandX().pad(5);

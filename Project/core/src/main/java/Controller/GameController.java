@@ -124,18 +124,19 @@ public class GameController {
                 gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
                                                                            // next player
             }
+        } else {
+            List<Player> players = gameState.getPlayers();
+            int currentIndex = players.indexOf(gameState.getCurrentPlayer());
+            // If we are at the end of players, set game to started
+            if (currentIndex == players.size() - 1) {
+                gameState.setCurrentPlayer(recruiter);
+                gameState.setGameState(gameStates.ONGOING);
+            } else {
+                // Set player to next rogue agent so they can place
+                gameState.setCurrentPlayer(players.get(currentIndex + 1));
+            }
         }
 
-        List<Player> players = gameState.getPlayers();
-        int currentIndex = players.indexOf(gameState.getCurrentPlayer());
-        // If we are at the end of players, set game to started
-        if (currentIndex == players.size() - 1) {
-            gameState.setCurrentPlayer(recruiter);
-            gameState.setGameState(gameStates.ONGOING);
-        } else {
-            // Set player to next rogue agent so they can place
-            gameState.setCurrentPlayer(players.get(currentIndex + 1));
-        }
     }
 
     private void ongoingLogic() {
