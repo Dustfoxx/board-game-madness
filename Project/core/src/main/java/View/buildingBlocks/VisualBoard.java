@@ -58,7 +58,6 @@ public class VisualBoard {
     }
 
     public Table getVisualBoard() {
-
         return this.board;
     }
 
