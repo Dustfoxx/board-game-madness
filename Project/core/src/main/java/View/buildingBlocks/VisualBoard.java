@@ -55,6 +55,23 @@ public class VisualBoard {
         return this.board;
     }
 
+    public void highlightValidCells(boolean[][] mask) {
+        int rows = mask.length;
+        int cols = mask[0].length;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (mask[i][j]) {
+                    VisualCell cell = getCell(i, j);
+                    if (cell != null) {
+                        cell.highlightCell();
+                    }
+                }
+            }
+        }
+    }
+
+
     public void UpdateCell(int i, int j){
         getCell(i, j).UpdateCell();
 

@@ -28,6 +28,8 @@
 
         private Texture featuresImg = new Texture("feature_img.png");
         private Texture playersImg = new Texture("players_tmp.png");
+        Texture highlight = new Texture("highlight.png");
+        TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
 
         public VisualCell(AbstractCell cellInfo) {
             abstractCell = cellInfo;
@@ -103,36 +105,34 @@
         }
 
         public void UpdateCell() {
-            // Clear existing contents in the table before updating
             clear();
     
-            // Rebuild the visuals based on the updated AbstractCell
             updateVisuals();
     
-            // Invalidate and relayout the table to ensure correct rendering
             invalidate();
             layout();
         }
+
+        void highlightCell(){
+            this.setBackground(highlightdrb);
+        }
     
-        // Method to update visuals (called both in constructor and UpdateCell)
         private void updateVisuals() {
-            
             if (abstractCell instanceof NormalCell) {
                 NormalCell convertedCell = (NormalCell) abstractCell;
                 Feature[] features = convertedCell.getFeatures();
     
-                // Add features to the cell (ensure to handle them properly)
                 this.add(new Image(fetchFeature(features[0]))).uniform();
                 this.add(new Image(fetchFeature(features[1]))).uniform();
             }
     
-            // Add the player icons to the cell
-            this.row(); // Move to next row after features
+            this.row(); 
 
             for (Player player : abstractCell.getPlayers()) {
                 System.out.println(player);
                 this.add(new Image(fetchPlayer(player.getId()))).uniform();
             }
+            highlightCell();
         }
         
     }
