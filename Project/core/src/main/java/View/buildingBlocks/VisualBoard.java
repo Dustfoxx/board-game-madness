@@ -30,11 +30,11 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         Actor target = event.getListenerActor();
                         String cellName = target.getName();
-                        System.out.println(cellName);
+                        // System.out.println(cellName);
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
-                        System.out.println(row);
-                        System.out.println(col);
+                        // System.out.println(row);
+                        // System.out.println(col);
 
                         boardInfo.getCell(row, col).addPlayer(new RougeAgent(2));
                     }

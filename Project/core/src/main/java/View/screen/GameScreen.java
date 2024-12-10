@@ -95,7 +95,7 @@ public class GameScreen implements Screen {
         board.getCell(6, 5).addPlayer(new RougeAgent(4));
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();
-        mainSection.add(boardSection).expandY().width(Value.percentWidth(0.5f, mainSection));
+        mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
         // boardSection.add(boardImage).expand().fill();
 
