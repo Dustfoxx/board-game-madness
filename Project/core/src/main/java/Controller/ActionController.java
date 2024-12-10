@@ -2,7 +2,8 @@ package Controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
+import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 import Model.Feature;
@@ -33,28 +34,21 @@ public class ActionController {
        }
     }
 
-
-    /**
-     * Displays a set of features to the player and prompts picking
-     * 
-     * @param feature The chosen feature
-     * @return The feature picked
-     */
-    private CompletableFuture<Feature> displayAndPickFeatures(Feature[] features) {
-        // TODO: Currently just picks first index
-        return CompletableFuture.completedFuture(features[0]);
-    }
-
-    /**
-     * Lets the user ask for a specific feature on it's current cell.
-     * 
-     * @param cell The cell containing the features
-     * @return The feature picked
-     */
-    public Feature ask(NormalCell cell) {
-        Feature[] features = cell.getFeatures();
-        CompletableFuture<Feature> featureFuture = displayAndPickFeatures(features);
-        return featureFuture.join();
+    public void ask(Feature feature, Recruiter recruiter, Board board) {
+        List<int[]> walkedPath = recruiter.getWalkedPath();
+        for (int[] step : walkedPath) {
+            AbstractCell cell = board.getCell(step[0], step[1]);
+            if (cell.getClass().equals(NormalCell.class)) {
+                NormalCell normalCell = (NormalCell) cell;
+                Feature[] features = normalCell.getFeatures();
+                List<Feature> featuresList = Arrays.asList(features);
+                if (featuresList.contains(feature)) {
+                    Footstep footstep = new Footstep();
+                    cell.addToken(footstep);
+                }
+                return;
+            }
+        }
     }
 
     /**
