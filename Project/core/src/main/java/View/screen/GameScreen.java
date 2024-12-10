@@ -83,7 +83,7 @@ public class GameScreen implements Screen {
         root.add(mainSection).expand().fill();
 
         Table mindslipBar = new Table();
-        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
+        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
 
         // TODO: Change so that the players are not hardcoded but chosen positions at
         // the start of the game
@@ -98,22 +98,22 @@ public class GameScreen implements Screen {
 
         // boardSection.add(boardImage).expand().fill();
 
-        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.3f, mainSection));
+        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
     }
 
     private void setupActionBar(Table root) {
         // Create a table for the action buttons
         Table actionBar = new Table();
         root.row();
-        root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
+        root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
-        actionBar.add(askButton);
+        actionBar.add(askButton).expand();
 
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);
-        actionBar.add(captureButton);
+        actionBar.add(captureButton).expand();
     }
 
     @Override
