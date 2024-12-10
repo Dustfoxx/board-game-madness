@@ -185,6 +185,11 @@ public class Game {
         return this.players;
     }
 
+    /**
+     * Gets the recruiter in the game.
+     * 
+     * @return The recruiter
+     */
     public Recruiter getRecruiter() {
         for (Player player : players) {
             if (player.getClass().equals(Recruiter.class)) {
