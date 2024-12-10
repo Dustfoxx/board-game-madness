@@ -26,7 +26,7 @@ public class AskButton extends TextButton {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 NormalCell normalCell = (NormalCell) cell;
-                AskWindow askActionWindow = new AskWindow(skin, normalCell);
+                AskWindow askActionWindow = new AskWindow(skin, normalCell, gameController);
                 askActionWindow.setPosition(
                     Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
                     Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);                
@@ -50,7 +50,7 @@ public class AskButton extends TextButton {
         // Enable the button
         if (cell.getClass().equals(NormalCell.class)) {
             this.setDisabled(false);
-            // Disable the button
+        // Disable the button
         } else {
             this.setColor(0.8f, 0.8f, 0.8f, 1f);
             this.setDisabled(true);
