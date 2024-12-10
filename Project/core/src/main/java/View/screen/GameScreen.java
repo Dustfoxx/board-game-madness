@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import Model.Board;
+import Model.BrainFact;
 import Model.Csv;
+import Model.Footstep;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
@@ -93,6 +95,8 @@ public class GameScreen implements Screen {
         board.getCell(0, 5).addPlayer(new RougeAgent(2));
         board.getCell(6, 0).addPlayer(new RougeAgent(3));
         board.getCell(6, 5).addPlayer(new RougeAgent(4));
+        board.getCell(1, 1).addToken(new BrainFact(1));
+        board.getCell(1, 2).addToken(new Footstep());
         VisualBoard visualBoard = new VisualBoard(board);
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));

@@ -119,11 +119,11 @@ public class VisualCell extends Actor {
         tokens.clear();
         for (Token token : cellInfo.getTokens()) {
             if (token instanceof Footstep) {
-                players.add(footstep);
+                tokens.add(footstep);
             } else if (token instanceof BrainNote) {
-                players.add(brains[0]);
+                tokens.add(brains[0]);
             } else {
-                players.add(brains[1]);
+                tokens.add(brains[1]);
             }
 
         }
