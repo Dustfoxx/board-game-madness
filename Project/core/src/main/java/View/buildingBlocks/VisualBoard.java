@@ -31,8 +31,8 @@ public class VisualBoard {
                         Actor target = event.getListenerActor();
                         String cellName = target.getName();
                         // System.out.println(cellName);
-                        int row = cellName.charAt(0) - '0';
-                        int col = cellName.charAt(1) - '0';
+                        int row = cellName.charAt(0) - '0'; //Convert from char to int
+                        int col = cellName.charAt(1) - '0'; //Convert from char to int
                         // System.out.println(row);
                         // System.out.println(col);
 
