@@ -51,7 +51,7 @@ public class Game {
         }
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
-        this.currentTime = 1;
+        this.currentTime = 0; // Starts at zero so it can increment as recruiter chooses start
         this.maxTime = 14;
         this.maxRecruits = 9;
         this.board = board;
@@ -92,6 +92,20 @@ public class Game {
      */
     public Player getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    /**
+     * Returns the recruiter object
+     * 
+     * @return recruiter object
+     */
+    public Recruiter getRecruiter() {
+        for (Player player : players) {
+            if (player instanceof Recruiter) {
+                return (Recruiter) player;
+            }
+        }
+        return null;
     }
 
     /**
@@ -154,14 +168,26 @@ public class Game {
     }
 
     /**
+     * Gets the tuple located at a specific timestamp
+     * 
+     * @param time the timestamp we wish to get
+     * @return the tuple at given time, null if not found
+     */
+    public int[] getRecruitAtTime(int time) {
+        for (int[] tuple : this.recruitHistory) {
+            if (tuple[0] == time) {
+                return tuple;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Adds the number of recruits revealed during the current round.
      * 
      * @param amount The number of recruits revealed during current round.
      */
     public void addAmountRecruited(int amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Amount to add must be greater than 0.");
-        }
         this.recruitHistory.add(new int[] { currentTime, amount });
     }
 

@@ -77,9 +77,9 @@ public class TurnBar extends Table {
         int currentTurn = gameController.getGame().getCurrentTime();
 
         // Reveal past turns
-        if (currentTurn > 5) {
-            if ((currentTurn - 1) % 2 == 1 && !revealedTurnsInt.contains(currentTurn - 1)) {
-                revealTurn(currentTurn - 1);
+        if (currentTurn > 4) {
+            if (currentTurn % 2 == 1 && !revealedTurnsInt.contains(currentTurn)) {
+                revealTurn(currentTurn);
             }
         }
     }
@@ -107,7 +107,7 @@ public class TurnBar extends Table {
         }
 
         // Add recruited information
-        int unrevealedRecruits = gameController.getGame().getRecruitHistory().get(turn)[1];
+        int unrevealedRecruits = gameController.getGame().getRecruitAtTime(turn)[1];
         Label recruitedLabel = new Label(String.valueOf(unrevealedRecruits), skin, "big");
         recruitedLabel.setAlignment(Align.center);
         turnRow.add(recruitedLabel).expandX().pad(5);

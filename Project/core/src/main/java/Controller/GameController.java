@@ -14,11 +14,19 @@ public class GameController {
     // Activate player
     // Check win
 
-    private boolean recruiterTurn = true;
     private Game gameState;
     private int activePlayer = 0;
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
+    private ActionController actionController;
+
+    public enum Actions {
+        MOVE,
+        ASK,
+        REVEAL,
+        CAPTURE,
+        MINDSLIP
+    }
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
@@ -37,6 +45,8 @@ public class GameController {
         gameState = initializeGame(playerAmount, boardCsv);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
+
+        this.actionController = new ActionController();
 
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
@@ -117,12 +127,15 @@ public class GameController {
     }
 
     private void preGameLogic() {
-        if (recruiterTurn) {
+        gameState.setUseMovement(true);
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
-            if (gameState.getCurrentTime() > 5) {
-                recruiterTurn = false;
+            if (gameState.getCurrentTime() > 4) {
+                gameState.addAmountRecruited(recruiter.getAmountRecruited());
+                recruiter.resetAmountRecruited();
                 gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
                                                                            // next player
+                gameState.setUseAction(true);
             }
         } else {
             List<Player> players = gameState.getPlayers();
@@ -134,29 +147,20 @@ public class GameController {
             } else {
                 // Set player to next rogue agent so they can place
                 gameState.setCurrentPlayer(players.get(currentIndex + 1));
+                gameState.setUseAction(true);
             }
         }
 
     }
 
     private void ongoingLogic() {
-        if (recruiterTurn) {
+        gameState.setUseMovement(true);
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
-            if (gameState.getCurrentTime() >= 14) {// IDK how many turns were max
-                // RECRUITER WIN
-                gameState.setGameOver();
-                // Should who won exist here or in model?
-                // I think model
-            }
-            recruiterTurn = false;
         }
-        if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of
-                                                   // how that
-                                                   // would be
-            // structured
-            if (recruiter.getAmountRecruited() > 0) {
-                gameState.addAmountRecruited(recruiter.getAmountRecruited());
-            }
+        if (gameState.getCurrentTime() % 2 == 1) {
+            gameState.addAmountRecruited(recruiter.getAmountRecruited());
+            recruiter.resetAmountRecruited();
             if (gameState.getAmountRecruited() >= 9) {
                 // RECRUITER WIN GAME
                 gameState.setGameOver();
@@ -165,8 +169,56 @@ public class GameController {
 
         activePlayer++;
         gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
-        if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            recruiterTurn = true;
+        if (gameState.getCurrentPlayer() instanceof RougeAgent) {
+            gameState.setUseAction(true);
+        } else if (gameState.getCurrentTime() >= 14) {
+            // RECRUITER WIN
+            gameState.setGameOver();
+            // Should who won exist here or in model?
+            // I think model
+        }
+    }
+
+    public void actionHandler(Actions action) {
+        if (gameState.getUsedAction()) {
+            switch (action) {
+                case ASK:
+                    actionController.ask(null);
+                    break;
+                case REVEAL:
+                    int[] playerCoord = gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
+                    actionController.reveal(gameState.getBoard().getCell(playerCoord[0], playerCoord[1]).getFootstep(),
+                            gameState.getBoard(),
+                            gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
+                            gameState.getRecruiter().getWalkedPath());
+                    break;
+                case CAPTURE:
+                    // ActionController.capture()
+                    break;
+                case MINDSLIP:
+
+                    break;
+                case MOVE:
+
+                    break;
+            }
+            gameState.setUseAction(false);
+        }
+        if (!gameState.getUsedAction() && !gameState.getUsedMovement()) {
+            newTurn();
+        }
+    }
+
+    public void actionHandler(Actions action, int row, int col) {
+        if (action == Actions.MOVE) {
+            if (gameState.getUsedMovement()) {
+                actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), null,
+                        new int[] { row, col });
+                gameState.setUseMovement(false);
+            }
+        }
+        if (!gameState.getUsedAction() && !gameState.getUsedMovement()) {
+            newTurn();
         }
     }
 

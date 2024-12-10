@@ -12,23 +12,6 @@ import Model.Player;
 
 public class ActionController {
 
-    public enum Actions {
-        MOVE,
-        ASK,
-        REVEAL,
-        CAPTURE,
-        MINDSLIP
-    }
-
-    // Proposed function:
-
-    public void actionHandler(Actions action) {
-        // Runs proper action from here
-        // Allows centralized control over if the turn should switch.
-        // Otherwise all action functions must modify model to match which actions have
-        // been taken
-    }
-
     /**
      * Displays a set of features to the player and prompts picking
      * 
