@@ -2,7 +2,6 @@ package View.screen.GameScreenComponents;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -27,13 +26,14 @@ public class CaptureWindow extends Window {
             message = "The recruiter was not captured!";
         }
         Label messageLabel = new Label(message, skin);
+        messageLabel.setFontScale(2f);
         this.add(messageLabel).pad(20).row();
 
         // Create a close button
         TextButton closeButton = new TextButton("Close", skin);
         this.add(closeButton).colspan(2).padTop(10).center().row();
         this.pack();
-        this.setSize(500, 300);
+        this.setSize(500, 200);
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
