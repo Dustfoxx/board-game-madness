@@ -1,21 +1,26 @@
 package View.buildingBlocks;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import Model.AbstractCell;
 import Model.Feature;
 import Model.NormalCell;
 import Model.Player;
 
 public class VisualCell extends Actor {
-    private Table cell = new Table();
+    private TextureRegion feature1 = fetchFeature(null);
+    private TextureRegion feature2 = fetchFeature(null);
+    private List<TextureRegion> players;
+
+    private AbstractCell cellInfo;
 
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
@@ -24,20 +29,45 @@ public class VisualCell extends Actor {
 
     public VisualCell(AbstractCell cellInfo) {
         initDict();
+        this.cellInfo = cellInfo;
         if (cellInfo instanceof NormalCell) {
             NormalCell convertedCell = (NormalCell) cellInfo;
             Feature[] features = convertedCell.getFeatures();
-            cell.add(new Image(fetchFeature(features[0]))).uniform();
-            cell.add(new Image(fetchFeature(features[1]))).uniform();
+            feature1 = fetchFeature(features[0]);
+            feature2 = fetchFeature(features[1]);
         }
-        cell.row();
-        for (Player player : cellInfo.getPlayers()) {
-            cell.add(new Image(fetchPlayer(player.getId()))).uniform();
+        players = new ArrayList<TextureRegion>();
+        updatePlayers();
+        setBounds(0, 0, 100, 100);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+        float featureYPos = getY() + getHeight() / 2;
+        float feature2Pos = getX() + getWidth() / 2;
+
+        batch.draw(feature1, getX(), featureYPos, getOriginX(), getOriginY(),
+                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+        batch.draw(feature2, feature2Pos, featureYPos, getOriginX(), getOriginY(),
+                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+
+        updatePlayers();
+
+        int xVal = 0;
+
+        for (TextureRegion player : players) {
+            float xPos = getX() + getWidth() / 4 * xVal;
+            batch.draw(player, xPos, getY(), getOriginX(), getOriginY(),
+                    getWidth() / 4, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
         }
     }
 
-    public Table getVisualCell() {
-        return this.cell;
+    private void updatePlayers() {
+        for (Player player : cellInfo.getPlayers()) {
+            players.add(fetchPlayer(player.getId()));
+        }
     }
 
     private void initDict() {
@@ -61,9 +91,15 @@ public class VisualCell extends Actor {
 
     private TextureRegion fetchFeature(Feature feature) {
         int sideSize = 873 / 4;
-        return new TextureRegion(featuresImg,
-                sideSize * (features.get(feature) % 4),
-                sideSize * (int) (Math.floor(features.get(feature) / 4)),
+        if (feature != null) {
+            return new TextureRegion(featuresImg,
+                    sideSize * (features.get(feature) % 4),
+                    sideSize * (int) (Math.floor(features.get(feature) / 4)),
+                    sideSize, sideSize);
+        }
+        return new TextureRegion(new Texture("feature_img.png"),
+                0,
+                0,
                 sideSize, sideSize);
     }
 
