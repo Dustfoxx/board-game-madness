@@ -8,8 +8,32 @@ import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
+import Model.Player;
+import Model.Recruiter;
 
 public class ActionController {
+
+
+    /**
+     * Performs the capture action
+     * @param player The player that performed the action
+     * @param recruiter A reference to the recruiter
+     * @param board A reference to the board state
+     * @return True if captured, else False
+     */
+    public boolean capture(Player player, Recruiter recruiter, Board board){
+       int[] playerPosition = board.getPlayerCoord(player);
+       int[] recruiterPoistion = board.getPlayerCoord(recruiter);
+
+       if(Arrays.equals(playerPosition, recruiterPoistion)){
+        return true;
+       }
+       else{
+        return false;
+       }
+    }
+
+
     /**
      * Displays a set of features to the player and prompts picking
      * 
