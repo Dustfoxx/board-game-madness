@@ -18,12 +18,14 @@ public class RecruiterActionController {
      * Moves the recruiter
      * 
      */
-    public void move(Board board, Player recruiter, int[] newPosition) {
+    public int[] move(Board board, Player recruiter, int[] newPosition) {
         AbstractCell newCellPosition = board.getCell(newPosition[0], newPosition[1]);
         int[] currentPosition = board.getPlayerCoord(recruiter);
         
         board.getCell(currentPosition[0], currentPosition[1]).removePlayer(recruiter);
         newCellPosition.addPlayer(recruiter);
+
+        return currentPosition;
     }
 
     public boolean mindSlip() {

@@ -12,7 +12,6 @@ public class GameController {
     // Update recruits if odd turn
     // Activate player
     // Check win
-    private RecruiterActionController recruiterActionController;
     private boolean recruiterTurn = true;
     private Game gameState;
     private int activePlayer = 0;
@@ -36,8 +35,6 @@ public class GameController {
         gameState = initializeGame(playerAmount, boardCsv);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
-
-        recruiterActionController = new RecruiterActionController();
 
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {

@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Controller.ActionController;
-
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class MindMGMT extends Game {
@@ -26,6 +24,7 @@ public class MindMGMT extends Game {
     public Skin skin;
     public int nrOfPlayers;
     public AssetManager assets;
+    boolean moving = false;
 
     @Override
     public void create() {

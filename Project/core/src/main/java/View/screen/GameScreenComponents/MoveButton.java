@@ -37,11 +37,8 @@ public class MoveButton extends TextButton {
 
                 Player currentPlayer = gameController.getGame().getCurrentPlayer();
 
-                int[] newCoors = {3, 3};
-                controller.move(gameController.getGame().getBoard(), currentPlayer, newCoors);
-                visualBoard.UpdateCell(0, 0);
-                visualBoard.UpdateCell(newCoors[0], newCoors[1]);
-                visualBoard.highlightValidCells(checkAction.getValidMoves((RougeAgent) currentPlayer, gameController.getGame().getBoard()));
+                boolean[][] validMoves = checkAction.getValidMoves((RougeAgent) currentPlayer, gameController.getGame().getBoard());
+                visualBoard.highlightValidCells(validMoves);
             }
         });
     }

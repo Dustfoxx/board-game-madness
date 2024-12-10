@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -11,14 +12,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.SnapshotArray;
 
+import Controller.ActionController;
+import Controller.GameController;
+import Controller.RecruiterActionController;
 import Model.Board;
+import Model.Game;
+import Model.Player;
 import Model.RougeAgent;
 
 public class VisualBoard {
     private Table board = new Table();
     private Texture bg = new Texture("basic-board.png");
+    public VisualBoard(Board boardInfo, Game game) {
 
-    public VisualBoard(Board boardInfo) {
+        RecruiterActionController actionController = new RecruiterActionController();
         int[] dimensions = boardInfo.getDims();
         // board.setDebug(true);
         board.setBackground(new TextureRegionDrawable(new TextureRegion(bg)));
@@ -34,14 +41,14 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         Actor target = event.getListenerActor();
                         String cellName = target.getName();
-                        System.out.println(cellName);
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
-                        System.out.println(row);
-                        System.out.println(col);
+                        Player currentPlayer = game.getCurrentPlayer();
 
-                        boardInfo.getCell(row, col).addPlayer(new RougeAgent(1));
-                        cell.UpdateCell();
+                        int[] newCoors = {row, col};
+                        actionController.move(game.getBoard(), currentPlayer, newCoors);
+
+                      UpdateAllCells();
                     }
                 });
                 board.add(cell).uniform();
@@ -64,7 +71,7 @@ public class VisualBoard {
                 if (mask[i][j]) {
                     VisualCell cell = getCell(i, j);
                     if (cell != null) {
-                        cell.highlightCell();
+                        cell.highlightCell(true);
                     }
                 }
             }
@@ -72,22 +79,32 @@ public class VisualBoard {
     }
 
 
+    // Used to update individual cells (saves performance opposed to updateAllCells)
     public void UpdateCell(int i, int j){
         getCell(i, j).UpdateCell();
 
     }
+
     public VisualCell getCell(int i, int j) {
-        String coords = i + "" + j;  // Create the coordinate string, e.g., "23" for row 2, column 3
-        SnapshotArray<Actor> cellTable = board.getChildren();  // Get all children of the Table
+        String coords = i + "" + j; 
+        SnapshotArray<Actor> cellTable = board.getChildren();
         
         for (Actor actor : cellTable) {
             if (actor.getName().equals(coords)) {
 
-                System.out.println("woop");
-                System.out.println(actor); // Check if the actor is a VisualCell and if the name matches coordinates
-                return (VisualCell) actor;  // Cast to VisualCell and return
+                System.out.println(actor);
+                return (VisualCell) actor;
             }
         }
-        return null;  // Return null if no matching cell is found
+        return null;
+    }
+
+    public void UpdateAllCells() {
+        SnapshotArray<Actor> children = board.getChildren();
+        for (Actor actor : children) {
+            if (actor instanceof VisualCell) {
+                ((VisualCell) actor).UpdateCell();
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
     private final GameController gameController;
-    private final ActionController actionController;
     private final MindMGMTStage stage;
     private final Skin skin;
     private final Texture boardTexture;
@@ -44,7 +43,6 @@ public class GameScreen implements Screen {
 
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(application.nrOfPlayers, boardCsv);
-        this.actionController = new ActionController();
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar=new TurnBar(gameController,skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
@@ -95,7 +93,7 @@ public class GameScreen implements Screen {
         board.getCell(0, 5).addPlayer(new RougeAgent(2));
         board.getCell(6, 0).addPlayer(new RougeAgent(3));
         board.getCell(6, 5).addPlayer(new RougeAgent(4));
-        visualBoard = new VisualBoard(board);
+        visualBoard = new VisualBoard(board, gameController.getGame());
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().width(Value.percentWidth(0.5f, mainSection));
 
