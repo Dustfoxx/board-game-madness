@@ -184,4 +184,13 @@ public class Game {
     public List<Player> getPlayers() {
         return this.players;
     }
+
+    public Recruiter getRecruiter() {
+        for (Player player : players) {
+            if (player.getClass().equals(Recruiter.class)) {
+                return (Recruiter) player;
+            }
+        }
+        throw new IllegalStateException("No recruiter found in the game");
+    }
 }
