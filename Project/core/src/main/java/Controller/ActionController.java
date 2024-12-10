@@ -14,30 +14,30 @@ import Model.Recruiter;
 
 public class ActionController {
 
-
     /**
      * Performs the capture action
-     * @param player The player that performed the action
+     * 
+     * @param player    The player that performed the action
      * @param recruiter A reference to the recruiter
-     * @param board A reference to the board state
+     * @param board     A reference to the board state
      * @return True if captured, else False
      */
-    public boolean capture(Player player, Recruiter recruiter, Board board){
-       int[] playerPosition = board.getPlayerCoord(player);
-       int[] recruiterPoistion = board.getPlayerCoord(recruiter);
+    public boolean capture(Player player, Recruiter recruiter, Board board) {
+        int[] playerPosition = board.getPlayerCoord(player);
+        int[] recruiterPoistion = board.getPlayerCoord(recruiter);
 
-       if(Arrays.equals(playerPosition, recruiterPoistion)){
-        return true;
-       }
-       else{
-        return false;
-       }
+        if (Arrays.equals(playerPosition, recruiterPoistion)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Performs the ask action without involving the actual recruiter player. 
-     * Instead it searches the recruiter's walked path for the first cell (earliest step)
-     * containing the specified feature and adds a Footstep token to that cell (if its found).
+     * Performs the ask action without involving the actual recruiter player.
+     * Instead it searches the recruiter's walked path for the first cell (earliest
+     * step) containing the specified feature and adds a Footstep token to that cell
+     * (if its found).
      * 
      * @param feature   the feature being searched for
      * @param recruiter the recruiter of the game
@@ -48,7 +48,7 @@ public class ActionController {
         for (int[] step : walkedPath) { // Loop through all steps of the walked path
             AbstractCell cell = board.getCell(step[0], step[1]);
             if (cell.getClass().equals(NormalCell.class)) { // Check if the cell is not a temple
-                NormalCell normalCell = (NormalCell) cell; 
+                NormalCell normalCell = (NormalCell) cell;
                 Feature[] features = normalCell.getFeatures(); // Get the features of the cell
                 List<Feature> featuresList = Arrays.asList(features);
                 if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
