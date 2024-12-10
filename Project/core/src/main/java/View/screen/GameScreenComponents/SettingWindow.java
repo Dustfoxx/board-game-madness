@@ -36,7 +36,7 @@ public class SettingWindow extends Window {
             }
         });
         //the size can be responsive
-        this.add(resumeButton).width(200).height(50).pad(10).row();
+        this.add(resumeButton).pad(10).row();
 
         TextButton mainMenuButton = new TextButton("Back to Main Menu", skin);
         mainMenuButton.addListener(new ChangeListener() {
@@ -46,7 +46,7 @@ public class SettingWindow extends Window {
             }
         });
         //the size can be responsive
-        this.add(mainMenuButton).width(200).height(50).pad(10).row();
+        this.add(mainMenuButton).pad(10).row();
     }
     public void init(){
         updateSize();

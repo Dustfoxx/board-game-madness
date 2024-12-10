@@ -89,7 +89,7 @@ public class VisualCell extends Actor {
         features.put(Feature.GRAFFITI, 15);
     }
 
-    private TextureRegion fetchFeature(Feature feature) {
+    public TextureRegion fetchFeature(Feature feature) {
         int sideSize = 873 / 4;
         if (feature != null) {
             return new TextureRegion(featuresImg,
