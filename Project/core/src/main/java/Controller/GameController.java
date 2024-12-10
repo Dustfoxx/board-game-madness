@@ -18,6 +18,7 @@ public class GameController {
     private int activePlayer = 0;
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
+    public ActionController actionController = new ActionController();
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players

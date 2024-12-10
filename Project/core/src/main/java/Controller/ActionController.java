@@ -2,7 +2,8 @@ package Controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
+import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 import Model.Feature;
@@ -13,48 +14,50 @@ import Model.Recruiter;
 
 public class ActionController {
 
-
     /**
      * Performs the capture action
-     * @param player The player that performed the action
+     * 
+     * @param player    The player that performed the action
      * @param recruiter A reference to the recruiter
-     * @param board A reference to the board state
+     * @param board     A reference to the board state
      * @return True if captured, else False
      */
-    public boolean capture(Player player, Recruiter recruiter, Board board){
-       int[] playerPosition = board.getPlayerCoord(player);
-       int[] recruiterPoistion = board.getPlayerCoord(recruiter);
+    public boolean capture(Player player, Recruiter recruiter, Board board) {
+        int[] playerPosition = board.getPlayerCoord(player);
+        int[] recruiterPoistion = board.getPlayerCoord(recruiter);
 
-       if(Arrays.equals(playerPosition, recruiterPoistion)){
-        return true;
-       }
-       else{
-        return false;
-       }
-    }
-
-
-    /**
-     * Displays a set of features to the player and prompts picking
-     * 
-     * @param feature The chosen feature
-     * @return The feature picked
-     */
-    private CompletableFuture<Feature> displayAndPickFeatures(Feature[] features) {
-        // TODO: Currently just picks first index
-        return CompletableFuture.completedFuture(features[0]);
+        if (Arrays.equals(playerPosition, recruiterPoistion)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Lets the user ask for a specific feature on it's current cell.
+     * Performs the ask action without involving the actual recruiter player.
+     * Instead it searches the recruiter's walked path for the first cell (earliest
+     * step) containing the specified feature and adds a Footstep token to that cell
+     * (if its found).
      * 
-     * @param cell The cell containing the features
-     * @return The feature picked
+     * @param feature   the feature being searched for
+     * @param recruiter the recruiter of the game
+     * @param board     the board of the game
      */
-    public Feature ask(NormalCell cell) {
-        Feature[] features = cell.getFeatures();
-        CompletableFuture<Feature> featureFuture = displayAndPickFeatures(features);
-        return featureFuture.join();
+    public void ask(Feature feature, Recruiter recruiter, Board board) {
+        List<int[]> walkedPath = recruiter.getWalkedPath();
+        for (int[] step : walkedPath) { // Loop through all steps of the walked path
+            AbstractCell cell = board.getCell(step[0], step[1]);
+            if (cell.getClass().equals(NormalCell.class)) { // Check if the cell is not a temple
+                NormalCell normalCell = (NormalCell) cell;
+                Feature[] features = normalCell.getFeatures(); // Get the features of the cell
+                List<Feature> featuresList = Arrays.asList(features);
+                if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
+                    Footstep footstep = new Footstep();
+                    cell.addToken(footstep); // Add a footstep to the cell
+                }
+                return; // Stop further searching once a cell is found
+            }
+        }
     }
 
     /**
