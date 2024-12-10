@@ -11,20 +11,19 @@ public class BrainFact extends Token {
 
     /**
      * Constructor to initialize a BrainFact with a specified timestamp.
-     *
+     * 
      * @param timestamp The timestamp of the BrainFact token.
      */
     public BrainFact(int timestamp) {
-        this.timestamp = timestamp;
+        this.timestamp = timestamp; 
     }
 
     /**
      * Gets the timestamp of this BrainFact token.
-     *
+     * 
      * @return The timestamp of the BrainFact token.
      */
     public int getTimestamp() {
         return this.timestamp;
     }
-
 }
