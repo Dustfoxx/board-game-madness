@@ -4,19 +4,15 @@ import Controller.ActionController;
 import Controller.GameController;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Model.AbstractCell;
 import Model.Board;
 import Model.Csv;
-import Model.NormalCell;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
@@ -28,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
-    private final MindMGMT application;
     private final GameController gameController;
     private final ActionController actionController;
     private final MindMGMTStage stage;
@@ -36,14 +31,10 @@ public class GameScreen implements Screen {
     private final Texture boardTexture;
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
-    //private Label timeTracker;
     private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final SettingWindow settingWindow;
-    private String selectedFeature;
 
     public GameScreen(MindMGMT application) {
-        this.application = application;
-        this.selectedFeature = "";
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
@@ -53,7 +44,7 @@ public class GameScreen implements Screen {
         this.gameController = new GameController(application.nrOfPlayers, boardCsv);
         this.actionController = new ActionController();
         this.playerBar = new PlayerBar(gameController, skin);
-        this.turnBar=new TurnBar(gameController,skin);
+        this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
 
         Gdx.input.setInputProcessor(stage);
@@ -81,7 +72,6 @@ public class GameScreen implements Screen {
                 stage.addActor(settingWindow);
             }
         });
-
     }
 
     private void setupPlayerBar(Table root) {
@@ -117,100 +107,12 @@ public class GameScreen implements Screen {
         root.row();
         root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
-        String[] actions = {"Move", "Reveal" };
-        for (String action : actions) {
-            TextButton actionButton = new TextButton(action, skin);
-            actionButtons.add(actionButton);
-            actionBar.add(actionButton).expandX();
-
-            actionButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    askAction();
-                }
-            });
-        }
-        // Create an Ask-button if the cell is not a temple
-        AbstractCell cell = gameController.getGame().getBoard().getCell(0, 0);
-        if (cell.getClass().equals(NormalCell.class)) {
-            NormalCell normalCell = (NormalCell) cell;
-            AskButton askButton = new AskButton("Ask", skin, stage, selectedFeature, gameController, normalCell);
-            actionButtons.add(askButton);
-            actionBar.add(askButton);
-        }
-    }
-
-    private void askAction() {
-        Window askActionWindow = createAskActionWindow("Ask Action", "Which feature do you want to ask?");
-        stage.addActor(askActionWindow);
-    }
-
-    private Window createAskActionWindow(String title, String message) {
-        Window askWindow = new Window(title, skin);
-        askWindow.setMovable(false);
-        askWindow.setResizable(false);
-        askWindow.setModal(true);
-
-        Button closeButton = new Button(skin, "close");
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                askWindow.remove();
-            }
-        });
-        askWindow.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
-
-        Label messageLabel = new Label(message, skin);
-        messageLabel.setFontScale(2f);
-        askWindow.add(messageLabel).pad(20).row();
-
-        Table buttonTable = new Table();
-
-        // TODO: get the feature from the model
-        TextButton featureButton1 = new TextButton("Feature 1", skin);
-        featureButton1.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // get the selected feature
-                selectedFeature = "Feature 1";
-            }
-        });
-        buttonTable.add(featureButton1).padRight(20).padBottom(10);
-
-        // TODO: get the feature from the model
-        TextButton featureButton2 = new TextButton("Feature 2", skin);
-        featureButton2.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                selectedFeature = "Feature 2";
-            }
-        });
-        buttonTable.add(featureButton2).padBottom(10);
-
-        askWindow.add(buttonTable).colspan(2).center().row();
-
-        TextButton confirmButton = new TextButton("Confirm", skin);
-        confirmButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // TODO:send the selected feature to the game controller
-                System.out.println("Feature selected" + selectedFeature);
-                gameController.newTurn();
-                askWindow.remove();
-            }
-        });
-        askWindow.add(confirmButton).colspan(2).padTop(10).center().row();
-
-        askWindow.pack();
-        askWindow.setSize(500, 200);
-        askWindow.setPosition(stage.getWidth() / 2 - askWindow.getWidth() / 2,
-                stage.getHeight() / 2 - askWindow.getHeight() / 2);
-
-        return askWindow;
+        AskButton askButton = new AskButton(gameController, skin);
+        actionButtons.add(askButton);
+        actionBar.add(askButton);
     }
 
     @Override
-
     public void show() {
     }
 
@@ -221,9 +123,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
-        // System.out.println(gameController.getGame().getBoard().getCell(2,
-        // 1).getPlayers()); TODO remove
-        playerBar.update();
         turnBar.updateTurnbar();
     }
 
