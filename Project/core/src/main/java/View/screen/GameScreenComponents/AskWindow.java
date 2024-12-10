@@ -88,8 +88,6 @@ public class AskWindow extends Window {
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO: Send the selected feature to the game controller
-                System.out.println("Feature selected" + selectedFeature.name());
                 actionController.ask(selectedFeature, gameController.getGame().getRecruiter(), gameController.getGame().getBoard());
                 actor.getParent().remove(); // Closes the window
             }
