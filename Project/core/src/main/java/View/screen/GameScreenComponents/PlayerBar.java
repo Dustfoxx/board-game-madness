@@ -2,8 +2,8 @@ package View.screen.GameScreenComponents;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -29,14 +29,15 @@ public class PlayerBar extends Table {
      *
      * @param gameController the {@link GameController} that manages game logic
      */
-    public PlayerBar(GameController gameController) {
+    public PlayerBar(GameController gameController, Skin skin) {
 
         this.gameController = gameController;
-        Skin skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
+        this.debug();
 
         // Create a label for each player and add it to the table
         for (Player player : gameController.getGame().getPlayers()) {
-            Label playerLabel = new Label(player.getName(), skin, "colored");
+            Label playerLabel = new Label(player.getName(), skin, "narration");
+            playerLabel.setFontScale(2f);
             this.add(playerLabel).expandX(); // Expand each label equally along the X-axis
         }
 
@@ -58,8 +59,8 @@ public class PlayerBar extends Table {
      * Updates the PlayerBar to visually indicate the current player by
      * highlighting its label in green and dimming the others.
      */
-    public void update() {
-
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
         Game game = gameController.getGame();
         List<Player> players = game.getPlayers();
         Player currentPlayer = game.getCurrentPlayer();
@@ -77,5 +78,6 @@ public class PlayerBar extends Table {
                 }
             }
         }
+        super.draw(batch, parentAlpha); // Important
     }
 }
