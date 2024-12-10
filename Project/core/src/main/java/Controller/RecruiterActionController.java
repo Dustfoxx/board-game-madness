@@ -22,8 +22,7 @@ public class RecruiterActionController {
         AbstractCell newCellPosition = board.getCell(newPosition[0], newPosition[1]);
         int[] currentPosition = board.getPlayerCoord(recruiter);
         
-        AbstractCell previousCellPosition = board.getCell(currentPosition[0], currentPosition[1]);
-        previousCellPosition.removePlayer(recruiter);
+        board.getCell(currentPosition[0], currentPosition[1]).removePlayer(recruiter);
         newCellPosition.addPlayer(recruiter);
     }
 

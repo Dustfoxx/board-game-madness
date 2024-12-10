@@ -46,7 +46,7 @@ public abstract class AbstractCell {
      * @param player The player to remove from the cell.
      */
     public void removePlayer(Player player) {
-        players.remove(player);
+        players.removeIf(p -> p.getId() == player.getId());
     }
 
     /**

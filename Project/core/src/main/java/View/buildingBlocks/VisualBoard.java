@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import Model.Board;
 import Model.RougeAgent;
@@ -43,15 +44,33 @@ public class VisualBoard {
                         cell.UpdateCell();
                     }
                 });
-                board.add(cellTable).uniform();
+                board.add(cell).uniform();
             }
             board.row();
         }
     }
 
     public Table getVisualBoard() {
+
         return this.board;
     }
 
+    public void UpdateCell(int i, int j){
+        getCell(i, j).UpdateCell();
 
+    }
+    public VisualCell getCell(int i, int j) {
+        String coords = i + "" + j;  // Create the coordinate string, e.g., "23" for row 2, column 3
+        SnapshotArray<Actor> cellTable = board.getChildren();  // Get all children of the Table
+        
+        for (Actor actor : cellTable) {
+            if (actor.getName().equals(coords)) {
+
+                System.out.println("woop");
+                System.out.println(actor); // Check if the actor is a VisualCell and if the name matches coordinates
+                return (VisualCell) actor;  // Cast to VisualCell and return
+            }
+        }
+        return null;  // Return null if no matching cell is found
+    }
 }
