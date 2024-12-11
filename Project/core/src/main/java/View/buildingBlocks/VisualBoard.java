@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Controller.GameController;
+import Controller.GameController.Actions;
 import Model.Board;
 import Model.RougeAgent;
 
@@ -34,6 +35,7 @@ public class VisualBoard {
                         String cellName = target.getName();
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
+                        System.out.println("Cell clicked");
 
                         gameInfo.actionHandler(Actions.MOVE, row, col);
                     }

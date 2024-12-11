@@ -135,7 +135,6 @@ public class GameController {
                 recruiter.resetAmountRecruited();
                 gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
                                                                            // next player
-                gameState.setUseAction(true);
             }
         } else {
             List<Player> players = gameState.getPlayers();
@@ -147,7 +146,6 @@ public class GameController {
             } else {
                 // Set player to next rogue agent so they can place
                 gameState.setCurrentPlayer(players.get(currentIndex + 1));
-                gameState.setUseAction(true);
             }
         }
 
@@ -180,7 +178,7 @@ public class GameController {
     }
 
     public void actionHandler(Actions action) {
-        if (gameState.getUsedAction()) {
+        if (gameState.isActionAvailable()) {
             switch (action) {
                 case ASK:
                     // actionController.ask(null);
@@ -206,20 +204,21 @@ public class GameController {
             }
             gameState.setUseAction(false);
         }
-        if (!gameState.getUsedAction() && !gameState.getUsedMovement()) {
+        if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
     }
 
     public void actionHandler(Actions action, int row, int col) {
         if (action == Actions.MOVE) {
-            if (gameState.getUsedMovement()) {
+            if (gameState.isMovementAvailable()) {
                 // actionController.movePlayer(gameState.getCurrentPlayer(),
-                // gameState.getBoard(), null, new int[] { row, col });
+                // gameState.getBoard(), null,
+                // new int[] { row, col });
                 gameState.setUseMovement(false);
             }
         }
-        if (!gameState.getUsedAction() && !gameState.getUsedMovement()) {
+        if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
     }

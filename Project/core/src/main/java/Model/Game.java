@@ -25,8 +25,8 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
-    private boolean movement;
-    private boolean action;
+    private boolean isMovementAvailable;
+    private boolean isActionAvailable;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -59,8 +59,8 @@ public class Game {
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
         this.gameState = gameStates.PREGAME;
-        this.action = false;
-        this.movement = true;
+        this.isActionAvailable = false;
+        this.isMovementAvailable = true;
     }
 
     /**
@@ -264,8 +264,8 @@ public class Game {
      * 
      * @return if player can move or not
      */
-    public boolean getUsedMovement() {
-        return this.movement;
+    public boolean isMovementAvailable() {
+        return this.isMovementAvailable;
     }
 
     /**
@@ -273,8 +273,8 @@ public class Game {
      * 
      * @return if player can use an action still or not
      */
-    public boolean getUsedAction() {
-        return this.action;
+    public boolean isActionAvailable() {
+        return this.isActionAvailable;
     }
 
     /**
@@ -284,7 +284,7 @@ public class Game {
      *              just moved
      */
     public void setUseMovement(boolean value) {
-        this.movement = value;
+        this.isMovementAvailable = value;
     }
 
     /**
@@ -294,7 +294,7 @@ public class Game {
      * @param value true if player can make an action, false if they have used one.
      */
     public void setUseAction(boolean value) {
-        this.action = value;
+        this.isActionAvailable = value;
     }
 
     /**
