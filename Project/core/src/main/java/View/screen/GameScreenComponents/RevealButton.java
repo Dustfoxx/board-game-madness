@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Model.Footstep;
+import Model.NormalCell;
 
 
 public class RevealButton extends TextButton {
@@ -35,8 +36,11 @@ public class RevealButton extends TextButton {
                 List<int[]> walkedPath = recruiter.getWalkedPath();
                 Board board = gameController.getGame().getBoard();
                 int[] playerPosition = board.getPlayerCoord(player);
-                Footstep footstep =gameController.getGame().getBoard().getCell(playerPosition[0], playerPosition[1]).getFootstep();
-                gameController.actionController.reveal(footstep,board,playerPosition,walkedPath);
+                NormalCell cell = (NormalCell) board.getCell(playerPosition[0], playerPosition[1]);
+                if (cell.containsFootstep()) {
+                    Footstep footstep = cell.getFootstep();
+                    gameController.actionController.reveal(footstep,board,playerPosition,walkedPath);
+                }
             }
         });
     }
@@ -48,6 +52,6 @@ public class RevealButton extends TextButton {
                 super.draw(batch, parentAlpha);
             }
     }
-    
+
 }
 
