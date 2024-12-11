@@ -95,20 +95,6 @@ public class Game {
     }
 
     /**
-     * Returns the recruiter object
-     * 
-     * @return recruiter object
-     */
-    public Recruiter getRecruiter() {
-        for (Player player : players) {
-            if (player instanceof Recruiter) {
-                return (Recruiter) player;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Sets the next player as the current player.
      * 
      * @param nextPlayer The player to become the current player.
@@ -134,6 +120,24 @@ public class Game {
      */
     public void incrementTime() {
         this.currentTime += 1;
+    }
+
+    /**
+     * getter for max time, limit of rounds
+     * 
+     * @return max round count
+     */
+    public int getMaxTime() {
+        return this.maxTime;
+    }
+
+    /**
+     * getter for max recruits, the limit where recruiter wins
+     * 
+     * @return max recruits as an int
+     */
+    public int getMaxRecruits() {
+        return this.maxRecruits;
     }
 
     /**

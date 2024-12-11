@@ -159,7 +159,7 @@ public class GameController {
         if (gameState.getCurrentTime() % 2 == 1) {
             gameState.addAmountRecruited(recruiter.getAmountRecruited());
             recruiter.resetAmountRecruited();
-            if (gameState.getAmountRecruited() >= 9) {
+            if (gameState.getAmountRecruited() >= gameState.getMaxRecruits()) {
                 // RECRUITER WIN GAME
                 gameState.setGameOver();
             }
@@ -169,7 +169,7 @@ public class GameController {
         gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             gameState.setUseAction(true);
-        } else if (gameState.getCurrentTime() >= 14) {
+        } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
             // Should who won exist here or in model?
@@ -177,50 +177,47 @@ public class GameController {
         }
     }
 
-    public void actionHandler(Actions action) {
-        if (gameState.isActionAvailable()) {
-            switch (action) {
-                case ASK:
-                    // actionController.ask(null);
-                    break;
-                case REVEAL:
-                    // int[] playerCoord =
-                    // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
-                    // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
-                    // playerCoord[1]).getFootstep(),
-                    // gameState.getBoard(),
-                    // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
-                    // gameState.getRecruiter().getWalkedPath());
-                    break;
-                case CAPTURE:
-                    // ActionController.capture()
-                    break;
-                case MINDSLIP:
-
-                    break;
-                case MOVE:
-
-                    break;
-            }
-            gameState.setUseAction(false);
-        }
-        if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
-            newTurn();
-        }
+    public boolean actionHandler(Actions action) {
+        return actionHandler(action, new Object[] {});
     }
 
-    public void actionHandler(Actions action, int row, int col) {
-        if (action == Actions.MOVE) {
-            if (gameState.isMovementAvailable()) {
-                // actionController.movePlayer(gameState.getCurrentPlayer(),
-                // gameState.getBoard(), null,
-                // new int[] { row, col });
-                gameState.setUseMovement(false);
-            }
+    public boolean actionHandler(Actions action, Object[] additionalInfo) {
+        boolean returnValue = true;
+        switch (action) {
+            case ASK:
+                actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
+                break;
+            case REVEAL:
+                // int[] playerCoord =
+                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
+                // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
+                // playerCoord[1]).getFootstep(),
+                // gameState.getBoard(),
+                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
+                // gameState.getRecruiter().getWalkedPath());
+                break;
+            case CAPTURE:
+                returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
+                        gameState.getBoard());
+
+                break;
+            case MINDSLIP:
+
+                break;
+            case MOVE:
+                if (gameState.isMovementAvailable()) {
+                    // actionController.movePlayer(gameState.getCurrentPlayer(),
+                    // gameState.getBoard(), null,
+                    // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
+                    gameState.setUseMovement(false);
+                }
+                break;
         }
+        gameState.setUseAction(false); // TODO: add so that this makes sure action was valid
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
+        return returnValue;
     }
 
 }

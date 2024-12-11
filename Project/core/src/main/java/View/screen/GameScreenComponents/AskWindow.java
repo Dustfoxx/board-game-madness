@@ -86,7 +86,7 @@ public class AskWindow extends Window {
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameController.actionHandler(Actions.ASK);
+                gameController.actionHandler(Actions.ASK, new Object[] { selectedFeature });
                 actor.getParent().remove(); // Closes the window
             }
         });

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.Board;
-import Model.RougeAgent;
 
 public class VisualBoard {
     private Table board = new Table();
@@ -37,7 +36,7 @@ public class VisualBoard {
                         int col = cellName.charAt(1) - '0';
                         System.out.println("Cell clicked");
 
-                        gameInfo.actionHandler(Actions.MOVE, row, col);
+                        gameInfo.actionHandler(Actions.MOVE, new Object[] { row, col });
                     }
                 });
                 board.add(cell).uniform().expand();
