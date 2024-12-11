@@ -11,12 +11,17 @@ import Controller.GameController;
 import Model.Board;
 import Model.Player;
 import Model.Recruiter;
+import Model.RougeAgent;
 
 public class CaptureButton extends TextButton {
+
+    private final GameController gameController;
+    private Player player;
 
     public CaptureButton(GameController gameController, Skin skin) {
 
         super("Capture", skin);
+        this.gameController = gameController;
 
         this.addListener(new ChangeListener() {
             @Override
@@ -34,7 +39,7 @@ public class CaptureButton extends TextButton {
                 CaptureWindow window = new CaptureWindow(wasCaptureSuccessful, skin);
                 window.setPosition(
                     Gdx.graphics.getWidth() / 2 - window.getWidth() / 2,
-                    Gdx.graphics.getHeight() / 2 - window.getHeight() / 2);                
+                    Gdx.graphics.getHeight() / 2 - window.getHeight() / 2);
                 actor.getStage().addActor(window);
 
             }
@@ -43,6 +48,11 @@ public class CaptureButton extends TextButton {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha); // Important
+        this.player = gameController.getGame().getCurrentPlayer();
+        // Only draw the button if the current player is a rouge agent
+        if (player.getClass().equals(RougeAgent.class)){
+                super.draw(batch, parentAlpha);
+        }
+
     }
 }
