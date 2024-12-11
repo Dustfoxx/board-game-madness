@@ -8,16 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import Controller.GameController;
 import Model.Board;
-import Model.Game;
 import Model.RougeAgent;
 
 public class VisualBoard {
     private Table board = new Table();
     private Texture bg = new Texture("basic-board.png");
 
-    public VisualBoard(Game gameInfo) {
-        Board boardInfo = gameInfo.getBoard();
+    public VisualBoard(GameController gameInfo) {
+        Board boardInfo = gameInfo.getGame().getBoard();
         int[] dimensions = boardInfo.getDims();
         // board.setDebug(true);
         board.setBackground(new TextureRegionDrawable(new TextureRegion(bg)));

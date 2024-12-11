@@ -3,26 +3,49 @@ package Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
+import Model.Game;
 import Model.NormalCell;
+import Model.Player;
 import Model.Token;
 
 public class RecruiterActionController {
 
-    public boolean mindSlip() {
-        // Check Valid Mindslip moves
+    /**
+     * Moves the recruiter
+     * 
+     * @param recruiter   Reference to the recruiter object
+     * @param board       The game state board
+     * @param newPosition The desired position
+     * @return True if footstep placed, else false
+     */
+    public void move(Board board, Player recruiter, int[] newPosition) {
+        AbstractCell newCellPosition = board.getCell(newPosition[0], newPosition[1]);
+        int[] currentPosition = board.getPlayerCoord(recruiter);
 
-        // Send valid moves to view (recieve player move)
-
-        // Update board state
-
-        return true;
+        AbstractCell previousCellPosition = board.getCell(currentPosition[0], currentPosition[1]);
+        previousCellPosition.removePlayer(recruiter);
+        newCellPosition.addPlayer(recruiter);
     }
 
-    // Placement for input for view
+    /**
+     * Moves the recruiter with mindslip
+     * 
+     * @param recruiter   Reference to the recruiter object
+     * @param board       Reference to the Game instance
+     * @param newPosition The desired position
+     * @return True if footstep placed, else false
+     */
+    public void mindSlip(Game game, Player recruiter, int[] newPosition) {
+        move(game.getBoard(), recruiter, newPosition);
+        game.addMindSlipEvent();
+    }
+
+    // Placement for input from view
     int[] answerView(List<int[]> viableChoices) {
         return viableChoices.get(0);
     }

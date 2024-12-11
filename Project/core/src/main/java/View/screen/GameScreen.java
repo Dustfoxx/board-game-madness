@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import Model.Board;
@@ -16,6 +15,7 @@ import Model.BrainFact;
 import Model.Csv;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
+import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -31,7 +31,6 @@ public class GameScreen implements Screen {
     private final Texture boardTexture;
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
-    private final Array<TextButton> actionButtons = new Array<TextButton>();
     private final SettingWindow settingWindow;
 
     public GameScreen(MindMGMT application) {
@@ -84,7 +83,7 @@ public class GameScreen implements Screen {
         root.add(mainSection).expand().fill();
 
         Table mindslipBar = new Table();
-        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.2f, mainSection));
+        mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
 
         Board board = gameController.getGame().getBoard();
         VisualBoard visualBoard = new VisualBoard(board);
@@ -93,17 +92,22 @@ public class GameScreen implements Screen {
 
         // boardSection.add(boardImage).expand().fill();
 
-        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.3f, mainSection));
+        mainSection.add(turnBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
     }
 
     private void setupActionBar(Table root) {
+        // Create a table for the action buttons
         Table actionBar = new Table();
         root.row();
-        root.add(actionBar).expandX().fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
+        root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
 
+        // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
-        actionButtons.add(askButton);
-        actionBar.add(askButton);
+        actionBar.add(askButton).expand();
+
+        // Create a capture button
+        CaptureButton captureButton = new CaptureButton(gameController, skin);
+        actionBar.add(captureButton).expand();
     }
 
     @Override

@@ -12,6 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+import Controller.ActionController;
+import Controller.GameController;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import Model.Feature;
@@ -20,11 +24,13 @@ import View.buildingBlocks.VisualCell;
 
 public class AskWindow extends Window {
 
-    String selectedFeature;
+    Feature selectedFeature;
     ImageButton selectedFeatureButton;
     Table buttonTable;
+    ActionController actionController;
+    GameController gameController;
 
-    public AskWindow(Skin skin, NormalCell cell) {
+    public AskWindow(Skin skin, NormalCell cell, GameController gameController) {
         super("Ask Win", skin);
         // Create the window
         this.setMovable(false);
@@ -32,6 +38,8 @@ public class AskWindow extends Window {
         this.setModal(true);
         this.buttonTable = new Table(); // Create a table for the feature buttons
         this.add(buttonTable).colspan(2).center().row();
+        this.actionController = gameController.actionController;
+        this.gameController = gameController;
 
         // Create a button for closing the window
         Button closeButton = new Button(skin, "close");
@@ -70,7 +78,7 @@ public class AskWindow extends Window {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     selectedFeatureButton = featureButton;
-                    selectedFeature = feature.name();
+                    selectedFeature = feature;
                 }
             });
             buttonTable.add(featureButton).padRight(20).padBottom(5);
@@ -80,8 +88,7 @@ public class AskWindow extends Window {
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO: Send the selected feature to the game controller
-                System.out.println("Feature selected" + selectedFeature);
+                actionController.ask(selectedFeature, gameController.getGame().getRecruiter(), gameController.getGame().getBoard());
                 actor.getParent().remove(); // Closes the window
             }
         });
