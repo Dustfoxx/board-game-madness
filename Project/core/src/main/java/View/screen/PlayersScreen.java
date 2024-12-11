@@ -1,32 +1,31 @@
 package View.screen;
 
-import View.buildingBlocks.MindMGMTStage;
-import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class SetupScreen implements Screen {
+import View.buildingBlocks.MindMGMTStage;
+import io.github.MindMGMT.MindMGMT;
+
+public class PlayersScreen implements Screen {
     private final MindMGMTStage stage;
     private final MindMGMT application;
 
-    public SetupScreen(final MindMGMT application) {
+    public PlayersScreen(final MindMGMT application) {
         this.application = application;
         stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         setupUI();
     }
 
-    private void createPlayers(int nrOfPlayers) {
-        application.nrOfPlayers = nrOfPlayers;
-        application.setScreen(new PlayersScreen(application));
+    private void startGame() {
+        application.setScreen(new GameScreen(application));
         dispose();
     }
 
@@ -37,28 +36,14 @@ public class SetupScreen implements Screen {
         float width = stage.getWidth();
         float height = stage.getHeight();
 
-        Label question = new Label("How many players?", application.skin, "narration");
-        question.setFontScale(2);
-        root.add(question).colspan(2).padBottom(40);
-        root.row();
-
-        root.row().height(height * 0.05f);
-
-        for (int i = 2; i <= 5; i++) {
-            final int value = i;
-            TextButton playersButton = new TextButton(i + " players", application.skin);
-            root.add(playersButton).pad(20);
-            playersButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    createPlayers(value);
-                }
-            });
-            // Start a new row for last 2 buttons
-            if (i == 3) {
-                root.row();
+        TextButton playersButton = new TextButton("Start game", application.skin);
+        root.add(playersButton).pad(20);
+        playersButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                startGame();
             }
-        }
+        });
 
         root.row();
 
@@ -115,4 +100,3 @@ public class SetupScreen implements Screen {
 
     }
 }
-
