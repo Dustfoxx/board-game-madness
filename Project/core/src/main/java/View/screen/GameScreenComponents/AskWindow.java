@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import Controller.ActionController;
 import Controller.GameController;
+import Controller.GameController.Actions;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -27,7 +27,6 @@ public class AskWindow extends Window {
     Feature selectedFeature;
     ImageButton selectedFeatureButton;
     Table buttonTable;
-    ActionController actionController;
     GameController gameController;
 
     public AskWindow(Skin skin, NormalCell cell, GameController gameController) {
@@ -38,7 +37,6 @@ public class AskWindow extends Window {
         this.setModal(true);
         this.buttonTable = new Table(); // Create a table for the feature buttons
         this.add(buttonTable).colspan(2).center().row();
-        this.actionController = gameController.actionController;
         this.gameController = gameController;
 
         // Create a button for closing the window
@@ -88,7 +86,7 @@ public class AskWindow extends Window {
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                actionController.ask(selectedFeature, gameController.getGame().getRecruiter(), gameController.getGame().getBoard());
+                gameController.actionHandler(Actions.ASK, new Object[] { selectedFeature });
                 actor.getParent().remove(); // Closes the window
             }
         });

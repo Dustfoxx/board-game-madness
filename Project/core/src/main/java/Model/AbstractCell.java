@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The AbstractCell class is an abstract class represents a single cell on the game board.
- * Each cell keeps track of current players visiting the cell and tokens placed on the cell.
- * NormalCell and TempleCell inherit from this class and define additional behaviors.
+ * The AbstractCell class is an abstract class represents a single cell on the
+ * game board.
+ * Each cell keeps track of current players visiting the cell and tokens placed
+ * on the cell.
+ * NormalCell and TempleCell inherit from this class and define additional
+ * behaviors.
  */
 
 public abstract class AbstractCell {
 
-    protected List<Player> players;  // List of players currently at the cell
-    protected List<Token> tokens;  // List of tokens currently at the cell
+    protected List<Player> players; // List of players currently at the cell
+    protected List<Token> tokens; // List of tokens currently at the cell
 
     /**
      * Constructor to initialize a cell with empty lists of players and tokens.
@@ -59,10 +62,11 @@ public abstract class AbstractCell {
     }
 
     /**
-     * Adds a token to the cell. 
+     * Adds a token to the cell.
      * 
      * @param newToken The token to add to the cell.
-     * @throws IllegalArgumentException If a token of the same class is already in the cell.
+     * @throws IllegalArgumentException If a token of the same class is already in
+     *                                  the cell.
      */
     public void addToken(Token newToken) {
         for (Token token : tokens) {
@@ -80,5 +84,14 @@ public abstract class AbstractCell {
      */
     public void removeToken(Token token) {
         tokens.remove(token);
+    }
+
+    public Footstep getFootstep() {
+        for (Token token : this.tokens) {
+            if (token instanceof Footstep) {
+                return (Footstep) token;
+            }
+        }
+        return null;
     }
 }
