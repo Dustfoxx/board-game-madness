@@ -16,6 +16,7 @@ import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -110,6 +111,9 @@ public class GameScreen implements Screen {
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
         actionBar.add(askButton).expand();
+        // Create a reveal button
+        RevealButton revealButton = new RevealButton("Reveal", skin);
+        actionBar.add(revealButton).expand();
 
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);
