@@ -24,7 +24,7 @@ public abstract class AbstractCell {
 
     /**
      * Gets the list of players currently in the cell.
-     * 
+     *
      * @return The list of players in the cell.
      */
     public List<Player> getPlayers() {
@@ -33,7 +33,7 @@ public abstract class AbstractCell {
 
     /**
      * Adds a player to the cell.
-     * 
+     *
      * @param player The player to add to the cell.
      */
     public void addPlayer(Player player) {
@@ -42,7 +42,7 @@ public abstract class AbstractCell {
 
     /**
      * Removes a player from the cell.
-     * 
+     *
      * @param player The player to remove from the cell.
      */
     public void removePlayer(Player player) {
@@ -51,7 +51,7 @@ public abstract class AbstractCell {
 
     /**
      * Gets the list of tokens currently in the cell.
-     * 
+     *
      * @return The list of tokens in the cell.
      */
     public List<Token> getTokens() {
@@ -59,8 +59,8 @@ public abstract class AbstractCell {
     }
 
     /**
-     * Adds a token to the cell. 
-     * 
+     * Adds a token to the cell.
+     *
      * @param newToken The token to add to the cell.
      * @throws IllegalArgumentException If a token of the same class is already in the cell.
      */
@@ -75,7 +75,7 @@ public abstract class AbstractCell {
 
     /**
      * Removes a token from the cell.
-     * 
+     *
      * @param token The token to remove from the cell.
      */
     public void removeToken(Token token) {
@@ -89,5 +89,14 @@ public abstract class AbstractCell {
             }
         }
         throw new IllegalStateException("No Footstep found in the cell");
+    }
+
+    public boolean containsFootstep() {
+        for (Token token : tokens) {
+            if (token.getClass().equals(Footstep.class)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
