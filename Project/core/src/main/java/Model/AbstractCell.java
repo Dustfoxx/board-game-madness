@@ -81,4 +81,13 @@ public abstract class AbstractCell {
     public void removeToken(Token token) {
         tokens.remove(token);
     }
+
+    public Footstep getFootstep() {
+        for (Token token : tokens) {
+            if (token.getClass().equals(Footstep.class)) {
+                return (Footstep) token;
+            }
+        }
+        throw new IllegalStateException("No Footstep found in the cell");
+    }
 }
