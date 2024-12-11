@@ -24,14 +24,23 @@ public class MainMenuScreen implements Screen {
     }
     private void setupUI() {
 
-        TextButton startButton = new TextButton("Start Game", application.skin);
+        TextButton hostButton = new TextButton("Host Game", application.skin);
+        TextButton joinButton = new TextButton("Join Game", application.skin);
         TextButton quitButton = new TextButton("Quit", application.skin);
 
-        startButton.addListener(new ChangeListener() {
+        hostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // not sure should this in view or controller
                 application.setScreen(new SetupScreen(application));
+                dispose();
+            }
+        });
+        joinButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // not sure should this in view or controller
+                application.setScreen(new JoinScreen(application));
                 dispose();
             }
         });
@@ -46,16 +55,20 @@ public class MainMenuScreen implements Screen {
         float width = stage.getCamera().viewportWidth;
         float height = stage.getCamera().viewportHeight;
 
-        quitButton.setSize(startButton.getWidth(), startButton.getHeight());
-
-        startButton.setPosition(
-            (width - startButton.getWidth()) / 2,
-            (height - startButton.getHeight()) / (2 - 0.15f));
+        quitButton.setSize(hostButton.getWidth(), hostButton.getHeight());
+        joinButton.setSize(hostButton.getWidth(), hostButton.getHeight());
+        hostButton.setPosition(
+            (width - hostButton.getWidth()) / 2,
+            (height - hostButton.getHeight()) / (2 - 0.38f));
+        joinButton.setPosition(
+            (width - hostButton.getWidth()) / 2,
+            (height - hostButton.getHeight()) / (2 - 0.15f));
         quitButton.setPosition(
             (width - quitButton.getWidth()) / 2,
             (height - quitButton.getHeight()) / (2 + 0.15f));
 
-        stage.addActor(startButton);
+        stage.addActor(hostButton);
+        stage.addActor(joinButton);
         stage.addActor(quitButton);
     }
 
