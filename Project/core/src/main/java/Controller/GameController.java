@@ -183,14 +183,16 @@ public class GameController {
         if (gameState.getUsedAction()) {
             switch (action) {
                 case ASK:
-                    actionController.ask(null);
+                    // actionController.ask(null);
                     break;
                 case REVEAL:
-                    int[] playerCoord = gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
-                    actionController.reveal(gameState.getBoard().getCell(playerCoord[0], playerCoord[1]).getFootstep(),
-                            gameState.getBoard(),
-                            gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
-                            gameState.getRecruiter().getWalkedPath());
+                    // int[] playerCoord =
+                    // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
+                    // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
+                    // playerCoord[1]).getFootstep(),
+                    // gameState.getBoard(),
+                    // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
+                    // gameState.getRecruiter().getWalkedPath());
                     break;
                 case CAPTURE:
                     // ActionController.capture()
@@ -212,8 +214,8 @@ public class GameController {
     public void actionHandler(Actions action, int row, int col) {
         if (action == Actions.MOVE) {
             if (gameState.getUsedMovement()) {
-                actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), null,
-                        new int[] { row, col });
+                // actionController.movePlayer(gameState.getCurrentPlayer(),
+                // gameState.getBoard(), null, new int[] { row, col });
                 gameState.setUseMovement(false);
             }
         }

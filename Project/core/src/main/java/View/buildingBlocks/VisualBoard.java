@@ -9,13 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.Board;
+import Model.Game;
 import Model.RougeAgent;
 
 public class VisualBoard {
     private Table board = new Table();
     private Texture bg = new Texture("basic-board.png");
 
-    public VisualBoard(Board boardInfo) {
+    public VisualBoard(Game gameInfo) {
+        Board boardInfo = gameInfo.getBoard();
         int[] dimensions = boardInfo.getDims();
         // board.setDebug(true);
         board.setBackground(new TextureRegionDrawable(new TextureRegion(bg)));
@@ -30,13 +32,10 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         Actor target = event.getListenerActor();
                         String cellName = target.getName();
-                        // System.out.println(cellName);
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
-                        // System.out.println(row);
-                        // System.out.println(col);
 
-                        boardInfo.getCell(row, col).addPlayer(new RougeAgent(2));
+                        gameInfo.actionHandler(Actions.MOVE, row, col);
                     }
                 });
                 board.add(cell).uniform().expand();
