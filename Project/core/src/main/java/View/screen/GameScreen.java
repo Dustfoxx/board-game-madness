@@ -112,7 +112,7 @@ public class GameScreen implements Screen {
         AskButton askButton = new AskButton(gameController, skin);
         actionBar.add(askButton).expand();
         // Create a reveal button
-        RevealButton revealButton = new RevealButton("Reveal", skin);
+        RevealButton revealButton = new RevealButton(gameController, skin);
         actionBar.add(revealButton).expand();
 
         // Create a capture button
