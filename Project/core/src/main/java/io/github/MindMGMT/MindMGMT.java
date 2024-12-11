@@ -50,6 +50,10 @@ public class MindMGMT extends Game {
         assets.load("basic-board.png", Texture.class);
     }
 
+    public boolean joinGame(String name, String code) {
+        return false;
+    }
+
     @Override
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
@@ -71,6 +75,10 @@ public class MindMGMT extends Game {
             this.skin.getFont("button")
                 .getData()
                 .setScale(0.8f);
+
+            this.skin.getFont("font")
+                .getData()
+                .setScale(2f);
             this.setScreen(new MainMenuScreen(this));
 
         } else {
