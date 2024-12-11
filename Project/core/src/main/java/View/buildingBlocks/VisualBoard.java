@@ -16,6 +16,11 @@ public class VisualBoard {
     private Table board = new Table();
     private Texture bg = new Texture("basic-board.png");
 
+    /**
+     * Constructing the board using VisualCells
+     * 
+     * @param gameInfo the gamecontroller controlling the game
+     */
     public VisualBoard(GameController gameInfo) {
         Board boardInfo = gameInfo.getGame().getBoard();
         int[] dimensions = boardInfo.getDims();
@@ -27,6 +32,7 @@ public class VisualBoard {
                 VisualCell cell = new VisualCell(boardInfo.getCell(i, j));
                 String name = i + "" + j;
                 cell.setName(name);
+                // This is for movement actions
                 cell.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
