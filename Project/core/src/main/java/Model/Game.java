@@ -172,7 +172,7 @@ public class Game {
     }
 
     /**
-     * Gets the tuple located at a specific timestamp
+     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple. 
      * 
      * @param time the timestamp we wish to get
      * @return the tuple at given time, null if not found
