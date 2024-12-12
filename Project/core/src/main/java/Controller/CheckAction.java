@@ -221,6 +221,34 @@ public class CheckAction {
     }
 
     /**
+     * Generic function to create a mask for initial placements of rogue agents
+     * 
+     * @param board board is only needed for size
+     * @return mask for valid placements of agents
+     */
+    public boolean[][] getValidPlacements(Board board) {
+        int[] dims = board.getDims();
+
+        boolean[][] mask = new boolean[dims[0]][dims[1]];
+        boolean value = false;
+
+        for (int i = 0; i < dims[0]; i++) {
+            for (int j = 0; j < dims[1]; j++) {
+                value = false;
+                if (i == 0 || i == dims[0] - 1) {
+                    value = true;
+                } else if (j == 0 || j == dims[1] - 1) {
+                    value = true;
+                }
+                mask[i][j] = value;
+            }
+        }
+
+        return mask;
+
+    }
+
+    /**
      * Returns if a player can take an ask action
      * 
      * @param player RougeAgent we are checking

@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import Model.Game.gameStates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +14,19 @@ public class GameController {
     // Activate player
     // Check win
 
-    private boolean recruiterTurn = true;
     private Game gameState;
     private int activePlayer = 0;
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
-    public ActionController actionController = new ActionController();
+    private ActionController actionController;
+
+    public enum Actions {
+        MOVE,
+        ASK,
+        REVEAL,
+        CAPTURE,
+        MINDSLIP
+    }
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
@@ -37,6 +45,8 @@ public class GameController {
         gameState = initializeGame(playerAmount, boardCsv, names);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
+
+        this.actionController = new ActionController();
 
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
@@ -99,23 +109,57 @@ public class GameController {
      * Decides new player and increments timer accordingly.
      */
     public void newTurn() {
-        if (recruiterTurn) {
-            gameState.incrementTime();
-            if (gameState.getCurrentTime() >= 8) {// IDK how many turns were max
-                // RECRUITER WIN
-                gameState.setGameOver();
-                // Should who won exist here or in model?
-                // I think model
-            }
-            recruiterTurn = false;
+        switch (gameState.getGameState()) {
+            case PREGAME:
+                preGameLogic();
+                break;
+            case ONGOING:
+                ongoingLogic();
+                break;
+            case ENDGAME:
+                // Save stats?
+                break;
+
+            default:
+                break;
         }
-        if (gameState.getCurrentTime() % 2 == 1) { // Need handling for first turn but I want a better idea of how that
-                                                   // would be
-            // structured
-            if (recruiter.getAmountRecruited() > 0) {
+
+    }
+
+    private void preGameLogic() {
+        gameState.setMovementAvailability(true);
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            gameState.incrementTime();
+            if (gameState.getCurrentTime() > 4) {
                 gameState.addAmountRecruited(recruiter.getAmountRecruited());
+                recruiter.resetAmountRecruited();
+                gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
+                                                                           // next player
             }
-            if (gameState.getAmountRecruited() >= 9) {
+        } else {
+            List<Player> players = gameState.getPlayers();
+            int currentIndex = players.indexOf(gameState.getCurrentPlayer());
+            // If we are at the end of players, set game to started
+            if (currentIndex == players.size() - 1) {
+                gameState.setCurrentPlayer(recruiter);
+                gameState.setGameState(gameStates.ONGOING);
+            } else {
+                // Set player to next rogue agent so they can place
+                gameState.setCurrentPlayer(players.get(currentIndex + 1));
+            }
+        }
+
+    }
+
+    private void ongoingLogic() {
+        gameState.setMovementAvailability(true);
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            gameState.incrementTime();
+        }
+        if (gameState.getCurrentTime() % 2 == 1) {
+            gameState.addAmountRecruited(recruiter.getAmountRecruited());
+            recruiter.resetAmountRecruited();
+            if (gameState.getAmountRecruited() >= gameState.getMaxRecruits()) {
                 // RECRUITER WIN GAME
                 gameState.setGameOver();
             }
@@ -123,9 +167,57 @@ public class GameController {
 
         activePlayer++;
         gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
-        if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            recruiterTurn = true;
+        if (gameState.getCurrentPlayer() instanceof RougeAgent) {
+            gameState.setActionAvailability(true);
+        } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
+            // RECRUITER WIN
+            gameState.setGameOver();
+            // TODO: Should who won exist here or in model?
+            // I think model
         }
+    }
+
+    public boolean actionHandler(Actions action) {
+        return actionHandler(action, new Object[] {});
+    }
+
+    public boolean actionHandler(Actions action, Object[] additionalInfo) {
+        boolean returnValue = true;
+        switch (action) {
+            case ASK:
+                actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
+                break;
+            case REVEAL:
+                // TODO: int[] playerCoord =
+                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
+                // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
+                // playerCoord[1]).getFootstep(),
+                // gameState.getBoard(),
+                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
+                // gameState.getRecruiter().getWalkedPath());
+                break;
+            case CAPTURE:
+                returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
+                        gameState.getBoard());
+
+                break;
+            case MINDSLIP:
+
+                break;
+            case MOVE:
+                if (gameState.isMovementAvailable()) {
+                    // TODO: actionController.movePlayer(gameState.getCurrentPlayer(),
+                    // gameState.getBoard(), null,
+                    // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
+                    gameState.setMovementAvailability(false);
+                }
+                break;
+        }
+        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+        if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
+            newTurn();
+        }
+        return returnValue;
     }
 
 }

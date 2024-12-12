@@ -36,6 +36,12 @@ public class VisualCell extends Actor {
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
 
+    /**
+     * Creates a single cell on the board. Initializes textures based on the
+     * information found for the cell
+     * 
+     * @param cellInfo a single cell on the board. contains players and more
+     */
     public VisualCell(AbstractCell cellInfo) {
         initDict();
         this.cellInfo = cellInfo;
@@ -46,6 +52,8 @@ public class VisualCell extends Actor {
             feature2 = fetchFeature(features[1]);
         }
 
+        // These are currently magic numbers and pretty ugly. Find better way of doing
+        // this
         this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
         this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
         this.brains = new TextureRegion[2];
@@ -54,9 +62,14 @@ public class VisualCell extends Actor {
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
         updatePlayers();
+        // Bounds needed to render at all. These should be updated based on parent if
+        // possible
         setBounds(0, 0, 100, 100);
     }
 
+    /**
+     * Draw function. Updates information and redraws based on the board
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
@@ -71,6 +84,11 @@ public class VisualCell extends Actor {
         drawTokens(batch);
     }
 
+    /**
+     * Draws the features for a cell on the current batch
+     * 
+     * @param batch the batch currently being composed
+     */
     private void drawFeatures(Batch batch) {
         float featureYPos = getY() + getHeight() / 2;
         float feature2Pos = getX() + getWidth() / 2;
@@ -81,6 +99,12 @@ public class VisualCell extends Actor {
                 getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
     }
 
+    /**
+     * Draws the tokens for the current cell. Values are based on how many tokens
+     * are in the current cell
+     * 
+     * @param batch batch being composed
+     */
     private void drawTokens(Batch batch) {
         updateTokens();
 
@@ -95,6 +119,11 @@ public class VisualCell extends Actor {
         }
     }
 
+    /**
+     * Draws players inhabiting the current cell
+     * 
+     * @param batch batch being composed
+     */
     private void drawPlayers(Batch batch) {
         updatePlayers();
 
@@ -108,6 +137,9 @@ public class VisualCell extends Actor {
         }
     }
 
+    /**
+     * Updates the textures to be drawn from the current players in the cell
+     */
     private void updatePlayers() {
         players.clear();
         for (Player player : cellInfo.getPlayers()) {
@@ -115,6 +147,9 @@ public class VisualCell extends Actor {
         }
     }
 
+    /**
+     * Updates the textures for tokens to be drawn based on the tokens in the cell
+     */
     private void updateTokens() {
         tokens.clear();
         for (Token token : cellInfo.getTokens()) {
@@ -129,6 +164,9 @@ public class VisualCell extends Actor {
         }
     }
 
+    /**
+     * Dictionary to fetch the proper feature from the texture based on feature name
+     */
     private void initDict() {
         features.put(Feature.BOOKSTORE, 0);
         features.put(Feature.BUS, 1);
@@ -148,6 +186,13 @@ public class VisualCell extends Actor {
         features.put(Feature.GRAFFITI, 15);
     }
 
+    /**
+     * fetches a feature as a textureregion from the main file. Currently using
+     * magic numbers to separate them. Should be replaced by atlas
+     * 
+     * @param feature Feature to be fetched
+     * @return a textureregion containing the feature
+     */
     public TextureRegion fetchFeature(Feature feature) {
         int sideSize = 873 / 4;
         if (feature != null) {
@@ -162,6 +207,13 @@ public class VisualCell extends Actor {
                 sideSize, sideSize);
     }
 
+    /**
+     * Fetches a player from the texturefile containing players. Uses magic numbers
+     * based on pixelsize.
+     * 
+     * @param playerNr which player to fetch
+     * @return a textureregion containing the corresponding player
+     */
     private TextureRegion fetchPlayer(int playerNr) {
         int sideSize = 400 / 4;
         return new TextureRegion(playersImg,

@@ -1,6 +1,5 @@
 package View.screen;
 
-import Controller.ActionController;
 import Controller.GameController;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Screen;
@@ -10,14 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Model.Board;
-import Model.BrainFact;
 import Model.Csv;
-import Model.Footstep;
-import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 
 import java.util.ArrayList;
@@ -30,7 +26,6 @@ import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
     private final GameController gameController;
-    private final ActionController actionController;
     private final MindMGMTStage stage;
     private final Skin skin;
     private final Texture boardTexture;
@@ -45,7 +40,6 @@ public class GameScreen implements Screen {
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(application.nrOfPlayers, boardCsv, names);
-        this.actionController = new ActionController();
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
@@ -89,16 +83,7 @@ public class GameScreen implements Screen {
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
 
-        // TODO: Change so that the players are not hardcoded but chosen positions at
-        // the start of the game
-        Board board = gameController.getGame().getBoard();
-        board.getCell(0, 0).addPlayer(new RougeAgent(1));
-        board.getCell(0, 5).addPlayer(new RougeAgent(2));
-        board.getCell(6, 0).addPlayer(new RougeAgent(3));
-        board.getCell(6, 5).addPlayer(new RougeAgent(4));
-        board.getCell(1, 1).addToken(new BrainFact(1));
-        board.getCell(1, 2).addToken(new Footstep());
-        VisualBoard visualBoard = new VisualBoard(board);
+        VisualBoard visualBoard = new VisualBoard(gameController);
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
@@ -111,11 +96,16 @@ public class GameScreen implements Screen {
         // Create a table for the action buttons
         Table actionBar = new Table();
         root.row();
-        root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom().height(stage.getViewport().getWorldHeight() * 0.1f);
+        root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom()
+                .height(stage.getViewport().getWorldHeight() * 0.1f);
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
         actionBar.add(askButton).expand();
+        
+        // Create a reveal button
+        RevealButton revealButton = new RevealButton(gameController, skin);
+        actionBar.add(revealButton).expand();
 
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);
