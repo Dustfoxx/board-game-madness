@@ -60,6 +60,7 @@ public class AskButton extends TextButton {
                     this.setDisabled(true);
                 // Enable the button if it's a normal cell
                 } else {
+                    this.setColor(Color.WHITE);
                     this.setDisabled(false);
                 }
             }
