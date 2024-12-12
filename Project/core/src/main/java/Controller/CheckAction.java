@@ -235,7 +235,7 @@ public class CheckAction {
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
                 value = false;
-                if (i == 0 || i == dims[1] - 1) {
+                if (i == 0 || i == dims[0] - 1) {
                     value = true;
                 } else if (j == 0 || j == dims[1] - 1) {
                     value = true;
