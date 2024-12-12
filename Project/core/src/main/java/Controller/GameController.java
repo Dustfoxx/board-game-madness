@@ -206,6 +206,11 @@ public class GameController {
                 break;
             case MOVE:
                 if (gameState.isMovementAvailable()) {
+
+                    int row = (int) additionalInfo[0];
+                    int col = (int) additionalInfo[1];
+
+                    actionController.movePlayer(recruiter, gameState.getBoard(), new int[] {row, col});
                     // actionController.movePlayer(gameState.getCurrentPlayer(),
                     // gameState.getBoard(), null,
                     // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });

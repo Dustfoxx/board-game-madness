@@ -99,13 +99,8 @@ public class ActionController {
      * @param coords       coordinates the player will be placed on
      * @return boolean defining if the action was successful or not
      */
-    public boolean movePlayer(Player player, Board board, boolean[][] validityMask, int[] coords) {
+    public boolean movePlayer(Player player, Board board, int[] coords) {
         // Did player choose a valid location?
-        if (validityMask != null) {
-            if (validityMask[coords[0]][coords[1]]) {
-                return false;
-            }
-        }
         // If player on board
         int[] playerCoords = board.getPlayerCoord(player);
         if (playerCoords != null) {

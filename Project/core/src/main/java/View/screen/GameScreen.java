@@ -13,6 +13,7 @@ import Model.Csv;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
@@ -28,6 +29,7 @@ public class GameScreen implements Screen {
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
     private final SettingWindow settingWindow;
+    private VisualBoard visualBoard;
 
     public GameScreen(MindMGMT application) {
 
@@ -80,7 +82,7 @@ public class GameScreen implements Screen {
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
 
-        VisualBoard visualBoard = new VisualBoard(gameController);
+        this.visualBoard = new VisualBoard(gameController);
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
@@ -98,7 +100,10 @@ public class GameScreen implements Screen {
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
+        MoveButton moveButton = new MoveButton(gameController, skin, visualBoard);
+
         actionBar.add(askButton).expand();
+        actionBar.add(moveButton).expand();
 
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);

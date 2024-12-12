@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
 import Model.BrainNote;
@@ -27,6 +30,10 @@ public class VisualCell extends Actor {
     private TextureRegion[] brains;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
+
+
+    Texture highlight = new Texture("highlight.png");
+    TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
 
     private AbstractCell cellInfo;
 
@@ -65,6 +72,7 @@ public class VisualCell extends Actor {
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
         setBounds(0, 0, 100, 100);
+        this.setTouchable(Touchable.disabled);
     }
 
     /**
@@ -220,5 +228,16 @@ public class VisualCell extends Actor {
                 sideSize * (playerNr - 1),
                 0,
                 sideSize, sideSize);
+    }
+
+
+
+    void highlightCell(boolean highlight) {
+        if (highlight) {
+            this.setColor(1f, 0f, 0f, 1f);
+                        this.setTouchable(Touchable.enabled);
+        } else {
+            this.setColor(this.getColor().r, this.getColor().g, this.getColor().b, 1f);
+        }
     }
 }

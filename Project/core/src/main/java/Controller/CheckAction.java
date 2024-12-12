@@ -221,7 +221,7 @@ public class CheckAction {
     }
 
     /**
-     * Generic function to create a mask for initial placements of rogue agents
+     * Generic function to create a mask for initial wplacements of rogue agents
      * 
      * @param board board is only needed for size
      * @return mask for valid placements of agents

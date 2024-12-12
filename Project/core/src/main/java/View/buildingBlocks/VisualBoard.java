@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import Controller.GameController;
 import Controller.GameController.Actions;
@@ -53,5 +54,51 @@ public class VisualBoard {
 
     public Table getVisualBoard() {
         return this.board;
+    }
+
+    public void highlightValidCells(boolean[][] mask) {
+        int rows = mask.length;
+        int cols = mask[0].length;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (mask[i][j]) {
+                    VisualCell cell = getCell(i, j);
+                    if (cell != null) {
+                        cell.highlightCell(true);
+                    }
+                }
+            }
+        }
+    }
+
+
+    // Used to update individual cells (saves performance opposed to updateAllCells)
+    public void UpdateCell(int i, int j){
+        getCell(i, j);
+
+    }
+
+    public VisualCell getCell(int i, int j) {
+        String coords = i + "" + j; 
+        SnapshotArray<Actor> cellTable = board.getChildren();
+        
+        for (Actor actor : cellTable) {
+            if (actor.getName().equals(coords)) {
+
+                System.out.println(actor);
+                return (VisualCell) actor;
+            }
+        }
+        return null;
+    }
+
+    public void UpdateAllCells() {
+        SnapshotArray<Actor> children = board.getChildren();
+        for (Actor actor : children) {
+            if (actor instanceof VisualCell) {
+               // ((VisualCell) actor).UpdateCell();
+            }
+        }
     }
 }
