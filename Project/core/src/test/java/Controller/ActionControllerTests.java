@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
+import Model.Recruiter;
 import Model.Board;
 import Model.BrainFact;
 
@@ -35,11 +36,23 @@ public class ActionControllerTests {
 
     @Test
     void testAsk() {
-        NormalCell testCell = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
-        Feature selectedFeature = actionController.ask(testCell);
+        // Prepare
+        Feature feature = Feature.BILLBOARD;
+        Recruiter recruiter = new Recruiter(0, "", new Feature[]{Feature.BILLBOARD, Feature.BUS, Feature.BOOKSTORE});
+        recruiter.addToWalkedPath(0, 0);
+        recruiter.addToWalkedPath(0, 1);
 
-        assertNotNull(selectedFeature, "The selected feature should not be null");
-        assertEquals(Feature.BILLBOARD, selectedFeature, "The feature should be BILLBOARD.");
+        // Call function
+        actionController.ask(feature, recruiter, board);
+
+        // Verify that a Footstep token was added to the correct cell (0, 0).
+        NormalCell firstStep = (NormalCell) board.getCell(0, 0);
+        assertEquals(1, firstStep.getTokens().size(), "Expected one token in cell (0, 0).");
+        assertTrue(firstStep.getTokens().get(0) instanceof Footstep, "Expected a Footstep token in cell (0, 0).");
+
+        // Verify that no Footstep token was added to cell (0, 1).
+        NormalCell secondStep = (NormalCell) board.getCell(0, 1);
+        assertEquals(0, secondStep.getTokens().size(), "Expected no tokens in cell (0, 1).");
     }
 
     @Test
