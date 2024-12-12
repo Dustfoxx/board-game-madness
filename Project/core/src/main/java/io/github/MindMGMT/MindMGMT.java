@@ -14,8 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
+ * platforms.
+ */
 public class MindMGMT extends Game {
     private Stage stage;
     private ProgressBar progressBar;
@@ -33,10 +35,10 @@ public class MindMGMT extends Game {
         assets = new AssetManager();
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
-        progressBar.setX(viewport.getCamera().viewportWidth/2);
-        progressBar.setY(viewport.getCamera().viewportHeight/2);
-        progressBar.setWidth(viewport.getCamera().viewportWidth/2);
-        progressBar.setHeight(viewport.getCamera().viewportHeight/2);
+        progressBar.setX(viewport.getCamera().viewportWidth / 2);
+        progressBar.setY(viewport.getCamera().viewportHeight / 2);
+        progressBar.setWidth(viewport.getCamera().viewportWidth / 2);
+        progressBar.setHeight(viewport.getCamera().viewportHeight / 2);
         stage.addActor(progressBar);
     }
 
@@ -73,12 +75,12 @@ public class MindMGMT extends Game {
             this.hasLoaded = true;
             this.skin = assets.get("comicui/comic-ui.json", Skin.class);
             this.skin.getFont("button")
-                .getData()
-                .setScale(0.8f);
+                    .getData()
+                    .setScale(0.8f);
 
             this.skin.getFont("font")
-                .getData()
-                .setScale(2f);
+                    .getData()
+                    .setScale(2f);
             this.setScreen(new MainMenuScreen(this));
 
         } else {

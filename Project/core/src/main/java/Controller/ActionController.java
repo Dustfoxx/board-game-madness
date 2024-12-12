@@ -87,4 +87,32 @@ public class ActionController {
             }
         }
     }
+
+    /**
+     * Places a player on the board. Mask
+     * decides valid spots
+     * 
+     * @param player       the player that is being placed
+     * @param board        the board it is being placed on
+     * @param validityMask the mask defining valid positions. Null if all options
+     *                     are valid
+     * @param coords       coordinates the player will be placed on
+     * @return boolean defining if the action was successful or not
+     */
+    public boolean movePlayer(Player player, Board board, boolean[][] validityMask, int[] coords) {
+        // Did player choose a valid location?
+        if (validityMask != null) {
+            if (validityMask[coords[0]][coords[1]]) {
+                return false;
+            }
+        }
+        // If player on board
+        int[] playerCoords = board.getPlayerCoord(player);
+        if (playerCoords != null) {
+            board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+        }
+        // Add player to new cell
+        board.getCell(coords[0], coords[1]).addPlayer(player);
+        return true;
+    }
 }

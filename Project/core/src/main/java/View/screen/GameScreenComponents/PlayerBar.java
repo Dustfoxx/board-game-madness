@@ -41,8 +41,9 @@ public class PlayerBar extends Table {
             this.add(playerLabel).expandX(); // Expand each label equally along the X-axis
         }
 
-        // Create a button to simulate advancing to the next player's turn - TODO: Remove when not useful anymore
-        TextButton nextTurnButton = new TextButton("Next Turn", skin);
+        // Create a button to simulate advancing to the next player's turn - TODO:
+        // Remove when not useful anymore
+        TextButton nextTurnButton = new TextButton("End Turn", skin);
         nextTurnButton.setColor(Color.MAGENTA);
         this.add(nextTurnButton);
 

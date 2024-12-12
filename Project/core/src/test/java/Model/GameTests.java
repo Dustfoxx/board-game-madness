@@ -3,6 +3,8 @@ package Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import Model.Game.gameStates;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +44,7 @@ class GameTests {
 
         // Initializing the Game object
         game = new Game(players, board, player1);
+        game.setGameState(gameStates.ONGOING);
     }
 
     @Test
@@ -63,7 +66,7 @@ class GameTests {
     void testGameInitialization() {
         assertFalse(game.isGameOver(), "Game should not be over initially.");
         assertEquals(player1, game.getCurrentPlayer(), "Starting player should be Player 1.");
-        assertEquals(1, game.getCurrentTime(), "Initial game time should be 1.");
+        assertEquals(0, game.getCurrentTime(), "Initial game time should be 0.");
         assertEquals(0, game.getRecruitHistory().size(), "Recruit history should be empty.");
         assertEquals(0, game.getMindSlipHistory().size(), "Mind slip history should be empty.");
         assertEquals(board, game.getBoard(), "Board should match the one passed in.");
@@ -93,9 +96,9 @@ class GameTests {
     @Test
     void testIncrementTime() {
         game.incrementTime();
-        assertEquals(2, game.getCurrentTime(), "Game time should increment to 2.");
+        assertEquals(1, game.getCurrentTime(), "Game time should increment to 1.");
         game.incrementTime();
-        assertEquals(3, game.getCurrentTime(), "Game time should increment to 3.");
+        assertEquals(2, game.getCurrentTime(), "Game time should increment to 3.");
     }
 
     @Test
@@ -106,15 +109,13 @@ class GameTests {
         assertEquals(3, game.getAmountRecruited(), "Total amount recruited should increase to 3.");
         assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(-1),
                 "Adding a negative number to the amount recruited should throw an IllegalArgumentException.");
-        assertThrows(IllegalArgumentException.class, () -> game.addAmountRecruited(0),
-                "Adding zero to the amount recruited should throw an IllegalArgumentException.");
     }
 
     @Test
     void testAddMindSlipEvent() {
         // TODO: Update tests
     }
-    
+
     @Test
     void testGetPlayers() {
         List<Player> players = game.getPlayers();

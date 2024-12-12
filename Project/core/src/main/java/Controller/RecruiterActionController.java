@@ -15,27 +15,28 @@ import Model.Token;
 
 public class RecruiterActionController {
 
-   /**
+    /**
      * Moves the recruiter
-     * @param recruiter Reference to the recruiter object
-     * @param board      The game state board
+     * 
+     * @param recruiter   Reference to the recruiter object
+     * @param board       The game state board
      * @param newPosition The desired position
      * @return True if footstep placed, else false
      */
     public void move(Board board, Player recruiter, int[] newPosition) {
         AbstractCell newCellPosition = board.getCell(newPosition[0], newPosition[1]);
         int[] currentPosition = board.getPlayerCoord(recruiter);
-        
+
         AbstractCell previousCellPosition = board.getCell(currentPosition[0], currentPosition[1]);
         previousCellPosition.removePlayer(recruiter);
         newCellPosition.addPlayer(recruiter);
     }
 
-
     /**
      * Moves the recruiter with mindslip
-     * @param recruiter Reference to the recruiter object
-     * @param board      Reference to the Game instance
+     * 
+     * @param recruiter   Reference to the recruiter object
+     * @param board       Reference to the Game instance
      * @param newPosition The desired position
      * @return True if footstep placed, else false
      */
