@@ -113,6 +113,10 @@ public class ActionController {
         }
         // Add player to new cell
         board.getCell(coords[0], coords[1]).addPlayer(player);
+        if (player.isRecruiter()) {
+            Recruiter recruiter = (Recruiter) player;
+            recruiter.addToWalkedPath(coords[0], coords[1]);
+        }
         return true;
     }
 }
