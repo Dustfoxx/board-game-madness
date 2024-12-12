@@ -88,7 +88,7 @@ public abstract class AbstractCell {
                 return (Footstep) token;
             }
         }
-        throw new IllegalStateException("No Footstep found in the cell");
+        return null;
     }
 
     public boolean containsFootstep() {
