@@ -41,9 +41,9 @@ public class VisualBoard {
                         String cellName = target.getName();
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
-                        System.out.println("Cell clicked");
-
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { row, col });
+                        UpdateAllCells();
+                        dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
                 board.add(cell).uniform().expand();
@@ -71,6 +71,18 @@ public class VisualBoard {
             }
         }
     }
+
+    public void dehighlightValidCells(int dimx, int dimy) {
+
+        for (int i = 0; i < dimx; i++) {
+            for (int j = 0; j < dimy; j++) {
+                    VisualCell cell = getCell(i, j);
+                    if (cell != null) {
+                        cell.highlightCell(false);
+                    }
+                }
+            }
+        }
 
 
     // Used to update individual cells (saves performance opposed to updateAllCells)

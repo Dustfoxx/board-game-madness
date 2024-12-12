@@ -42,6 +42,7 @@ public class VisualCell extends Actor {
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
+    private boolean highlighted = false;
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -81,6 +82,15 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
+
+        if (highlighted) {
+            this.setTouchable(Touchable.enabled);
+            highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight());  // Draw the background
+        }
+        else{
+            this.setTouchable(Touchable.disabled);
+        }
+
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         if (cellInfo instanceof NormalCell) {
             drawFeatures(batch);
@@ -234,10 +244,9 @@ public class VisualCell extends Actor {
 
     void highlightCell(boolean highlight) {
         if (highlight) {
-            this.setColor(1f, 0f, 0f, 1f);
-                        this.setTouchable(Touchable.enabled);
+            this.highlighted = true;
         } else {
-            this.setColor(this.getColor().r, this.getColor().g, this.getColor().b, 1f);
+            this.highlighted = false;
         }
     }
 }
