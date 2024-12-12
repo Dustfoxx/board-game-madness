@@ -14,7 +14,11 @@ import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.MoveButton;
+import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
+
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
 import View.screen.GameScreenComponents.SettingWindow;
@@ -31,14 +35,13 @@ public class GameScreen implements Screen {
     private final SettingWindow settingWindow;
     private VisualBoard visualBoard;
 
-    public GameScreen(MindMGMT application) {
+    public GameScreen(MindMGMT application, ArrayList<String> names) {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
-
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(application.nrOfPlayers, boardCsv);
+        this.gameController = new GameController(application.nrOfPlayers, boardCsv, names);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
@@ -104,6 +107,10 @@ public class GameScreen implements Screen {
 
         actionBar.add(askButton).expand();
         actionBar.add(moveButton).expand();
+        
+        // Create a reveal button
+        RevealButton revealButton = new RevealButton(gameController, skin);
+        actionBar.add(revealButton).expand();
 
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);

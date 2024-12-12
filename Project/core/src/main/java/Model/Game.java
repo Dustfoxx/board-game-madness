@@ -172,7 +172,7 @@ public class Game {
     }
 
     /**
-     * Gets the tuple located at a specific timestamp
+     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple. 
      * 
      * @param time the timestamp we wish to get
      * @return the tuple at given time, null if not found
@@ -192,6 +192,9 @@ public class Game {
      * @param amount The number of recruits revealed during current round.
      */
     public void addAmountRecruited(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Recruits added cannot be below 0.");
+        }
         this.recruitHistory.add(new int[] { currentTime, amount });
     }
 
@@ -287,7 +290,7 @@ public class Game {
      * @param value true if player should be able to move and false if they have
      *              just moved
      */
-    public void setUseMovement(boolean value) {
+    public void setMovementAvailability(boolean value) {
         this.isMovementAvailable = value;
     }
 
@@ -297,7 +300,7 @@ public class Game {
      * 
      * @param value true if player can make an action, false if they have used one.
      */
-    public void setUseAction(boolean value) {
+    public void setActionAvailability(boolean value) {
         this.isActionAvailable = value;
     }
 

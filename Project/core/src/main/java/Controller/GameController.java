@@ -37,12 +37,12 @@ public class GameController {
      * @param playerAmount The number of players this specific game should have
      */
 
-    public GameController(int playerAmount, Csv boardCsv) {
+    public GameController(int playerAmount, Csv boardCsv, ArrayList<String> names) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
-        gameState = initializeGame(playerAmount, boardCsv);
+        gameState = initializeGame(playerAmount, boardCsv, names);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
 
@@ -85,7 +85,7 @@ public class GameController {
         }
     }
 
-    private Game initializeGame(int playerAmount, Csv boardCsv) {
+    private Game initializeGame(int playerAmount, Csv boardCsv, ArrayList<String> names) {
         if (playerAmount <= 1) {
             throw new IllegalArgumentException("Must be more than 1 player");
         }
@@ -93,7 +93,7 @@ public class GameController {
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
 
         for (int i = 0; i < playerAmount; i++) {
-            players.add(i == 0 ? new Recruiter(i, "recruiter", recruiterFeatures) : new RougeAgent(i));
+            players.add(i == 0 ? new Recruiter(i, names.get(i), recruiterFeatures) : new RougeAgent(i, names.get(i)));
         }
 
         Board board = new Board(boardCsv);
@@ -127,7 +127,7 @@ public class GameController {
     }
 
     private void preGameLogic() {
-        gameState.setUseMovement(true);
+        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
@@ -152,7 +152,7 @@ public class GameController {
     }
 
     private void ongoingLogic() {
-        gameState.setUseMovement(true);
+        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
         }
@@ -168,11 +168,11 @@ public class GameController {
         activePlayer++;
         gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
-            gameState.setUseAction(true);
+            gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
-            // Should who won exist here or in model?
+            // TODO: Should who won exist here or in model?
             // I think model
         }
     }
@@ -188,7 +188,7 @@ public class GameController {
                 actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
                 break;
             case REVEAL:
-                // int[] playerCoord =
+                // TODO: int[] playerCoord =
                 // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
                 // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
                 // playerCoord[1]).getFootstep(),
@@ -214,11 +214,11 @@ public class GameController {
                     // actionController.movePlayer(gameState.getCurrentPlayer(),
                     // gameState.getBoard(), null,
                     // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
-                    gameState.setUseMovement(false);
+                    gameState.setMovementAvailability(false);
                 }
                 break;
         }
-        gameState.setUseAction(false); // TODO: add so that this makes sure action was valid
+        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }

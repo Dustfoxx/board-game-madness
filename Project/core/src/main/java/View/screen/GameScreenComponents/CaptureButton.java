@@ -8,13 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Controller.GameController;
+import Model.Player;
+import Model.RougeAgent;
 import Controller.GameController.Actions;
 
 public class CaptureButton extends TextButton {
 
+    private final GameController gameController;
+    private Player player;
+
     public CaptureButton(GameController gameController, Skin skin) {
 
         super("Capture", skin);
+        this.gameController = gameController;
 
         this.addListener(new ChangeListener() {
             @Override
@@ -22,6 +28,7 @@ public class CaptureButton extends TextButton {
 
                 // Perform the capture
                 boolean wasCaptureSuccessful = gameController.actionHandler(Actions.CAPTURE);
+                System.out.println("Got here");
 
                 // Create a window displaying the result
                 CaptureWindow window = new CaptureWindow(wasCaptureSuccessful, skin);
@@ -36,6 +43,14 @@ public class CaptureButton extends TextButton {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha); // Important
+        this.player = gameController.getGame().getCurrentPlayer();
+        // Only draw the button if the current player is a rouge agent
+        if (player.getClass().equals(RougeAgent.class)){
+                this.setDisabled(false);
+                super.draw(batch, parentAlpha);
+        }else{
+            this.setDisabled(true);
+        }
+
     }
 }
