@@ -127,7 +127,7 @@ public class GameController {
     }
 
     private void preGameLogic() {
-        gameState.setUseMovement(true);
+        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
@@ -152,7 +152,7 @@ public class GameController {
     }
 
     private void ongoingLogic() {
-        gameState.setUseMovement(true);
+        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
         }
@@ -168,11 +168,11 @@ public class GameController {
         activePlayer++;
         gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
-            gameState.setUseAction(true);
+            gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
-            // Should who won exist here or in model?
+            // TODO: Should who won exist here or in model?
             // I think model
         }
     }
@@ -188,7 +188,7 @@ public class GameController {
                 actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
                 break;
             case REVEAL:
-                // int[] playerCoord =
+                // TODO: int[] playerCoord =
                 // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
                 // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
                 // playerCoord[1]).getFootstep(),
@@ -206,14 +206,14 @@ public class GameController {
                 break;
             case MOVE:
                 if (gameState.isMovementAvailable()) {
-                    // actionController.movePlayer(gameState.getCurrentPlayer(),
+                    // TODO: actionController.movePlayer(gameState.getCurrentPlayer(),
                     // gameState.getBoard(), null,
                     // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
-                    gameState.setUseMovement(false);
+                    gameState.setMovementAvailability(false);
                 }
                 break;
         }
-        gameState.setUseAction(false); // TODO: add so that this makes sure action was valid
+        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }

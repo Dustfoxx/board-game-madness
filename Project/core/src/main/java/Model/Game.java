@@ -290,7 +290,7 @@ public class Game {
      * @param value true if player should be able to move and false if they have
      *              just moved
      */
-    public void setUseMovement(boolean value) {
+    public void setMovementAvailability(boolean value) {
         this.isMovementAvailable = value;
     }
 
@@ -300,7 +300,7 @@ public class Game {
      * 
      * @param value true if player can make an action, false if they have used one.
      */
-    public void setUseAction(boolean value) {
+    public void setActionAvailability(boolean value) {
         this.isActionAvailable = value;
     }
 
