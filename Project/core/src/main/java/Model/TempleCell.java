@@ -26,4 +26,9 @@ public class TempleCell extends AbstractCell {
         }
         super.addToken(newToken);
     }
+
+    @Override
+    public boolean isTemple() {
+        return true;
+    }
 }

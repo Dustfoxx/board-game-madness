@@ -41,4 +41,10 @@ public class NormalCell extends AbstractCell {
     public Feature[] getFeatures() {
         return features;
     }
+
+    @Override
+    public boolean isTemple() {
+        return false;
+    }
+
 }
