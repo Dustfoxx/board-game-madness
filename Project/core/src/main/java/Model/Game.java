@@ -192,6 +192,9 @@ public class Game {
      * @param amount The number of recruits revealed during current round.
      */
     public void addAmountRecruited(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Recruits added cannot be below 0.");
+        }
         this.recruitHistory.add(new int[] { currentTime, amount });
     }
 
