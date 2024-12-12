@@ -33,10 +33,9 @@ public class VisualBoard {
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
                 VisualCell cell = new VisualCell(boardInfo.getCell(i, j));
-                Table cellTable = cell.getVisualCell();
                 String name = i + "" + j;
-                cellTable.setName(name);
-                cellTable.addListener(new ClickListener() {
+                cell.setName(name);
+                cell.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         Actor target = event.getListenerActor();
@@ -51,7 +50,7 @@ public class VisualBoard {
                       UpdateAllCells();
                     }
                 });
-                board.add(cell).uniform();
+                board.add(cell).uniform().expand();
             }
             board.row();
         }

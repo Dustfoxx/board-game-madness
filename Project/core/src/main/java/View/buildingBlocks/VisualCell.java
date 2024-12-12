@@ -20,6 +20,7 @@ public class VisualCell extends Table {
 
     AbstractCell abstractCell;
 
+
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
     private Texture featuresImg = new Texture("feature_img.png");
@@ -89,7 +90,6 @@ public class VisualCell extends Table {
 
 
     public void UpdateCell() {
-        clear();  // Also clears listeners :/
         updateVisuals();
         invalidate();
         layout();
