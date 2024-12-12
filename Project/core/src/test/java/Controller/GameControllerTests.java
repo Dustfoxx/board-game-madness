@@ -13,6 +13,7 @@ import static org.mockito.Mockito.*;
 
 public class GameControllerTests {
     Csv boardCsv;
+    ArrayList<String> names;
 
     @BeforeEach
     void setUp() {
@@ -23,6 +24,7 @@ public class GameControllerTests {
         };
         boardCsv = mock(Csv.class);
         when(boardCsv.getData()).thenReturn(boardData);
+        names = new ArrayList<>(Arrays.asList("Name1", "Name2", "Name3", "Name4", "Name5"));
     }
 
     @Test
@@ -32,7 +34,7 @@ public class GameControllerTests {
         GameController controller;
 
         // Act
-        controller = new GameController(nrOfPlayers, boardCsv);
+        controller = new GameController(nrOfPlayers, boardCsv, names);
 
         // Assert
         assertEquals(Recruiter.class, controller.getGame().getPlayers().get(0).getClass());
@@ -42,11 +44,10 @@ public class GameControllerTests {
     public void testOnePlayer() {
         // Arrange
         int nrOfPlayers = 1;
-
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
                 () -> {
-                    final GameController controller = new GameController(nrOfPlayers, boardCsv);
+                    final GameController controller = new GameController(nrOfPlayers, boardCsv, names);
                 });
 
         // Assert
@@ -61,7 +62,7 @@ public class GameControllerTests {
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
                 () -> {
-                    final GameController controller = new GameController(nrOfPlayers, boardCsv);
+                    final GameController controller = new GameController(nrOfPlayers, boardCsv, names);
                 });
 
         // Assert
@@ -72,7 +73,7 @@ public class GameControllerTests {
     public void testTurnOrder() {
         // Arrange
         int nrOfPlayers = 3;
-        GameController controller = new GameController(nrOfPlayers, boardCsv);
+        GameController controller = new GameController(nrOfPlayers, boardCsv, names);
         List<Player> players = controller.getGame().getPlayers();
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
                 players.get(0), players.get(1), players.get(2), players.get(0), players.get(1), players.get(2)));
@@ -94,7 +95,7 @@ public class GameControllerTests {
     public void testNrOfTurns() {
         // Arrange
         int nrOfPlayers = 3;
-        GameController controller = new GameController(nrOfPlayers, boardCsv);
+        GameController controller = new GameController(nrOfPlayers, boardCsv, names);
 
         for (int i = 0; i < 6; i++) {
             controller.newTurn();
