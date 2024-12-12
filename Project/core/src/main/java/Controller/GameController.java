@@ -29,12 +29,12 @@ public class GameController {
      * @param playerAmount The number of players this specific game should have
      */
 
-    public GameController(int playerAmount, Csv boardCsv) {
+    public GameController(int playerAmount, Csv boardCsv, ArrayList<String> names) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
-        gameState = initializeGame(playerAmount, boardCsv);
+        gameState = initializeGame(playerAmount, boardCsv, names);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
 
@@ -75,7 +75,7 @@ public class GameController {
         }
     }
 
-    private Game initializeGame(int playerAmount, Csv boardCsv) {
+    private Game initializeGame(int playerAmount, Csv boardCsv, ArrayList<String> names) {
         if (playerAmount <= 1) {
             throw new IllegalArgumentException("Must be more than 1 player");
         }
@@ -83,7 +83,7 @@ public class GameController {
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
 
         for (int i = 0; i < playerAmount; i++) {
-            players.add(i == 0 ? new Recruiter(i, "recruiter", recruiterFeatures) : new RougeAgent(i));
+            players.add(i == 0 ? new Recruiter(i, names.get(i), recruiterFeatures) : new RougeAgent(i, names.get(i)));
         }
 
         Board board = new Board(boardCsv);

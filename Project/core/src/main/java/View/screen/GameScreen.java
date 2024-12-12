@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(application.nrOfPlayers, boardCsv);
+        this.gameController = new GameController(application.nrOfPlayers, boardCsv, names);
         this.actionController = new ActionController();
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
