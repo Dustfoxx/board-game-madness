@@ -1,5 +1,7 @@
 package View.screen;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -7,10 +9,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import View.buildingBlocks.MindMGMTStage;
@@ -20,11 +24,8 @@ public class PlayersScreen implements Screen {
     private final MindMGMTStage stage;
     private final MindMGMT application;
 
-    private String[] names;
-
     public PlayersScreen(final MindMGMT application) {
         this.application = application;
-        this.names = new String[application.nrOfPlayers];
         stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         setupUI();
     }
@@ -34,7 +35,7 @@ public class PlayersScreen implements Screen {
         root.setDebug(true);
         root.setFillParent(true);
 
-        for (int i = 0; i < names.length; i++ ) {
+        for (int i = 0; i < application.nrOfPlayers; i++) {
             Label nameLabel;
             if (i == 0) {
                 nameLabel = new Label("Recruiter", application.skin);
@@ -42,7 +43,12 @@ public class PlayersScreen implements Screen {
                 nameLabel = new Label("Agent " + i, application.skin);
             }
             nameLabel.setFontScale(2);
-            TextField nameField = new TextField(names[i], application.skin);
+            TextField nameField = new TextField("", application.skin);
+            nameField.setTextFieldListener(new TextFieldListener() {
+                @Override
+                public void keyTyped(TextField nameField, char c) {
+                }
+            });
             root.add(nameLabel).colspan(2).width(500).left();
             root.row();
             root.add(nameField).colspan(2).width(500).fillX();
@@ -53,6 +59,13 @@ public class PlayersScreen implements Screen {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ArrayList<String> names = new ArrayList<String>();
+                SnapshotArray<Actor> children = actor.getParent().getChildren();
+                for (Actor child : children) {
+                    if (child.getClass().equals(TextField.class)) {
+                        names.add(((TextField) child).getText());
+                    }
+                }
                 application.setScreen(new GameScreen(application));
                 dispose();
             }
