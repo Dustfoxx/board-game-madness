@@ -240,8 +240,6 @@ public class VisualCell extends Actor {
                 sideSize, sideSize);
     }
 
-
-
     void highlightCell(boolean highlight) {
         if (highlight) {
             this.highlighted = true;

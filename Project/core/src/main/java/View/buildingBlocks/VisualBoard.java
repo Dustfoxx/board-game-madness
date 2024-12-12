@@ -42,7 +42,6 @@ public class VisualBoard {
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { row, col });
-                        UpdateAllCells();
                         dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
@@ -73,7 +72,6 @@ public class VisualBoard {
     }
 
     public void dehighlightValidCells(int dimx, int dimy) {
-
         for (int i = 0; i < dimx; i++) {
             for (int j = 0; j < dimy; j++) {
                     VisualCell cell = getCell(i, j);
