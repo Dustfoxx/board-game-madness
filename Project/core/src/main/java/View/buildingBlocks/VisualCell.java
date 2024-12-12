@@ -1,44 +1,172 @@
 package View.buildingBlocks;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import Model.AbstractCell;
+import Model.BrainNote;
 import Model.Feature;
+import Model.Footstep;
 import Model.NormalCell;
 import Model.Player;
+import Model.Token;
 
-public class VisualCell {
-    private Table cell = new Table();
+public class VisualCell extends Actor {
+    private TextureRegion feature1 = fetchFeature(null);
+    private TextureRegion feature2 = fetchFeature(null);
+    private TextureRegion temple;
+    private TextureRegion footstep;
+    private TextureRegion[] brains;
+    private List<TextureRegion> players;
+    private List<TextureRegion> tokens;
+
+    private AbstractCell cellInfo;
 
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
     private Texture featuresImg = new Texture("feature_img.png");
+    private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
 
+    /**
+     * Creates a single cell on the board. Initializes textures based on the
+     * information found for the cell
+     * 
+     * @param cellInfo a single cell on the board. contains players and more
+     */
     public VisualCell(AbstractCell cellInfo) {
         initDict();
+        this.cellInfo = cellInfo;
         if (cellInfo instanceof NormalCell) {
             NormalCell convertedCell = (NormalCell) cellInfo;
             Feature[] features = convertedCell.getFeatures();
-            cell.add(new Image(fetchFeature(features[0]))).uniform();
-            cell.add(new Image(fetchFeature(features[1]))).uniform();
+            feature1 = fetchFeature(features[0]);
+            feature2 = fetchFeature(features[1]);
         }
-        cell.row();
+
+        // These are currently magic numbers and pretty ugly. Find better way of doing
+        // this
+        this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
+        this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
+        this.brains = new TextureRegion[2];
+        this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
+        this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
+        this.players = new ArrayList<TextureRegion>();
+        this.tokens = new ArrayList<TextureRegion>();
+        updatePlayers();
+        // Bounds needed to render at all. These should be updated based on parent if
+        // possible
+        setBounds(0, 0, 100, 100);
+    }
+
+    /**
+     * Draw function. Updates information and redraws based on the board
+     */
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        Color color = getColor();
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+        if (cellInfo instanceof NormalCell) {
+            drawFeatures(batch);
+        } else {
+            batch.draw(temple, getX(), getY(), getOriginX(), getOriginY(),
+                    getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        }
+        drawPlayers(batch);
+        drawTokens(batch);
+    }
+
+    /**
+     * Draws the features for a cell on the current batch
+     * 
+     * @param batch the batch currently being composed
+     */
+    private void drawFeatures(Batch batch) {
+        float featureYPos = getY() + getHeight() / 2;
+        float feature2Pos = getX() + getWidth() / 2;
+
+        batch.draw(feature1, getX(), featureYPos, getOriginX(), getOriginY(),
+                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+        batch.draw(feature2, feature2Pos, featureYPos, getOriginX(), getOriginY(),
+                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+    }
+
+    /**
+     * Draws the tokens for the current cell. Values are based on how many tokens
+     * are in the current cell
+     * 
+     * @param batch batch being composed
+     */
+    private void drawTokens(Batch batch) {
+        updateTokens();
+
+        int xVal = 0;
+        int size = tokens.size();
+
+        for (TextureRegion token : tokens) {
+            float xPos = getX() + getWidth() / size * xVal;
+            batch.draw(token, xPos, getY() + getHeight() / 2, getOriginX(), getOriginY(),
+                    getWidth() / size, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+            xVal++;
+        }
+    }
+
+    /**
+     * Draws players inhabiting the current cell
+     * 
+     * @param batch batch being composed
+     */
+    private void drawPlayers(Batch batch) {
+        updatePlayers();
+
+        int xVal = 0;
+
+        for (TextureRegion player : players) {
+            float xPos = getX() + getWidth() / 4 * xVal;
+            batch.draw(player, xPos, getY(), getOriginX(), getOriginY(),
+                    getWidth() / 4, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+            xVal++;
+        }
+    }
+
+    /**
+     * Updates the textures to be drawn from the current players in the cell
+     */
+    private void updatePlayers() {
+        players.clear();
         for (Player player : cellInfo.getPlayers()) {
-            cell.add(new Image(fetchPlayer(player.getId()))).uniform();
+            players.add(fetchPlayer(player.getId()));
         }
     }
 
-    public Table getVisualCell() {
-        return this.cell;
+    /**
+     * Updates the textures for tokens to be drawn based on the tokens in the cell
+     */
+    private void updateTokens() {
+        tokens.clear();
+        for (Token token : cellInfo.getTokens()) {
+            if (token instanceof Footstep) {
+                tokens.add(footstep);
+            } else if (token instanceof BrainNote) {
+                tokens.add(brains[0]);
+            } else {
+                tokens.add(brains[1]);
+            }
+
+        }
     }
 
+    /**
+     * Dictionary to fetch the proper feature from the texture based on feature name
+     */
     private void initDict() {
         features.put(Feature.BOOKSTORE, 0);
         features.put(Feature.BUS, 1);
@@ -58,14 +186,34 @@ public class VisualCell {
         features.put(Feature.GRAFFITI, 15);
     }
 
+    /**
+     * fetches a feature as a textureregion from the main file. Currently using
+     * magic numbers to separate them. Should be replaced by atlas
+     * 
+     * @param feature Feature to be fetched
+     * @return a textureregion containing the feature
+     */
     public TextureRegion fetchFeature(Feature feature) {
         int sideSize = 873 / 4;
-        return new TextureRegion(featuresImg,
-                sideSize * (features.get(feature) % 4),
-                sideSize * (int) (Math.floor(features.get(feature) / 4)),
+        if (feature != null) {
+            return new TextureRegion(featuresImg,
+                    sideSize * (features.get(feature) % 4),
+                    sideSize * (int) (Math.floor(features.get(feature) / 4)),
+                    sideSize, sideSize);
+        }
+        return new TextureRegion(new Texture("feature_img.png"),
+                0,
+                0,
                 sideSize, sideSize);
     }
 
+    /**
+     * Fetches a player from the texturefile containing players. Uses magic numbers
+     * based on pixelsize.
+     * 
+     * @param playerNr which player to fetch
+     * @return a textureregion containing the corresponding player
+     */
     private TextureRegion fetchPlayer(int playerNr) {
         int sideSize = 400 / 4;
         return new TextureRegion(playersImg,

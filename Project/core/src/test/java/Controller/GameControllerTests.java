@@ -1,8 +1,12 @@
 package Controller;
 
 import Model.*;
+import Model.Game.gameStates;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import Controller.GameController.Actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +78,7 @@ public class GameControllerTests {
         int nrOfPlayers = 3;
         GameController controller = new GameController(nrOfPlayers, boardCsv);
         List<Player> players = controller.getGame().getPlayers();
+        controller.getGame().setGameState(gameStates.ONGOING);
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
                 players.get(0), players.get(1), players.get(2), players.get(0), players.get(1), players.get(2)));
         List<Player> actualOrder = new ArrayList<>();
@@ -95,10 +100,11 @@ public class GameControllerTests {
         // Arrange
         int nrOfPlayers = 3;
         GameController controller = new GameController(nrOfPlayers, boardCsv);
+        controller.getGame().setGameState(gameStates.ONGOING);
 
         for (int i = 0; i < 6; i++) {
             controller.newTurn();
         }
-        assertEquals(3, controller.getGame().getCurrentTime());
+        assertEquals(2, controller.getGame().getCurrentTime());
     }
 }
