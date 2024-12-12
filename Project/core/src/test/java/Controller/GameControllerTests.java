@@ -46,10 +46,7 @@ public class GameControllerTests {
         int nrOfPlayers = 1;
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> {
-                    final GameController controller = new GameController(nrOfPlayers, boardCsv, names);
-                });
-
+                () -> new GameController(nrOfPlayers, boardCsv, names));
         // Assert
         assertEquals("Must be more than 1 player", exception.getMessage());
     }
@@ -61,9 +58,7 @@ public class GameControllerTests {
 
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> {
-                    final GameController controller = new GameController(nrOfPlayers, boardCsv, names);
-                });
+                () -> new GameController(nrOfPlayers, boardCsv, names));
 
         // Assert
         assertEquals("Must be more than 1 player", exception.getMessage());
