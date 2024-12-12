@@ -52,6 +52,8 @@ public class CaptureButton extends TextButton {
         // Only draw the button if the current player is a rouge agent
         if (player.getClass().equals(RougeAgent.class)){
                 super.draw(batch, parentAlpha);
+        }else{
+            this.setDisabled(true);
         }
 
     }

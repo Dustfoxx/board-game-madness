@@ -50,6 +50,8 @@ public class RevealButton extends TextButton {
             this.player = gameController.getGame().getCurrentPlayer();
             if (player.getClass().equals(RougeAgent.class)){
                 super.draw(batch, parentAlpha);
+            }else{
+                this.setDisabled(true);
             }
     }
 

@@ -1,5 +1,7 @@
 package View.screen.GameScreenComponents;
 
+import javax.swing.text.DefaultStyledDocument;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -55,16 +57,18 @@ public class AskButton extends TextButton {
         this.player = gameController.getGame().getCurrentPlayer();
         if (player.getClass().equals(RougeAgent.class)){
             super.draw(batch, parentAlpha); // Important
-        }
-
-        // Enable the button
-        if (cell.getClass().equals(NormalCell.class)) {
-            this.setDisabled(false);
-        // Disable the button
+            // Enable the button
+            if (cell.getClass().equals(NormalCell.class)) {
+                this.setDisabled(false);
+            // Disable the button
+            } else {
+                this.setColor(0.8f, 0.8f, 0.8f, 1f);
+                this.setDisabled(true);
+            }
         } else {
-            this.setColor(0.8f, 0.8f, 0.8f, 1f);
             this.setDisabled(true);
         }
+
     }
 
 }
