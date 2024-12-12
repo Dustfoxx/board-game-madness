@@ -66,7 +66,7 @@ public class PlayersScreen implements Screen {
                         names.add(((TextField) child).getText());
                     }
                 }
-                application.setScreen(new GameScreen(application));
+                application.setScreen(new GameScreen(application, names));
                 dispose();
             }
         });

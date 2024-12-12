@@ -19,6 +19,9 @@ import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.PlayerBar;
+
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
 import View.screen.GameScreenComponents.SettingWindow;
@@ -35,12 +38,11 @@ public class GameScreen implements Screen {
     private final TurnBar turnBar;
     private final SettingWindow settingWindow;
 
-    public GameScreen(MindMGMT application) {
+    public GameScreen(MindMGMT application, ArrayList<String> names) {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
-
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(application.nrOfPlayers, boardCsv);
         this.actionController = new ActionController();
