@@ -24,9 +24,9 @@ public class SetupScreen implements Screen {
         setupUI();
     }
 
-    private void startGame(int nrOfPlayers) {
+    private void createPlayers(int nrOfPlayers) {
         application.nrOfPlayers = nrOfPlayers;
-        application.setScreen(new GameScreen(application));
+        application.setScreen(new PlayersScreen(application));
         dispose();
     }
 
@@ -51,7 +51,7 @@ public class SetupScreen implements Screen {
             playersButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    startGame(value);
+                    createPlayers(value);
                 }
             });
             // Start a new row for last 2 buttons
