@@ -58,6 +58,4 @@ public abstract class Player {
     public String getName() {
         return name;
     }
-
-    public abstract boolean isRecruiter();
 }

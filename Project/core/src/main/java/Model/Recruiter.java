@@ -94,8 +94,4 @@ public class Recruiter extends Player {
     public Feature[] getFeaturesOfInterest() {
         return featuresOfInterest;
     }
-
-    public boolean isRecruiter() {
-        return true;
-    }
 }
