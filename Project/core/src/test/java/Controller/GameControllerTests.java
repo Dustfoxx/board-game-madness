@@ -32,11 +32,10 @@ public class GameControllerTests {
     @Test
     public void testRecruiterExists() {
         // Arrange
-        int nrOfPlayers = 3;
         GameController controller;
 
         // Act
-        controller = new GameController(nrOfPlayers, boardCsv, names);
+        controller = new GameController(boardCsv, names);
 
         // Assert
         assertEquals(Recruiter.class, controller.getGame().getPlayers().get(0).getClass());
@@ -45,10 +44,10 @@ public class GameControllerTests {
     @Test
     public void testOnePlayer() {
         // Arrange
-        int nrOfPlayers = 1;
+        names = new ArrayList<String>(Arrays.asList("Name1"));
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(nrOfPlayers, boardCsv, names));
+                () -> new GameController(boardCsv, names));
         // Assert
         assertEquals("Must be more than 1 player", exception.getMessage());
     }
@@ -56,11 +55,11 @@ public class GameControllerTests {
     @Test
     public void testNoPlayers() {
         // Arrange
-        int nrOfPlayers = 0;
+        names = new ArrayList<String>();
 
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(nrOfPlayers, boardCsv, names));
+                () -> new GameController(boardCsv, names));
 
         // Assert
         assertEquals("Must be more than 1 player", exception.getMessage());
@@ -69,12 +68,12 @@ public class GameControllerTests {
     @Test
     public void testTurnOrder() {
         // Arrange
-        int nrOfPlayers = 3;
-        GameController controller = new GameController(nrOfPlayers, boardCsv, names);
+        GameController controller = new GameController(boardCsv, names);
+        names = new ArrayList<>(Arrays.asList("Name1", "Name2", "Name3"));
         List<Player> players = controller.getGame().getPlayers();
         controller.getGame().setGameState(gameStates.ONGOING);
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
-                players.get(0), players.get(1), players.get(2), players.get(0), players.get(1), players.get(2)));
+                players.get(0), players.get(1), players.get(2), players.get(0), players.get(3), players.get(4)));
         List<Player> actualOrder = new ArrayList<>();
 
         // Act
@@ -92,8 +91,7 @@ public class GameControllerTests {
     @Test
     public void testNrOfTurns() {
         // Arrange
-        int nrOfPlayers = 3;
-        GameController controller = new GameController(nrOfPlayers, boardCsv, names);
+        GameController controller = new GameController(boardCsv, names);
         controller.getGame().setGameState(gameStates.ONGOING);
 
         for (int i = 0; i < 6; i++) {

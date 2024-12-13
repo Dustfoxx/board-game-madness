@@ -34,11 +34,9 @@ public class GameController {
      * are next in queue to play. This is the constructor. Currently does not track
      * when
      * recruits and similar have been added timewise.
-     *
-     * @param playerAmount The number of players this specific game should have
      */
 
-    public GameController(int playerAmount, Csv boardCsv, ArrayList<String> names) {
+    public GameController(Csv boardCsv, ArrayList<String> names) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
