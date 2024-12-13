@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Controller.GameController;
 import Model.AbstractCell;
+import Model.NormalCell;
 import Model.Player;
-import Model.Recruiter;
-import Model.TempleCell;
+import Model.RougeAgent;
 
 public class AskButton extends TextButton {
 
@@ -49,23 +49,23 @@ public class AskButton extends TextButton {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Player currentPlayer = gameController.getGame().getCurrentPlayer();
-        // Disable the button if it's the recruiters turn
-        if (currentPlayer instanceof Recruiter) {
-            this.setDisabled(true);
-        } else {
+        if (currentPlayer instanceof RougeAgent) {
+            // Draw the button if it's a rouge agent's turn
             super.draw(batch, parentAlpha); // Important
+            // Get the cell of the current player
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
-            if (currentCell != null) {
-                // Disable the button if it's a temple cell
-                if (currentCell instanceof TempleCell) {
-                    this.setColor(0.6f, 0.6f, 0.6f, 1f);
-                    this.setDisabled(true);
-                // Enable the button if it's a normal cell
-                } else {
-                    this.setColor(Color.WHITE);
-                    this.setDisabled(false);
-                }
+            if (currentCell != null && currentCell instanceof NormalCell) {
+                // Enable the button if current player is placed at a normal cell
+                this.setColor(Color.WHITE);
+                this.setDisabled(false);
+            } else {
+                // Disable and shadow the button otherwise
+                this.setColor(0.6f, 0.6f, 0.6f, 1f);
+                this.setDisabled(true);
             }
+        } else {
+            // Disable the button if it's the recruiter's turn
+            this.setDisabled(true);
         }
     }
 }
