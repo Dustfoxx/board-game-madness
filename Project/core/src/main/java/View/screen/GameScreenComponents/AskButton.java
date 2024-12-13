@@ -1,7 +1,5 @@
 package View.screen.GameScreenComponents;
 
-import javax.swing.text.DefaultStyledDocument;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -35,8 +33,8 @@ public class AskButton extends TextButton {
                 NormalCell normalCell = (NormalCell) cell;
                 AskWindow askActionWindow = new AskWindow(skin, normalCell, gameController);
                 askActionWindow.setPosition(
-                    Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
-                    Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);
+                        Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
+                        Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);
                 actor.getStage().addActor(askActionWindow);
             }
         });
@@ -55,12 +53,12 @@ public class AskButton extends TextButton {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         this.player = gameController.getGame().getCurrentPlayer();
-        if (player.getClass().equals(RougeAgent.class)){
+        if (player.getClass().equals(RougeAgent.class)) {
             super.draw(batch, parentAlpha); // Important
             // Enable the button
             if (cell.getClass().equals(NormalCell.class)) {
                 this.setDisabled(false);
-            // Disable the button
+                // Disable the button
             } else {
                 this.setColor(0.8f, 0.8f, 0.8f, 1f);
                 this.setDisabled(true);

@@ -25,6 +25,7 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
+    private List<Token> activeBrains;
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
 
@@ -58,6 +59,7 @@ public class Game {
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
+        this.activeBrains = new ArrayList<>();
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
         this.isMovementAvailable = true;
@@ -172,7 +174,7 @@ public class Game {
     }
 
     /**
-     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple. 
+     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple.
      * 
      * @param time the timestamp we wish to get
      * @return the tuple at given time, null if not found
@@ -229,6 +231,24 @@ public class Game {
      */
     public List<Player> getPlayers() {
         return this.players;
+    }
+
+    /**
+     * Sets active brains. These display when brainWindow is called
+     * 
+     * @param brains the list of brains to display
+     */
+    public List<Token> getActiveBrains() {
+        return this.activeBrains;
+    }
+
+    /**
+     * Sets active brains. These display when brainWindow is called
+     * 
+     * @param brains the list of brains to display
+     */
+    public void setActiveBrains(List<Token> brains) {
+        this.activeBrains = brains;
     }
 
     /**

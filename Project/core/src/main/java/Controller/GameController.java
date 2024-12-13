@@ -25,7 +25,8 @@ public class GameController {
         ASK,
         REVEAL,
         CAPTURE,
-        MINDSLIP
+        MINDSLIP,
+        BRAINNOTE
     }
 
     /**
@@ -186,6 +187,7 @@ public class GameController {
         switch (action) {
             case ASK:
                 actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
+                gameState.setActionAvailability(false);
                 break;
             case REVEAL:
                 // TODO: int[] playerCoord =
@@ -195,11 +197,12 @@ public class GameController {
                 // gameState.getBoard(),
                 // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
                 // gameState.getRecruiter().getWalkedPath());
+                gameState.setActionAvailability(false);
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
                         gameState.getBoard());
-
+                gameState.setActionAvailability(false);
                 break;
             case MINDSLIP:
 
@@ -212,8 +215,17 @@ public class GameController {
                     gameState.setMovementAvailability(false);
                 }
                 break;
+            case BRAINNOTE:
+                if (additionalInfo[0] instanceof String) {
+                    actionController.addBrainNote(additionalInfo[0]);
+                } else {
+                    gameState.setActiveBrains(
+                            actionController.fetchBrains((int) additionalInfo[0], (int) additionalInfo[1],
+                                    gameState.getBoard()));
+                }
+                break;
         }
-        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+        // TODO: add so that this makes sure action was valid
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
