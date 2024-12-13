@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import Controller.GameController;
 import Model.AbstractCell;
 import Model.Player;
+import Model.TempleCell;
 
 public class AskButton extends TextButton {
 
@@ -55,7 +56,7 @@ public class AskButton extends TextButton {
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
             if (currentCell != null) {
                 // Disable the button if it's a temple cell
-                if (currentCell.isTemple()) {
+                if (currentCell instanceof TempleCell) {
                     this.setColor(0.6f, 0.6f, 0.6f, 1f);
                     this.setDisabled(true);
                 // Enable the button if it's a normal cell
