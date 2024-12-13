@@ -115,13 +115,14 @@ public class ActionController {
         // Add player to new cell
         AbstractCell newCell = board.getCell(coords[0], coords[1]);
         newCell.addPlayer(player);
-        if (player.isRecruiter()) {
+
+        if (player instanceof Recruiter) {
             // Add new cell to walked path
             Recruiter recruiter = (Recruiter) player;
             recruiter.addToWalkedPath(coords[0], coords[1]);
-
+            
             // Add a Step to the cell
-            int timestamp = recruiter.getWalkedPath().size(); 
+            int timestamp = recruiter.getWalkedPath().size();
             newCell.addToken(new Step(timestamp));
         }
         return true;

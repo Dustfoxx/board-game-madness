@@ -27,9 +27,4 @@ public class TempleCell extends AbstractCell {
             throw new IllegalArgumentException("Only BrainNote tokens can be added to a TempelCell.");
         }
     }
-
-    @Override
-    public boolean isTemple() {
-        return true;
-    }
 }
