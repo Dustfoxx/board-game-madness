@@ -27,7 +27,6 @@ public class MoveButton extends TextButton {
 
         super("Move", skin);
         this.gameController = gameController;
-        // TODO: This should probbly be in controller
         this.cell = gameController.getGame().getBoard().getCell(0, 0);
         this.addListener(new ChangeListener() {
             @Override

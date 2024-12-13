@@ -42,6 +42,9 @@ public class VisualBoard {
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { row, col });
+
+                        // Action Complete, remove highlights on all cells
+                        // Note: This can probably be avoided by adding a field in abstractcell
                         dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
@@ -62,7 +65,7 @@ public class VisualBoard {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (mask[i][j]) {
-                    VisualCell cell = getCell(i, j);
+                    VisualCell cell = getVisualCell(i, j);
                     if (cell != null) {
                         cell.highlightCell(true);
                     }
@@ -71,25 +74,19 @@ public class VisualBoard {
         }
     }
 
-    public void dehighlightValidCells(int dimx, int dimy) {
+    private void dehighlightValidCells(int dimx, int dimy) {
         for (int i = 0; i < dimx; i++) {
             for (int j = 0; j < dimy; j++) {
-                    VisualCell cell = getCell(i, j);
+                    VisualCell cell = getVisualCell(i, j);
                     if (cell != null) {
                         cell.highlightCell(false);
                     }
                 }
             }
         }
+        
 
-
-    // Used to update individual cells (saves performance opposed to updateAllCells)
-    public void UpdateCell(int i, int j){
-        getCell(i, j);
-
-    }
-
-    public VisualCell getCell(int i, int j) {
+    private VisualCell getVisualCell(int i, int j) {
         String coords = i + "" + j; 
         SnapshotArray<Actor> cellTable = board.getChildren();
         
@@ -101,14 +98,5 @@ public class VisualBoard {
             }
         }
         return null;
-    }
-
-    public void UpdateAllCells() {
-        SnapshotArray<Actor> children = board.getChildren();
-        for (Actor actor : children) {
-            if (actor instanceof VisualCell) {
-               // ((VisualCell) actor).UpdateCell();
-            }
-        }
     }
 }

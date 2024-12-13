@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
@@ -30,13 +29,9 @@ public class VisualCell extends Actor {
     private TextureRegion[] brains;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
-
-
-    Texture highlight = new Texture("highlight.png");
-    TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
-
+    private Texture highlight = new Texture("highlight.png");
+    private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
-
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
     private Texture featuresImg = new Texture("feature_img.png");

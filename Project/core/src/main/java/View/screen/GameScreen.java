@@ -54,7 +54,6 @@ public class GameScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-
         setupSettings(root);
         setupPlayerBar(root);
         setupMainSection(root);
