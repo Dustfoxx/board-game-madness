@@ -92,8 +92,6 @@ public class VisualBoard {
         
         for (Actor actor : cellTable) {
             if (actor.getName().equals(coords)) {
-
-                System.out.println(actor);
                 return (VisualCell) actor;
             }
         }
