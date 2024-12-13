@@ -97,7 +97,7 @@ public class GameController {
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
 
         for (int i = 0; i < playerPieceAmount; i++) {
-            players.add(i == 0 ? new Recruiter(i, names.get(i), recruiterFeatures) : new RougeAgent(i, names.get(i)));
+            players.add(i == 0 ? new Recruiter(i, "Recruiter", recruiterFeatures) : new RougeAgent(i, "Agent" + i));
         }
 
         for (int i = 0; i < playerAmount; i++) {
@@ -108,12 +108,12 @@ public class GameController {
 
         users.get(0).addPlayerPiece(players.get(0));
 
-        int agentIterator = 0;
+        int agentIterator = 1;
         for (int i = 0; i < rogueAgents.size(); i++) { // TODO: Generalize as this is also done for players
             users.get(agentIterator).addPlayerPiece(rogueAgents.get(i));
             agentIterator++;
             if (agentIterator >= users.size()) {
-                agentIterator = 0;
+                agentIterator = 1;
             }
         }
 
@@ -207,6 +207,7 @@ public class GameController {
         switch (action) {
             case ASK:
                 actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case REVEAL:
                 // TODO: int[] playerCoord =
@@ -216,10 +217,12 @@ public class GameController {
                 // gameState.getBoard(),
                 // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
                 // gameState.getRecruiter().getWalkedPath());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
                         gameState.getBoard());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
 
                 break;
             case MINDSLIP:
@@ -234,7 +237,6 @@ public class GameController {
                 }
                 break;
         }
-        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }

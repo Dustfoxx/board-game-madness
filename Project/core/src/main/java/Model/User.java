@@ -23,6 +23,10 @@ public class User {
         return this.userName;
     }
 
+    public int getPlayerAmount() {
+        return this.playerPieces.size();
+    }
+
     public void addPlayerPiece(Player player) {
         this.playerPieces.add(player.getId());
     }
