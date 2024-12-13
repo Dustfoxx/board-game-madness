@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import Model.AbstractCell;
+import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
@@ -25,6 +26,7 @@ public class VisualCell extends Actor {
     private TextureRegion temple;
     private TextureRegion footstep;
     private TextureRegion[] brains;
+    private TextureRegion step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
 
@@ -35,6 +37,7 @@ public class VisualCell extends Actor {
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
+    private Texture stepImg = new Texture("tokens_3d.png");
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -59,6 +62,7 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
+        this.step = new TextureRegion(stepImg, 170, 360, 70, 70);
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
         updatePlayers();
@@ -157,10 +161,11 @@ public class VisualCell extends Actor {
                 tokens.add(footstep);
             } else if (token instanceof BrainNote) {
                 tokens.add(brains[0]);
-            } else {
+            } else if (token instanceof BrainFact) {
                 tokens.add(brains[1]);
+            } else {
+                tokens.add(step);
             }
-
         }
     }
 
