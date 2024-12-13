@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import Controller.GameController;
 import Model.AbstractCell;
 import Model.Player;
+import Model.Recruiter;
 import Model.TempleCell;
 
 public class AskButton extends TextButton {
@@ -49,7 +50,7 @@ public class AskButton extends TextButton {
     public void draw(Batch batch, float parentAlpha) {
         Player currentPlayer = gameController.getGame().getCurrentPlayer();
         // Disable the button if it's the recruiters turn
-        if (currentPlayer.isRecruiter()) {
+        if (currentPlayer instanceof Recruiter) {
             this.setDisabled(true);
         } else {
             super.draw(batch, parentAlpha); // Important

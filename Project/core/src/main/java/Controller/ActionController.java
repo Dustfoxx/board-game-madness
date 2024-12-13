@@ -113,7 +113,7 @@ public class ActionController {
         }
         // Add player to new cell
         board.getCell(coords[0], coords[1]).addPlayer(player);
-        if (player.isRecruiter()) {
+        if (player instanceof Recruiter) {
             Recruiter recruiter = (Recruiter) player;
             recruiter.addToWalkedPath(coords[0], coords[1]);
         }
