@@ -23,4 +23,8 @@ public class RougeAgent extends Player {
     public RougeAgent(int id, String name) {
         super(id, name); // Call the parent constructor to set the ID and name
     }
+
+    public boolean isRecruiter() {
+        return false;
+    }
 }

@@ -103,4 +103,6 @@ public abstract class AbstractCell {
         }
         return false;
     }
+
+    public abstract boolean isTemple();
 }

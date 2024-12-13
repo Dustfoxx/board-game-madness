@@ -317,4 +317,18 @@ public class Game {
         }
         throw new IllegalStateException("No recruiter found in the game");
     }
+
+    /**
+     * Gets the cell which the current player is at. 
+     * 
+     * @return The cell which the current player is at, otherwise null. 
+     */
+    public AbstractCell getCurrentPlayerCell() {
+        int[] position = board.getPlayerCoord(currentPlayer);
+        if (position != null) {
+            return board.getCell(position[0], position[1]);
+        } else {
+            return null;
+        }
+    }
 }

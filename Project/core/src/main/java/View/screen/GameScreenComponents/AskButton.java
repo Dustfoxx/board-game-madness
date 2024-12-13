@@ -1,8 +1,7 @@
 package View.screen.GameScreenComponents;
 
-import javax.swing.text.DefaultStyledDocument;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -11,32 +10,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Controller.GameController;
 import Model.AbstractCell;
-import Model.NormalCell;
 import Model.Player;
-import Model.RougeAgent;
 
 public class AskButton extends TextButton {
 
-    private AbstractCell cell;
     private final GameController gameController;
-    private Player player;
 
     public AskButton(GameController gameController, Skin skin) {
 
         super("Ask", skin);
 
-        // TODO: This should probbly be in controller
-        this.cell = gameController.getGame().getBoard().getCell(0, 0);
         this.gameController = gameController;
 
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                NormalCell normalCell = (NormalCell) cell;
-                AskWindow askActionWindow = new AskWindow(skin, normalCell, gameController);
+                AskWindow askActionWindow = new AskWindow(skin, gameController);
                 askActionWindow.setPosition(
-                    Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
-                    Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);
+                        Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
+                        Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);
                 actor.getStage().addActor(askActionWindow);
             }
         });
@@ -45,30 +37,33 @@ public class AskButton extends TextButton {
     @Override
     public Actor hit(float x, float y, boolean touchable) {
         // This override prevents the button from being clickable when disabled
-        if (cell.getClass().equals(NormalCell.class)) {
-            return super.hit(x, y, touchable);
-        } else {
+        if (this.isDisabled()) {
             return null;
+        } else {
+            return super.hit(x, y, touchable);
         }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        this.player = gameController.getGame().getCurrentPlayer();
-        if (player.getClass().equals(RougeAgent.class)){
-            super.draw(batch, parentAlpha); // Important
-            // Enable the button
-            if (cell.getClass().equals(NormalCell.class)) {
-                this.setDisabled(false);
-            // Disable the button
-            } else {
-                this.setColor(0.8f, 0.8f, 0.8f, 1f);
-                this.setDisabled(true);
-            }
-        } else {
+        Player currentPlayer = gameController.getGame().getCurrentPlayer();
+        // Disable the button if it's the recruiters turn
+        if (currentPlayer.isRecruiter()) {
             this.setDisabled(true);
+        } else {
+            super.draw(batch, parentAlpha); // Important
+            AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
+            if (currentCell != null) {
+                // Disable the button if it's a temple cell
+                if (currentCell.isTemple()) {
+                    this.setColor(0.6f, 0.6f, 0.6f, 1f);
+                    this.setDisabled(true);
+                // Enable the button if it's a normal cell
+                } else {
+                    this.setColor(Color.WHITE);
+                    this.setDisabled(false);
+                }
+            }
         }
-
     }
-
 }
