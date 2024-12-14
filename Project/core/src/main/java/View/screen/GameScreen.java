@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(application.nrOfPlayers, boardCsv, names);
+        this.gameController = new GameController(boardCsv, names);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
@@ -102,7 +102,7 @@ public class GameScreen implements Screen {
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
         actionBar.add(askButton).expand();
-        
+
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);
         actionBar.add(revealButton).expand();
