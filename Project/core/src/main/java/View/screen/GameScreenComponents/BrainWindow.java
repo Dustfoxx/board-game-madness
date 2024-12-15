@@ -30,8 +30,6 @@ public class BrainWindow extends Window {
         this.setResizable(false);
         this.setModal(true);
 
-        this.setDebug(true);
-
         List<Token> cellBrains = gameController.getGame().getActiveBrains();
         BrainNote tmpBrainNote = new BrainNote("");
 
@@ -42,17 +40,14 @@ public class BrainWindow extends Window {
                 TextField nameField = new TextField(tmpBrainNote.getNote(), skin);
                 brainNoteLabel.setFontScale(2f);
                 this.add(brainNoteLabel).pad(20).row();
-                this.add(nameField).expandX().fillX();
+                this.add(nameField).expandX().fillX().row();
             } else {
                 BrainFact tempBrain = (BrainFact) brain;
-                Label brainFactLabel = new Label("Brain Note:", skin);
-                Label factInfo = new Label(String.valueOf(tempBrain.getTimestamp()), skin);
+                Label brainFactLabel = new Label("Recruiter was here turn " + tempBrain.getTimestamp(), skin);
                 brainFactLabel.setFontScale(2f);
                 this.add(brainFactLabel).pad(20).row();
-                this.add(factInfo).expandX();
             }
         }
-        this.row();
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
