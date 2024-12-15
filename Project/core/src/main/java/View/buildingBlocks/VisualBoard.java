@@ -53,7 +53,7 @@ public class VisualBoard {
                         BrainWindow brainNoteWindow = new BrainWindow(
                                 gameInfo.actionHandler(Actions.BRAINNOTE,
                                         new Object[] { cellCoords[0], cellCoords[1] }),
-                                gameInfo, skin);
+                                gameInfo, cellCoords[0], cellCoords[1], skin);
                         brainNoteWindow.setPosition(
                                 Gdx.graphics.getWidth() / 2 - brainNoteWindow.getWidth() / 2,
                                 Gdx.graphics.getHeight() / 2 - brainNoteWindow.getHeight() / 2);

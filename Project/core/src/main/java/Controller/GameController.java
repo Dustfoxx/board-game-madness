@@ -217,7 +217,9 @@ public class GameController {
                 break;
             case BRAINNOTE:
                 if (additionalInfo[0] instanceof String) {
-                    actionController.addBrainNote(additionalInfo[0]);
+                    actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
+                            (Integer) additionalInfo[2],
+                            gameState.getBoard());
                 } else {
                     gameState.setActiveBrains(
                             actionController.fetchBrains((int) additionalInfo[0], (int) additionalInfo[1],

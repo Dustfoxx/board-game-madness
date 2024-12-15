@@ -128,15 +128,22 @@ public class ActionController {
      * @param board board to add the note to
      * @return true if the operation succeeded, false otherwise
      */
-    public boolean addBrainNote(BrainNote newNote, int row, int col, Board board) {
-        for (Token token : board.getCell(row, col).getTokens()) {
-            if (token instanceof BrainNote) {
+    public boolean addBrainNote(String newNote, int row, int col, Board board) {
+        AbstractCell cell = board.getCell(row, col);
 
+        for (Token token : cell.getTokens()) {
+            if (token instanceof BrainNote) {
+                if (newNote == "") {
+                    cell.removeToken(token);
+                } else {
+                    ((BrainNote) token).setNote(newNote);
+                }
                 return true;
             }
         }
         try {
-            board.getCell(row, col).addToken(newNote);
+            BrainNote brainNote = new BrainNote(newNote);
+            cell.addToken(brainNote);
             return true;
         } catch (Exception e) {
             return false;
@@ -154,11 +161,19 @@ public class ActionController {
     public List<Token> fetchBrains(int row, int col, Board board) {
         List<Token> tokens = board.getCell(row, col).getTokens();
         List<Token> brains = new ArrayList<Token>();
+        boolean foundNote = false;
         for (Token token : tokens) {
-            if (token instanceof BrainNote || token instanceof BrainFact) {
+            if (token instanceof BrainNote) {
+                brains.add(token);
+                foundNote = true;
+            } else if (token instanceof BrainFact) {
                 brains.add(token);
             }
         }
+        if (!foundNote) {
+            brains.add(new BrainNote(""));
+        }
+
         return brains;
     }
 }
