@@ -25,10 +25,8 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
-    <<<<<<<HEAD
-    private List<Token> activeBrains;=======
+    private List<Token> activeBrains;
     private List<User> users; // The list of users connected to the game
-    >>>>>>>main
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
 
