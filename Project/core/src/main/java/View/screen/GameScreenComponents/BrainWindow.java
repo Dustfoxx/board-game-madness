@@ -38,6 +38,7 @@ public class BrainWindow extends Window {
                 tmpBrainNote = (BrainNote) brain;
                 Label brainNoteLabel = new Label("Brain Note:", skin);
                 TextField nameField = new TextField(tmpBrainNote.getNote(), skin);
+                nameField.setMaxLength(30);
                 brainNoteLabel.setFontScale(2f);
                 this.add(brainNoteLabel).pad(20).row();
                 this.add(nameField).expandX().fillX().row();
