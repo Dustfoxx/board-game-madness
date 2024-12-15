@@ -83,7 +83,7 @@ public class GameScreen implements Screen {
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
 
-        VisualBoard visualBoard = new VisualBoard(gameController);
+        VisualBoard visualBoard = new VisualBoard(gameController, skin);
         Table boardSection = visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
@@ -102,7 +102,7 @@ public class GameScreen implements Screen {
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
         actionBar.add(askButton).expand();
-        
+
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);
         actionBar.add(revealButton).expand();
