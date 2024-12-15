@@ -25,7 +25,10 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
-    private List<Token> activeBrains;
+    <<<<<<<HEAD
+    private List<Token> activeBrains;=======
+    private List<User> users; // The list of users connected to the game
+    >>>>>>>main
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
 
@@ -37,7 +40,7 @@ public class Game {
      * @param board          The game board.
      * @param startingPlayer The player who will start the game.
      */
-    public Game(List<Player> players, Board board, Player startingPlayer) {
+    public Game(List<Player> players, List<User> users, Board board, Player startingPlayer) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("Players list cannot be null or empty.");
         }
@@ -60,6 +63,7 @@ public class Game {
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
         this.activeBrains = new ArrayList<>();
+        this.users = users;
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
         this.isMovementAvailable = true;
@@ -249,6 +253,15 @@ public class Game {
      */
     public void setActiveBrains(List<Token> brains) {
         this.activeBrains = brains;
+    }
+
+    /**
+     * Gets the list of users in the game.
+     *
+     * @return The list of users.
+     */
+    public List<User> getUsers() {
+        return this.users;
     }
 
     /**
