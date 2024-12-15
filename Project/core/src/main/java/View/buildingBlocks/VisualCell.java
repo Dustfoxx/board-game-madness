@@ -39,7 +39,7 @@ public class VisualCell extends Actor {
     /**
      * Creates a single cell on the board. Initializes textures based on the
      * information found for the cell
-     * 
+     *
      * @param cellInfo a single cell on the board. contains players and more
      */
     public VisualCell(AbstractCell cellInfo) {
@@ -86,23 +86,26 @@ public class VisualCell extends Actor {
 
     /**
      * Draws the features for a cell on the current batch
-     * 
+     *
      * @param batch the batch currently being composed
      */
     private void drawFeatures(Batch batch) {
-        float featureYPos = getY() + getHeight() / 2;
-        float feature2Pos = getX() + getWidth() / 2;
+        float featureSize= getWidth() / 2;
 
-        batch.draw(feature1, getX(), featureYPos, getOriginX(), getOriginY(),
-                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
-        batch.draw(feature2, feature2Pos, featureYPos, getOriginX(), getOriginY(),
-                getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+        float feature1XPos = getX();
+        float feature1YPos = getY() + getHeight() - featureSize;
+
+        float feature2XPos = getX() + getWidth() - featureSize;
+        float feature2YPos = getY();
+
+        batch.draw(feature1, feature1XPos, feature1YPos, featureSize, featureSize);
+        batch.draw(feature2, feature2XPos, feature2YPos, featureSize, featureSize);
     }
 
     /**
      * Draws the tokens for the current cell. Values are based on how many tokens
      * are in the current cell
-     * 
+     *
      * @param batch batch being composed
      */
     private void drawTokens(Batch batch) {
@@ -121,7 +124,7 @@ public class VisualCell extends Actor {
 
     /**
      * Draws players inhabiting the current cell
-     * 
+     *
      * @param batch batch being composed
      */
     private void drawPlayers(Batch batch) {
@@ -189,7 +192,7 @@ public class VisualCell extends Actor {
     /**
      * fetches a feature as a textureregion from the main file. Currently using
      * magic numbers to separate them. Should be replaced by atlas
-     * 
+     *
      * @param feature Feature to be fetched
      * @return a textureregion containing the feature
      */
@@ -210,7 +213,7 @@ public class VisualCell extends Actor {
     /**
      * Fetches a player from the texturefile containing players. Uses magic numbers
      * based on pixelsize.
-     * 
+     *
      * @param playerNr which player to fetch
      * @return a textureregion containing the corresponding player
      */
