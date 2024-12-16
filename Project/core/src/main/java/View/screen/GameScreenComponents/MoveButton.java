@@ -8,43 +8,36 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Controller.CheckAction;
 import Controller.GameController;
-import Controller.RecruiterActionController;
-import Model.AbstractCell;
-import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
 import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 
 public class MoveButton extends TextButton {
-
-    RecruiterActionController controller = new RecruiterActionController();
-    GameController gameController;
-    CheckAction checkAction = new CheckAction();
-    private AbstractCell cell;
+    private GameController gameController;
+    private CheckAction checkAction = new CheckAction();
 
     public MoveButton(GameController gameController, Skin skin, VisualBoard visualBoard) {
 
         super("Move", skin);
         this.gameController = gameController;
-        this.cell = gameController.getGame().getBoard().getCell(0, 0);
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
                 Player currentPlayer = gameController.getGame().getCurrentPlayer();
                 boolean[][] validMoves;
-                if(gameController.getGame().getBoard().getPlayerCoord(currentPlayer) == null){
-                        validMoves = checkAction.getValidPlacements(gameController.getGame().getBoard());
+                if (gameController.getGame().getBoard().getPlayerCoord(currentPlayer) == null) {
+                    validMoves = checkAction.getValidPlacements(gameController.getGame().getBoard());
+                } else {
+                    if (currentPlayer instanceof RougeAgent) {
+                        validMoves = checkAction.getValidMoves((RougeAgent) currentPlayer,
+                                gameController.getGame().getBoard());
+                    } else {
+                        validMoves = checkAction.getValidMoves((Recruiter) currentPlayer,
+                                gameController.getGame().getBoard(), 0);
+                    }
                 }
-                else {
-                if(currentPlayer instanceof RougeAgent) {
-                 validMoves = checkAction.getValidMoves((RougeAgent) currentPlayer, gameController.getGame().getBoard());
-                }
-                else{
-                validMoves = checkAction.getValidMoves((Recruiter) currentPlayer, gameController.getGame().getBoard(), 0);
-                }                    
-            }
                 visualBoard.highlightValidCells(validMoves);
             }
         });
@@ -53,7 +46,7 @@ public class MoveButton extends TextButton {
     @Override
     public Actor hit(float x, float y, boolean touchable) {
         // This override prevents the button from being clickable when disabled
-        if (cell.getClass().equals(NormalCell.class)) {
+        if (gameController.getGame().isMovementAvailable()) {
             return super.hit(x, y, touchable);
         } else {
             return null;
