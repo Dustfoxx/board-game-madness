@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import Controller.GameController;
 import Controller.GameController.Actions;
@@ -34,16 +35,15 @@ public class VisualBoard {
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
                 VisualCell cell = new VisualCell(boardInfo.getCell(i, j));
-                String name = i + "" + j;
-                cell.setName(name);
+                cell.setName(i + "" + j);
+
                 // This is for movement actions
                 cell.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         int[] cellCoords = getCellClicked(event);
-                        System.out.println("Cell clicked");
-
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
+                        dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
@@ -77,5 +77,44 @@ public class VisualBoard {
 
     public Table getVisualBoard() {
         return this.board;
+    }
+
+    public void highlightValidCells(boolean[][] mask) {
+        int rows = mask.length;
+        int cols = mask[0].length;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (mask[i][j]) {
+                    VisualCell cell = getVisualCell(i, j);
+                    if (cell != null) {
+                        cell.highlightCell(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void dehighlightValidCells(int dimx, int dimy) {
+        for (int i = 0; i < dimx; i++) {
+            for (int j = 0; j < dimy; j++) {
+                VisualCell cell = getVisualCell(i, j);
+                if (cell != null) {
+                    cell.highlightCell(false);
+                }
+            }
+        }
+    }
+
+    private VisualCell getVisualCell(int i, int j) {
+        String coords = i + "" + j;
+        SnapshotArray<Actor> cellTable = board.getChildren();
+
+        for (Actor actor : cellTable) {
+            if (actor.getName().equals(coords)) {
+                return (VisualCell) actor;
+            }
+        }
+        return null;
     }
 }

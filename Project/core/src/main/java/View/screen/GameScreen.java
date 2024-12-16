@@ -13,6 +13,7 @@ import Model.Csv;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 
@@ -32,6 +33,7 @@ public class GameScreen implements Screen {
     private final PlayerBar playerBar;
     private final TurnBar turnBar;
     private final SettingWindow settingWindow;
+    private VisualBoard visualBoard;
 
     public GameScreen(MindMGMT application, ArrayList<String> names) {
 
@@ -52,7 +54,6 @@ public class GameScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-
         setupSettings(root);
         setupPlayerBar(root);
         setupMainSection(root);
@@ -101,7 +102,10 @@ public class GameScreen implements Screen {
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
+        MoveButton moveButton = new MoveButton(gameController, skin, visualBoard);
+
         actionBar.add(askButton).expand();
+        actionBar.add(moveButton).expand();
 
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);

@@ -21,9 +21,10 @@ public class TempleCell extends AbstractCell {
      */
     @Override
     public void addToken(Token newToken) {
-        if (!(newToken instanceof BrainNote)) {
+        if (newToken instanceof BrainNote || newToken instanceof Step) {
+            super.addToken(newToken);
+        } else {
             throw new IllegalArgumentException("Only BrainNote tokens can be added to a TempelCell.");
         }
-        super.addToken(newToken);
     }
 }
