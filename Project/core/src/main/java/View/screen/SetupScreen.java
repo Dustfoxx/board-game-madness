@@ -37,7 +37,7 @@ public class SetupScreen implements Screen {
         float width = stage.getWidth();
         float height = stage.getHeight();
 
-        Label question = new Label("How many users?", application.skin, "narration");
+        Label question = new Label("How many Players?", application.skin, "narration");
         question.setFontScale(2);
         root.add(question).colspan(2).padBottom(40);
         root.row();
@@ -46,7 +46,7 @@ public class SetupScreen implements Screen {
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
-            TextButton usersButton = new TextButton(i + " users", application.skin);
+            TextButton usersButton = new TextButton(i + " players", application.skin);
             root.add(usersButton).pad(20);
             usersButton.addListener(new ChangeListener() {
                 @Override
@@ -115,4 +115,3 @@ public class SetupScreen implements Screen {
 
     }
 }
-

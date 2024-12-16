@@ -40,9 +40,9 @@ public class UsersScreen implements Screen {
         for (int i = 0; i < application.nrOfUsers; i++) {
             Label nameLabel;
             if (i == 0) {
-                nameLabel = new Label("User 1 / Recruiter", application.skin);
+                nameLabel = new Label("Player 1 / Recruiter", application.skin);
             } else {
-                nameLabel = new Label("User " + (i+1), application.skin);
+                nameLabel = new Label("Player " + (i + 1), application.skin);
             }
             nameLabel.setFontScale(2);
             TextField nameField = new TextField("", application.skin);
@@ -66,16 +66,10 @@ public class UsersScreen implements Screen {
 
                 SnapshotArray<Actor> children = actor.getParent().getChildren();
 
-                // for (Actor child : children) {
-                //     if (child.getClass().equals(TextField.class)) {
-                //         names.add(((TextField) child).getText());
-                //     }
-                // }
-
                 for (Actor child : children) {
                     if (child instanceof TextField) {
                         String userName = ((TextField) child).getText();
-                                users.add(new User(userId++, userName));
+                        users.add(new User(userId++, userName));
                     }
 
                 }

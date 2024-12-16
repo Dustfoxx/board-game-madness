@@ -31,8 +31,7 @@ public class GameControllerTests {
                 new User(1, "User2"),
                 new User(2, "User3"),
                 new User(3, "User4"),
-                new User(4, "User5")
-        ));
+                new User(4, "User5")));
     }
 
     @Test
@@ -75,7 +74,6 @@ public class GameControllerTests {
     public void testTurnOrder() {
         // Arrange
         GameController controller = new GameController(boardCsv, users);
-       // names = new ArrayList<>(Arrays.asList("Name1", "Name2", "Name3"));
         List<Player> players = controller.getGame().getPlayers();
         controller.getGame().setGameState(gameStates.ONGOING);
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(

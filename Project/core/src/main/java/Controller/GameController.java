@@ -100,10 +100,6 @@ public class GameController {
             players.add(new RougeAgent(i, "Agent" + i));
         }
 
-        // for (int i = 0; i < playerAmount; i++) {
-        //     users.add(new User(i, names.get(i))); // TODO: integrate with multiplayer id
-        // }
-
         users.get(0).addPlayerPiece(recruiter);
 
         List<Player> rogueAgents = players.subList(1, players.size());
@@ -114,12 +110,12 @@ public class GameController {
     }
 
     private void distributePlayers(List<Player> players, List<User> users, int startUserIndex) {
-        int userIterator = startUserIndex;
+        int userIterator = startUserIndex; // TODO: integrate with multiplayer id
         for (Player player : players) {
             users.get(userIterator).addPlayerPiece(player);
             userIterator++;
             if (userIterator >= users.size()) {
-                userIterator = startUserIndex; 
+                userIterator = startUserIndex;
             }
         }
     }
