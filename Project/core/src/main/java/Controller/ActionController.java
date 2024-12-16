@@ -3,6 +3,7 @@ package Controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.lang.Math;
 
 import Model.AbstractCell;
 import Model.Board;
@@ -14,6 +15,7 @@ import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
 import Model.Token;
+import Model.Recruiter.RecruiterType;
 import Model.Step;
 
 public class ActionController {
@@ -107,8 +109,16 @@ public class ActionController {
         // Did player choose a valid location?
         // If player on board
         int[] playerCoords = board.getPlayerCoord(player);
+
         if (playerCoords != null) {
             board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+
+            // If recruiter and new spot is two steps away then it was a mindslipmove
+            if (player instanceof Recruiter && (Math.abs(playerCoords[0] - coords[0]) > 1
+                    || Math.abs(playerCoords[1] - coords[1]) > 1)) {
+                Recruiter tmpRecruiter = (Recruiter) player;
+                tmpRecruiter.setRecruiterType(RecruiterType.USED);
+            }
         }
         // Add player to new cell
         AbstractCell newCell = board.getCell(coords[0], coords[1]);
@@ -118,7 +128,7 @@ public class ActionController {
             // Add new cell to walked path
             Recruiter recruiter = (Recruiter) player;
             recruiter.addToWalkedPath(coords[0], coords[1]);
-            
+
             // Add a Step to the cell
             int timestamp = recruiter.getWalkedPath().size();
             newCell.addToken(new Step(timestamp));
