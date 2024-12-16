@@ -120,10 +120,10 @@ public abstract class AbstractCell {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        AbstractCell that = (AbstractCell) o;
+        AbstractCell cell = (AbstractCell) o;
 
-        return Objects.equals(players, that.players) &&
-                Objects.equals(tokens, that.tokens);
+        return Objects.equals(players, cell.players) &&
+                Objects.equals(tokens, cell.tokens);
     }
 
     @Override
