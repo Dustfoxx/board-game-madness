@@ -30,6 +30,7 @@ public class MoveButton extends TextButton {
                 } else {
                     validMoves = checkAction.getValidMoves(currentPlayer,
                             gameController.getGame().getBoard());
+                    gameController.endGameIfMaskEmpty(validMoves);
                 }
                 visualBoard.highlightValidCells(validMoves);
             }

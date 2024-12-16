@@ -140,7 +140,7 @@ public class GameController {
                 ongoingLogic();
                 break;
             case ENDGAME:
-                // Save stats?
+
                 break;
 
             default:
@@ -197,9 +197,20 @@ public class GameController {
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
-            // TODO: Should who won exist here or in model?
-            // I think model
         }
+    }
+
+    public void endGameIfMaskEmpty(boolean[][] mask) {
+        for (boolean[] row : mask) {
+            for (boolean col : row) {
+                // A single value being true means recruiter is not stuck
+                if (col) {
+                    return;
+                }
+            }
+        }
+        // If no true value was found the recruiter cannot move and it is game over
+        gameState.setGameOver();
     }
 
     public boolean actionHandler(Actions action) {
