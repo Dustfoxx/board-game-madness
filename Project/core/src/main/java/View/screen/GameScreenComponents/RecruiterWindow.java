@@ -90,6 +90,12 @@ public class RecruiterWindow extends Window {
         super.draw(batch, parentAlpha); // Important
     }
 
+    /**
+     * Fetches recruiter card image
+     * 
+     * @param recruiter which recruiter it is
+     * @return a textureregion containing the proper recruiter
+     */
     private TextureRegion fetchRecruiter(RecruiterType recruiter) {
         int xSize = 677 / 2;
         int ySize = 481;
