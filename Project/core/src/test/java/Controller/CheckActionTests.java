@@ -53,7 +53,7 @@ public class CheckActionTests {
 
         board.getCell(5, 3).addPlayer(mockedRecruiter);
 
-        boolean[][] mask = checkAction.getValidMoves(mockedRecruiter, board, 0);
+        boolean[][] mask = checkAction.getValidMoves(mockedRecruiter, board);
 
         boolean[][] expectedMask = new boolean[][]
 
@@ -67,7 +67,7 @@ public class CheckActionTests {
 
         assertArrayEquals(expectedMask, mask);
 
-        mask = checkAction.getValidMoves(mockedRecruiter, board, 1);
+        mask = checkAction.getValidMoves(mockedRecruiter, board);
 
         expectedMask = new boolean[][]
 

@@ -144,8 +144,21 @@ public class CheckAction {
      * @param type   Type of mindslip equipped. 0 for orhogonal and 1 for diagonal
      * @return Possible coordinates to visit after mindslip
      */
-    private List<int[]> mindSlip(Recruiter player, Board board, int type) {
-        int mindSlipType = type;// player.getMindSlip() NEEDS TO BE AVAILABLE
+    private List<int[]> mindSlip(Recruiter player, Board board) {
+        int mindSlipType = 0;
+
+        switch (player.getRecruiterType()) {
+            // Sets the correct type for validation. If its been used empty list is sent
+            case HORIZONTAL:
+                mindSlipType = 0;
+                break;
+            case DIAGONAL:
+                mindSlipType = 1;
+                break;
+            case USED:
+                return new ArrayList<int[]>();
+        }
+
         int[] coords = board.getPlayerCoord(player);
         int[] dims = board.getDims();
 
@@ -168,6 +181,22 @@ public class CheckAction {
         }
         return possibleSlips;
 
+    }
+
+    /**
+     * Gets valid moves for a player, works for both recruiter and rougeagents
+     * 
+     * @param player player that is being considered
+     * @param board  Board that the player inhabits
+     * @return Returns a mask that contains booleans saying where a player
+     *         can move
+     */
+    public boolean[][] getValidMoves(Player player, Board board) {
+        if (player instanceof Recruiter) {
+            return getValidMoves((Recruiter) player, board);
+        } else {
+            return getValidMoves((RougeAgent) player, board);
+        }
     }
 
     /**
@@ -201,13 +230,13 @@ public class CheckAction {
      * @return Returns a mask that contains booleans saying where a player
      *         can move
      */
-    public boolean[][] getValidMoves(Recruiter player, Board board, int type) {
+    public boolean[][] getValidMoves(Recruiter player, Board board) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
         List<int[]> walkedList = player.getWalkedPath();
 
-        firstMove.addAll(mindSlip(player, board, type));
+        firstMove.addAll(mindSlip(player, board));
 
         for (int i = 0; i < walkedList.size(); i++) {
             for (int j = 0; j < firstMove.size(); j++) {

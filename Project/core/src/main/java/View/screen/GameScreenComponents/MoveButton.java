@@ -9,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import Controller.CheckAction;
 import Controller.GameController;
 import Model.Player;
-import Model.Recruiter;
-import Model.RougeAgent;
 import View.buildingBlocks.VisualBoard;
 
 public class MoveButton extends TextButton {
@@ -30,13 +28,8 @@ public class MoveButton extends TextButton {
                 if (gameController.getGame().getBoard().getPlayerCoord(currentPlayer) == null) {
                     validMoves = checkAction.getValidPlacements(gameController.getGame().getBoard());
                 } else {
-                    if (currentPlayer instanceof RougeAgent) {
-                        validMoves = checkAction.getValidMoves((RougeAgent) currentPlayer,
-                                gameController.getGame().getBoard());
-                    } else {
-                        validMoves = checkAction.getValidMoves((Recruiter) currentPlayer,
-                                gameController.getGame().getBoard(), 0);
-                    }
+                    validMoves = checkAction.getValidMoves(currentPlayer,
+                            gameController.getGame().getBoard());
                 }
                 visualBoard.highlightValidCells(validMoves);
             }

@@ -16,6 +16,7 @@ import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
+import View.screen.GameScreenComponents.RecruiterWindow;
 
 import java.util.ArrayList;
 
@@ -58,6 +59,12 @@ public class GameScreen implements Screen {
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
+        RecruiterWindow recruiterWindow = new RecruiterWindow(skin, gameController.getGame().getRecruiter(),
+                gameController);
+        recruiterWindow.setPosition(
+                Gdx.graphics.getWidth() / 2 - recruiterWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2 - recruiterWindow.getHeight() / 2);
+        stage.addActor(recruiterWindow);
     }
 
     private void setupSettings(Table root) {
@@ -106,7 +113,7 @@ public class GameScreen implements Screen {
 
         actionBar.add(askButton).expand();
         actionBar.add(moveButton).expand();
-        
+
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);
         actionBar.add(revealButton).expand();
