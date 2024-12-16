@@ -47,15 +47,15 @@ public class ActionController {
         List<int[]> walkedPath = recruiter.getWalkedPath();
         for (int[] step : walkedPath) { // Loop through all steps of the walked path
             AbstractCell cell = board.getCell(step[0], step[1]);
-            if (cell.getClass().equals(NormalCell.class)) { // Check if the cell is not a temple
+            if (cell instanceof NormalCell) { // Check if the cell is not a temple
                 NormalCell normalCell = (NormalCell) cell;
                 Feature[] features = normalCell.getFeatures(); // Get the features of the cell
                 List<Feature> featuresList = Arrays.asList(features);
                 if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
                     Footstep footstep = new Footstep();
                     cell.addToken(footstep); // Add a footstep to the cell
+                    return; // Stop further searching once a cell is found
                 }
-                return; // Stop further searching once a cell is found
             }
         }
     }
@@ -108,6 +108,10 @@ public class ActionController {
         }
         // Add player to new cell
         board.getCell(coords[0], coords[1]).addPlayer(player);
+        if (player instanceof Recruiter) {
+            Recruiter recruiter = (Recruiter) player;
+            recruiter.addToWalkedPath(coords[0], coords[1]);
+        }
         return true;
     }
 }
