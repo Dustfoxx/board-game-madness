@@ -19,6 +19,7 @@ public class GameController {
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
     private ActionController actionController;
+    private final int playerPieceAmount = 5;
 
     public enum Actions {
         MOVE,
@@ -33,16 +34,14 @@ public class GameController {
      * are next in queue to play. This is the constructor. Currently does not track
      * when
      * recruits and similar have been added timewise.
-     *
-     * @param playerAmount The number of players this specific game should have
      */
 
-    public GameController(int playerAmount, Csv boardCsv, ArrayList<String> names) {
+    public GameController(Csv boardCsv, ArrayList<String> names) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
-        gameState = initializeGame(playerAmount, boardCsv, names);
+        gameState = initializeGame(boardCsv, names);
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<RougeAgent>();
 
@@ -85,19 +84,39 @@ public class GameController {
         }
     }
 
-    private Game initializeGame(int playerAmount, Csv boardCsv, ArrayList<String> names) {
+    private Game initializeGame(Csv boardCsv, ArrayList<String> names) {
+        int playerAmount = names.size();
+
         if (playerAmount <= 1) {
             throw new IllegalArgumentException("Must be more than 1 player");
         }
         List<Player> players = new ArrayList<Player>();
+        List<User> users = new ArrayList<User>();
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
 
+        for (int i = 0; i < playerPieceAmount; i++) {
+            players.add(i == 0 ? new Recruiter(i, "Recruiter", recruiterFeatures) : new RougeAgent(i, "Agent" + i));
+        }
+
         for (int i = 0; i < playerAmount; i++) {
-            players.add(i == 0 ? new Recruiter(i, names.get(i), recruiterFeatures) : new RougeAgent(i, names.get(i)));
+            users.add(new User(i, names.get(i))); // TODO: integrate with multiplayer id
+        }
+
+        List<Player> rogueAgents = players.subList(1, players.size());
+
+        users.get(0).addPlayerPiece(players.get(0));
+
+        int agentIterator = 1;
+        for (int i = 0; i < rogueAgents.size(); i++) { // TODO: Generalize as this is also done for players
+            users.get(agentIterator).addPlayerPiece(rogueAgents.get(i));
+            agentIterator++;
+            if (agentIterator >= users.size()) {
+                agentIterator = 1;
+            }
         }
 
         Board board = new Board(boardCsv);
-        return new Game(players, board, players.get(0));
+        return new Game(players, users, board, players.get(0));
     }
 
     public Game getGame() {
@@ -186,6 +205,7 @@ public class GameController {
         switch (action) {
             case ASK:
                 actionController.ask((Feature) additionalInfo[0], gameState.getRecruiter(), gameState.getBoard());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case REVEAL:
                 // TODO: int[] playerCoord =
@@ -195,10 +215,12 @@ public class GameController {
                 // gameState.getBoard(),
                 // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
                 // gameState.getRecruiter().getWalkedPath());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
                         gameState.getBoard());
+                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
 
                 break;
             case MINDSLIP:
@@ -206,14 +228,18 @@ public class GameController {
                 break;
             case MOVE:
                 if (gameState.isMovementAvailable()) {
-                    // TODO: actionController.movePlayer(gameState.getCurrentPlayer(),
-                    // gameState.getBoard(), null,
-                    // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
+                    int row = (int) additionalInfo[0];
+                    int col = (int) additionalInfo[1];
+                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), new int[] {row, col});
                     gameState.setMovementAvailability(false);
                 }
                 break;
         }
-        gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+
+        if(action != Actions.MOVE){
+            gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+        }
+        
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }

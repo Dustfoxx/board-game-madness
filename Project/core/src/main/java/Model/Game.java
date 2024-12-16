@@ -25,6 +25,7 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
+    private List<User> users; // The list of users connected to the game
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
 
@@ -36,7 +37,7 @@ public class Game {
      * @param board          The game board.
      * @param startingPlayer The player who will start the game.
      */
-    public Game(List<Player> players, Board board, Player startingPlayer) {
+    public Game(List<Player> players, List<User> users, Board board, Player startingPlayer) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("Players list cannot be null or empty.");
         }
@@ -58,6 +59,7 @@ public class Game {
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
+        this.users = users;
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
         this.isMovementAvailable = true;
@@ -172,7 +174,7 @@ public class Game {
     }
 
     /**
-     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple. 
+     * Gets the amount recruited at a specific timestamp as a (time, amount) tuple.
      * 
      * @param time the timestamp we wish to get
      * @return the tuple at given time, null if not found
@@ -229,6 +231,15 @@ public class Game {
      */
     public List<Player> getPlayers() {
         return this.players;
+    }
+
+    /**
+     * Gets the list of users in the game.
+     * 
+     * @return The list of users.
+     */
+    public List<User> getUsers() {
+        return this.users;
     }
 
     /**
