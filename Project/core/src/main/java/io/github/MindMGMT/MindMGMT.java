@@ -25,7 +25,7 @@ public class MindMGMT extends Game {
     private boolean hasLoaded = false;
 
     public Skin skin;
-    public int nrOfPlayers;
+    public int nrOfUsers;
     public AssetManager assets;
     public MindMGMTServer server;
 
