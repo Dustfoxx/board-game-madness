@@ -152,6 +152,8 @@ public class GameController {
             if (gameState.getCurrentTime() > 4) {
                 gameState.addAmountRecruited(recruiter.getAmountRecruited());
                 recruiter.resetAmountRecruited();
+                int[] firstStepCoord = recruiter.getWalkedPath().get(0);
+                gameState.getBoard().getCell(firstStepCoord[0], firstStepCoord[1]).addToken(new BrainFact(1));
                 gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
                                                                            // next player
             }
