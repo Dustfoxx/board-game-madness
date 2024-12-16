@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
+import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
@@ -27,6 +28,7 @@ public class VisualCell extends Actor {
     private TextureRegion temple;
     private TextureRegion footstep;
     private TextureRegion[] brains;
+    private TextureRegion step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
     private Texture highlight = new Texture("highlight.png");
@@ -37,6 +39,7 @@ public class VisualCell extends Actor {
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
+    private Texture stepImg = new Texture("tokens_3d.png");
     private boolean highlighted = false;
 
     /**
@@ -62,6 +65,7 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
+        this.step = new TextureRegion(stepImg, 170, 360, 70, 70);
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
         updatePlayers();
@@ -80,9 +84,8 @@ public class VisualCell extends Actor {
 
         if (highlighted) {
             this.setTouchable(Touchable.enabled);
-            highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight());  // Draw the background
-        }
-        else{
+            highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
+        } else {
             this.setTouchable(Touchable.disabled);
         }
 
@@ -170,10 +173,11 @@ public class VisualCell extends Actor {
                 tokens.add(footstep);
             } else if (token instanceof BrainNote) {
                 tokens.add(brains[0]);
-            } else {
+            } else if (token instanceof BrainFact) {
                 tokens.add(brains[1]);
+            } else {
+                tokens.add(step);
             }
-
         }
     }
 
