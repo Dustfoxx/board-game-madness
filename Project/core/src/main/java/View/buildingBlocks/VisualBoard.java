@@ -31,8 +31,8 @@ public class VisualBoard {
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
                 VisualCell cell = new VisualCell(boardInfo.getCell(i, j));
-                String name = i + "" + j;
-                cell.setName(name);
+                cell.setName(i + "" + j);
+                
                 // This is for movement actions
                 cell.addListener(new ClickListener() {
                     @Override
@@ -42,9 +42,6 @@ public class VisualBoard {
                         int row = cellName.charAt(0) - '0';
                         int col = cellName.charAt(1) - '0';
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { row, col });
-
-                        // Action Complete, remove highlights on all cells
-                        // Note: This can probably be avoided by adding a field in abstractcell
                         dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
