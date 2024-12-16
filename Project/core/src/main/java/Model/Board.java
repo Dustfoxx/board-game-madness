@@ -1,6 +1,8 @@
 package Model;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Board class represents the game board, which consists of a grid of cells.
@@ -124,4 +126,33 @@ public class Board {
     public int[] getDims() {
         return new int[] { rowsDim, colsDim };
     }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "rowsDim=" + rowsDim +
+                ", colsDim=" + colsDim +
+                ", cells=" + Arrays.deepToString(cells) +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Board board = (Board) o;
+        return rowsDim == board.rowsDim &&
+                colsDim == board.colsDim &&
+                Arrays.deepEquals(cells, board.cells);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(rowsDim, colsDim);
+        result = 31 * result + Arrays.deepHashCode(cells);
+        return result;
+    }
+
 }

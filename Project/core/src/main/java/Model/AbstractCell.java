@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The AbstractCell class is an abstract class represents a single cell on the
@@ -63,11 +64,11 @@ public abstract class AbstractCell {
 
     /**
      * Adds a token to the cell.
-     *      * 
+     * *
      * 
-     *      * @throws IllegalArgumentException If a token of the same class is already in
+     * * @throws IllegalArgumentException If a token of the same class is already in
      *
-     *      */
+     */
     public void addToken(Token newToken) {
         for (Token token : tokens) {
             if (token.getClass().equals(newToken.getClass())) {
@@ -102,5 +103,31 @@ public abstract class AbstractCell {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractCell{" +
+                "players=" + players +
+                ", tokens=" + tokens +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        AbstractCell that = (AbstractCell) o;
+
+        return Objects.equals(players, that.players) &&
+                Objects.equals(tokens, that.tokens);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(players, tokens);
     }
 }

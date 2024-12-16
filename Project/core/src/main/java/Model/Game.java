@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Game class is the top-level class in the game model hierarchy.
@@ -328,4 +329,69 @@ public class Game {
         }
         throw new IllegalStateException("No recruiter found in the game");
     }
+
+    /**
+     * Gets the cell which the current player is at.
+     * 
+     * @return The cell which the current player is at, otherwise null.
+     */
+    public AbstractCell getCurrentPlayerCell() {
+        int[] position = board.getPlayerCoord(currentPlayer);
+        if (position != null) {
+            return board.getCell(position[0], position[1]);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "gameState=" + gameState +
+                ", gameOver=" + gameOver +
+                ", currentPlayer=" + currentPlayer +
+                ", currentTime=" + currentTime +
+                ", maxTime=" + maxTime +
+                ", maxRecruits=" + maxRecruits +
+                ", board=" + board +
+                ", recruitHistory=" + recruitHistory +
+                ", mindSlipHistory=" + mindSlipHistory +
+                ", players=" + players +
+                ", activeBrains=" + activeBrains +
+                ", users=" + users +
+                ", isMovementAvailable=" + isMovementAvailable +
+                ", isActionAvailable=" + isActionAvailable +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Game game = (Game) o;
+        return gameOver == game.gameOver &&
+                currentTime == game.currentTime &&
+                maxTime == game.maxTime &&
+                maxRecruits == game.maxRecruits &&
+                isMovementAvailable == game.isMovementAvailable &&
+                isActionAvailable == game.isActionAvailable &&
+                gameState == game.gameState &&
+                Objects.equals(currentPlayer, game.currentPlayer) &&
+                Objects.equals(board, game.board) &&
+                Objects.equals(recruitHistory, game.recruitHistory) &&
+                Objects.equals(mindSlipHistory, game.mindSlipHistory) &&
+                Objects.equals(players, game.players) &&
+                Objects.equals(activeBrains, game.activeBrains) &&
+                Objects.equals(users, game.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
+                board, recruitHistory, mindSlipHistory, players, activeBrains,
+                users, isMovementAvailable, isActionAvailable);
+    }
+
 }
