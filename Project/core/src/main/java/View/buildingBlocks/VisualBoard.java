@@ -38,9 +38,10 @@ public class VisualBoard {
                 cell.setName(i + "" + j);
 
                 // This is for movement actions
-                cell.addListener(new ClickListener() {
+                cell.addListener(new ClickListener(Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        System.out.println("Leftclick");
                         int[] cellCoords = getCellClicked(event);
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
                         dehighlightValidCells(dimensions[0], dimensions[1]);
@@ -49,6 +50,7 @@ public class VisualBoard {
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        System.out.println("rightClick");
                         int[] cellCoords = getCellClicked(event);
                         BrainWindow brainNoteWindow = new BrainWindow(
                                 gameInfo.actionHandler(Actions.BRAINNOTE,
