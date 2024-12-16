@@ -236,7 +236,7 @@ public class GameController {
                 if (gameState.isMovementAvailable()) {
                     int row = (int) additionalInfo[0];
                     int col = (int) additionalInfo[1];
-                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(),
+                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState,
                             new int[] { row, col });
                     gameState.setMovementAvailability(false);
                 }

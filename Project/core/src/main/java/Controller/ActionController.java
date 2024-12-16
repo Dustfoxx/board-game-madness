@@ -3,6 +3,7 @@ package Controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import java.lang.Math;
 
 import Model.AbstractCell;
@@ -11,6 +12,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.Game;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
@@ -105,9 +107,10 @@ public class ActionController {
      * @param coords       coordinates the player will be placed on
      * @return boolean defining if the action was successful or not
      */
-    public boolean movePlayer(Player player, Board board, int[] coords) {
+    public boolean movePlayer(Player player, Game gameState, int[] coords) {
         // Did player choose a valid location?
         // If player on board
+        Board board = gameState.getBoard();
         int[] playerCoords = board.getPlayerCoord(player);
 
         if (playerCoords != null) {
@@ -118,6 +121,7 @@ public class ActionController {
                     || Math.abs(playerCoords[1] - coords[1]) > 1)) {
                 Recruiter tmpRecruiter = (Recruiter) player;
                 tmpRecruiter.setRecruiterType(RecruiterType.USED);
+                gameState.addMindSlipEvent();
             }
         }
         // Add player to new cell
