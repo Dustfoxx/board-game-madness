@@ -24,9 +24,9 @@ public class SetupScreen implements Screen {
         setupUI();
     }
 
-    private void createPlayers(int nrOfPlayers) {
-        application.nrOfPlayers = nrOfPlayers;
-        application.setScreen(new PlayersScreen(application));
+    private void createUsers(int nrOfUsers) {
+        application.nrOfUsers = nrOfUsers;
+        application.setScreen(new UsersScreen(application));
         dispose();
     }
 
@@ -37,7 +37,7 @@ public class SetupScreen implements Screen {
         float width = stage.getWidth();
         float height = stage.getHeight();
 
-        Label question = new Label("How many players?", application.skin, "narration");
+        Label question = new Label("How many users?", application.skin, "narration");
         question.setFontScale(2);
         root.add(question).colspan(2).padBottom(40);
         root.row();
@@ -46,12 +46,12 @@ public class SetupScreen implements Screen {
 
         for (int i = 2; i <= 5; i++) {
             final int value = i;
-            TextButton playersButton = new TextButton(i + " players", application.skin);
-            root.add(playersButton).pad(20);
-            playersButton.addListener(new ChangeListener() {
+            TextButton usersButton = new TextButton(i + " users", application.skin);
+            root.add(usersButton).pad(20);
+            usersButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    createPlayers(value);
+                    createUsers(value);
                 }
             });
             // Start a new row for last 2 buttons

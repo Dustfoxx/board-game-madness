@@ -1,28 +1,31 @@
 package View.screen;
 
 import Controller.GameController;
-import View.buildingBlocks.MindMGMTStage;
+
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.Gdx;
 
 import Model.Csv;
+import Model.User;
+
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
+import View.buildingBlocks.MindMGMTStage;
+import View.screen.GameScreenComponents.SettingWindow;
+import View.screen.GameScreenComponents.TurnBar;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import io.github.MindMGMT.MindMGMT;
-import View.screen.GameScreenComponents.SettingWindow;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import View.screen.GameScreenComponents.TurnBar;
 
 public class GameScreen implements Screen {
     private final GameController gameController;
@@ -33,17 +36,16 @@ public class GameScreen implements Screen {
     private final TurnBar turnBar;
     private final SettingWindow settingWindow;
 
-    public GameScreen(MindMGMT application, ArrayList<String> names) {
+    public GameScreen(MindMGMT application,  ArrayList<User> users) {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(boardCsv, names);
+        this.gameController = new GameController(boardCsv, users);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
-
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }

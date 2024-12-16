@@ -50,6 +50,9 @@ public class Game {
         if (!players.contains(startingPlayer)) {
             throw new IllegalArgumentException("Starting player must be in the players list.");
         }
+        if (users == null || users.isEmpty()) {
+            throw new IllegalArgumentException("Users list cannot be null or empty.");
+        }
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
         this.currentTime = 0; // Starts at zero so it can increment as recruiter chooses start
