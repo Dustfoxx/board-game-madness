@@ -1,6 +1,7 @@
 package View.screen;
 
 import Controller.ServerComponents.MindMGMTServer;
+import Model.User;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
@@ -71,31 +72,39 @@ public class LobbyScreen implements Screen {
             root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1);
         }
         root.row();
-        if (isHost) {
-            TextButton backButton = new TextButton("Back", application.skin);
-            backButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    if (application.server != null) {
-                        application.server.stop();
-                    }
-                    application.setScreen(new SetupScreen(application));
-                    dispose();
-                }
-            });
 
+
+
+        TextButton backButton = new TextButton("Back", application.skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (application.server != null) {
+                    application.server.stop();
+                }
+                application.setScreen(new SetupScreen(application));
+                dispose();
+            }
+        });
+
+        if (isHost) {
             TextButton startButton = new TextButton("Start", application.skin);
             startButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    application.nrOfPlayers = (int) players.stream().filter(Objects::nonNull).count();
-                    application.setScreen(new GameScreen(application, players));
+                    ArrayList<User> users = new ArrayList<>();
+                    for (int i = 0; i < players.size(); i++) {
+                        users.add(new User(i, players.get(i)));
+                    }
+                    application.setScreen(new GameScreen(application, users));
                     dispose();
                 }
             });
 
             root.add(backButton);
             root.add(startButton);
+        } else {
+            root.add(backButton).colspan(2);
         }
         stage.addActor(root);
     }
@@ -137,7 +146,11 @@ public class LobbyScreen implements Screen {
     @Override
     public void render(float delta) {
         if (gameStarted) {
-            application.setScreen(new GameScreen(application, players));
+            ArrayList<User> users = new ArrayList<>();
+            for (int i = 0; i < players.size(); i++) {
+                users.add(new User(i, players.get(i)));
+            }
+            application.setScreen(new GameScreen(application, users));
             dispose();
         } else if (!isHost && frameCount >= pollingFrequency) {
             frameCount = 0;
