@@ -28,7 +28,8 @@ public class GameController {
         REVEAL,
         CAPTURE,
         MINDSLIP,
-        RECRUITERCHOICE
+        RECRUITERCHOICE,
+        BRAINNOTE
     }
 
     /**
@@ -38,14 +39,14 @@ public class GameController {
      * recruits and similar have been added timewise.
      */
 
-    public GameController(Csv boardCsv, ArrayList<String> names) {
+    public GameController(Csv boardCsv, ArrayList<User> users) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
-        gameState = initializeGame(boardCsv, names);
+        gameState = initializeGame(boardCsv, users);
         List<Player> gamePlayers = gameState.getPlayers();
-        List<RougeAgent> agents = new ArrayList<RougeAgent>();
+        List<RougeAgent> agents = new ArrayList<>();
 
         this.actionController = new ActionController();
 
@@ -86,39 +87,40 @@ public class GameController {
         }
     }
 
-    private Game initializeGame(Csv boardCsv, ArrayList<String> names) {
-        int playerAmount = names.size();
+    private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
+        int userAmount = users.size();
 
-        if (playerAmount <= 1) {
-            throw new IllegalArgumentException("Must be more than 1 player");
+        if (userAmount <= 1) {
+            throw new IllegalArgumentException("Must be more than 1 user");
         }
-        List<Player> players = new ArrayList<Player>();
-        List<User> users = new ArrayList<User>();
+
+        List<Player> players = new ArrayList<>();
         Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
 
-        for (int i = 0; i < playerPieceAmount; i++) {
-            players.add(i == 0 ? new Recruiter(i, "Recruiter", recruiterFeatures) : new RougeAgent(i, "Agent" + i));
+        Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
+        players.add(recruiter);
+        for (int i = 1; i < playerPieceAmount; i++) {
+            players.add(new RougeAgent(i, "Agent" + i));
         }
 
-        for (int i = 0; i < playerAmount; i++) {
-            users.add(new User(i, names.get(i))); // TODO: integrate with multiplayer id
-        }
+        users.get(0).addPlayerPiece(recruiter);
 
         List<Player> rogueAgents = players.subList(1, players.size());
-
-        users.get(0).addPlayerPiece(players.get(0));
-
-        int agentIterator = 1;
-        for (int i = 0; i < rogueAgents.size(); i++) { // TODO: Generalize as this is also done for players
-            users.get(agentIterator).addPlayerPiece(rogueAgents.get(i));
-            agentIterator++;
-            if (agentIterator >= users.size()) {
-                agentIterator = 1;
-            }
-        }
+        distributePlayers(rogueAgents, users, 1);
 
         Board board = new Board(boardCsv);
-        return new Game(players, users, board, players.get(0));
+        return new Game(players, users, board, recruiter);
+    }
+
+    private void distributePlayers(List<Player> players, List<User> users, int startUserIndex) {
+        int userIterator = startUserIndex; // TODO: integrate with multiplayer id
+        for (Player player : players) {
+            users.get(userIterator).addPlayerPiece(player);
+            userIterator++;
+            if (userIterator >= users.size()) {
+                userIterator = startUserIndex;
+            }
+        }
     }
 
     public Game getGame() {
@@ -154,6 +156,8 @@ public class GameController {
             if (gameState.getCurrentTime() > 4) {
                 gameState.addAmountRecruited(recruiter.getAmountRecruited());
                 recruiter.resetAmountRecruited();
+                int[] firstStepCoord = recruiter.getWalkedPath().get(0);
+                gameState.getBoard().getCell(firstStepCoord[0], firstStepCoord[1]).addToken(new BrainFact(1));
                 gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
                                                                            // next player
             }
@@ -239,6 +243,18 @@ public class GameController {
                 break;
             case RECRUITERCHOICE:
                 getGame().getRecruiter().setRecruiterType((RecruiterType) additionalInfo[0]);
+                break;
+            case BRAINNOTE:
+                if (additionalInfo[0] instanceof String) {
+                    actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
+                            (Integer) additionalInfo[2],
+                            gameState.getBoard());
+                } else {
+                    gameState.setActiveBrains(
+                            actionController.fetchBrains((int) additionalInfo[0], (int) additionalInfo[1],
+                                    gameState.getBoard()));
+                }
+                break;
         }
 
         if (action != Actions.MOVE) {

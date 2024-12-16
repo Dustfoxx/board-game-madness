@@ -1,16 +1,20 @@
 package Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
+import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
+import Model.Token;
+import Model.Step;
 
 public class ActionController {
 
@@ -47,15 +51,15 @@ public class ActionController {
         List<int[]> walkedPath = recruiter.getWalkedPath();
         for (int[] step : walkedPath) { // Loop through all steps of the walked path
             AbstractCell cell = board.getCell(step[0], step[1]);
-            if (cell.getClass().equals(NormalCell.class)) { // Check if the cell is not a temple
+            if (cell instanceof NormalCell) { // Check if the cell is not a temple
                 NormalCell normalCell = (NormalCell) cell;
                 Feature[] features = normalCell.getFeatures(); // Get the features of the cell
                 List<Feature> featuresList = Arrays.asList(features);
                 if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
                     Footstep footstep = new Footstep();
                     cell.addToken(footstep); // Add a footstep to the cell
+                    return; // Stop further searching once a cell is found
                 }
-                return; // Stop further searching once a cell is found
             }
         }
     }
@@ -107,7 +111,76 @@ public class ActionController {
             board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
         }
         // Add player to new cell
-        board.getCell(coords[0], coords[1]).addPlayer(player);
+        AbstractCell newCell = board.getCell(coords[0], coords[1]);
+        newCell.addPlayer(player);
+
+        if (player instanceof Recruiter) {
+            // Add new cell to walked path
+            Recruiter recruiter = (Recruiter) player;
+            recruiter.addToWalkedPath(coords[0], coords[1]);
+            
+            // Add a Step to the cell
+            int timestamp = recruiter.getWalkedPath().size();
+            newCell.addToken(new Step(timestamp));
+        }
         return true;
+    }
+
+    /**
+     * Adds a brainnote to a cell, replaces it if one exists already
+     * 
+     * @param text  Text it should contain
+     * @param row   row of the brainnote
+     * @param col   column of the brainnote
+     * @param board board to add the note to
+     * @return true if the operation succeeded, false otherwise
+     */
+    public boolean addBrainNote(String newNote, int row, int col, Board board) {
+        AbstractCell cell = board.getCell(row, col);
+
+        for (Token token : cell.getTokens()) {
+            if (token instanceof BrainNote) {
+                if (newNote == "") {
+                    cell.removeToken(token);
+                } else {
+                    ((BrainNote) token).setNote(newNote);
+                }
+                return true;
+            }
+        }
+        try {
+            BrainNote brainNote = new BrainNote(newNote);
+            cell.addToken(brainNote);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Fetches the information of a cells brains
+     * 
+     * @param row   the row to fetch from
+     * @param col   the columns to fetch from
+     * @param board the board the notes exists on
+     * @return list of brains of a cell
+     */
+    public List<Token> fetchBrains(int row, int col, Board board) {
+        List<Token> tokens = board.getCell(row, col).getTokens();
+        List<Token> brains = new ArrayList<Token>();
+        boolean foundNote = false;
+        for (Token token : tokens) {
+            if (token instanceof BrainNote) {
+                brains.add(token);
+                foundNote = true;
+            } else if (token instanceof BrainFact) {
+                brains.add(token);
+            }
+        }
+        if (!foundNote) {
+            brains.add(new BrainNote(""));
+        }
+
+        return brains;
     }
 }
