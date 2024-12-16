@@ -17,14 +17,16 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import Model.User;
+
 import View.buildingBlocks.MindMGMTStage;
 import io.github.MindMGMT.MindMGMT;
 
-public class PlayersScreen implements Screen {
+public class UsersScreen implements Screen {
     private final MindMGMTStage stage;
     private final MindMGMT application;
 
-    public PlayersScreen(final MindMGMT application) {
+    public UsersScreen(final MindMGMT application) {
         this.application = application;
         stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         setupUI();
@@ -35,12 +37,12 @@ public class PlayersScreen implements Screen {
         root.setDebug(true);
         root.setFillParent(true);
 
-        for (int i = 0; i < application.nrOfPlayers; i++) {
+        for (int i = 0; i < application.nrOfUsers; i++) {
             Label nameLabel;
             if (i == 0) {
-                nameLabel = new Label("Recruiter", application.skin);
+                nameLabel = new Label("Player 1 / Recruiter", application.skin);
             } else {
-                nameLabel = new Label("Agent " + i, application.skin);
+                nameLabel = new Label("Player " + (i + 1), application.skin);
             }
             nameLabel.setFontScale(2);
             TextField nameField = new TextField("", application.skin);
@@ -59,14 +61,19 @@ public class PlayersScreen implements Screen {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ArrayList<String> names = new ArrayList<String>();
+                ArrayList<User> users = new ArrayList<>();
+                int userId = 0;
+
                 SnapshotArray<Actor> children = actor.getParent().getChildren();
+
                 for (Actor child : children) {
-                    if (child.getClass().equals(TextField.class)) {
-                        names.add(((TextField) child).getText());
+                    if (child instanceof TextField) {
+                        String userName = ((TextField) child).getText();
+                        users.add(new User(userId++, userName));
                     }
+
                 }
-                application.setScreen(new GameScreen(application, names));
+                application.setScreen(new GameScreen(application, users));
                 dispose();
             }
         });
