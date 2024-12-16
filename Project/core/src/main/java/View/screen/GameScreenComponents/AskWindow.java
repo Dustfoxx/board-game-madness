@@ -29,7 +29,7 @@ public class AskWindow extends Window {
     Table buttonTable;
     GameController gameController;
 
-    public AskWindow(Skin skin, NormalCell cell, GameController gameController) {
+    public AskWindow(Skin skin, GameController gameController) {
         super("Ask Win", skin);
         // Create the window
         this.setMovable(false);
@@ -54,6 +54,9 @@ public class AskWindow extends Window {
         // Add the message to the window
         Label messageLabel = new Label("Which feature do you want to ask about?", skin);
         this.add(messageLabel).pad(20).row();
+
+        // Get the cell of the current player
+        NormalCell cell = (NormalCell) gameController.getGame().getCurrentPlayerCell();
 
         // Create a button for the first feature
         Feature[] features = cell.getFeatures();
