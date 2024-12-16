@@ -32,7 +32,7 @@ public class Game {
     /**
      * Constructor to initialize a new game with a list of players, a game board,
      * and the starting player.
-     * 
+     *
      * @param players        The list of players participating in the game.
      * @param board          The game board.
      * @param startingPlayer The player who will start the game.
@@ -49,9 +49,6 @@ public class Game {
         }
         if (!players.contains(startingPlayer)) {
             throw new IllegalArgumentException("Starting player must be in the players list.");
-        }
-        if (users == null || users.isEmpty()) {
-            throw new IllegalArgumentException("Users list cannot be null or empty.");
         }
         this.gameOver = false;
         this.currentPlayer = startingPlayer;
@@ -70,7 +67,7 @@ public class Game {
 
     /**
      * Gets the current game over status.
-     * 
+     *
      * @return true if the game is over, false otherwise.
      */
     public boolean isGameOver() {
@@ -92,7 +89,7 @@ public class Game {
 
     /**
      * Gets the player whose turn it is currently.
-     * 
+     *
      * @return The current player.
      */
     public Player getCurrentPlayer() {
@@ -101,7 +98,7 @@ public class Game {
 
     /**
      * Sets the next player as the current player.
-     * 
+     *
      * @param nextPlayer The player to become the current player.
      */
     public void setCurrentPlayer(Player nextPlayer) {
@@ -113,7 +110,7 @@ public class Game {
 
     /**
      * Gets the current time in the game.
-     * 
+     *
      * @return The current time.
      */
     public int getCurrentTime() {
@@ -129,7 +126,7 @@ public class Game {
 
     /**
      * getter for max time, limit of rounds
-     * 
+     *
      * @return max round count
      */
     public int getMaxTime() {
@@ -138,7 +135,7 @@ public class Game {
 
     /**
      * getter for max recruits, the limit where recruiter wins
-     * 
+     *
      * @return max recruits as an int
      */
     public int getMaxRecruits() {
@@ -147,7 +144,7 @@ public class Game {
 
     /**
      * Gets the game board.
-     * 
+     *
      * @return The game board.
      */
     public Board getBoard() {
@@ -156,7 +153,7 @@ public class Game {
 
     /**
      * Gets the total amount of recruits reveald so far.
-     * 
+     *
      * @return The total amount of recruits reveald so far.
      */
     public int getAmountRecruited() {
@@ -169,7 +166,7 @@ public class Game {
 
     /**
      * Gets the history of revealed recruits.
-     * 
+     *
      * @return A list of revealed recruites as (time, amount) pairs.
      */
     public List<int[]> getRecruitHistory() {
@@ -178,7 +175,7 @@ public class Game {
 
     /**
      * Gets the amount recruited at a specific timestamp as a (time, amount) tuple.
-     * 
+     *
      * @param time the timestamp we wish to get
      * @return the tuple at given time, null if not found
      */
@@ -193,7 +190,7 @@ public class Game {
 
     /**
      * Adds the number of recruits revealed during the current round.
-     * 
+     *
      * @param amount The number of recruits revealed during current round.
      */
     public void addAmountRecruited(int amount) {
@@ -205,7 +202,7 @@ public class Game {
 
     /**
      * Gets the mind slip history.
-     * 
+     *
      * @return A list of times when mind slips were used.
      */
     public List<Integer> getMindSlipHistory() {
@@ -214,7 +211,7 @@ public class Game {
 
     /**
      * Adds a mind slip event to the mind slip history based on current time.
-     * 
+     *
      */
     public void addMindSlipEvent() {
 
@@ -229,7 +226,7 @@ public class Game {
 
     /**
      * Gets the list of players in the game.
-     * 
+     *
      * @return The list of players.
      */
     public List<Player> getPlayers() {
@@ -238,7 +235,7 @@ public class Game {
 
     /**
      * Gets the list of users in the game.
-     * 
+     *
      * @return The list of users.
      */
     public List<User> getUsers() {
@@ -247,7 +244,7 @@ public class Game {
 
     /**
      * Gets the current gamestate
-     * 
+     *
      * @return The corresponding enum for the current state of the game
      */
     public gameStates getGameState() {
@@ -256,7 +253,7 @@ public class Game {
 
     /**
      * Sets the gameState
-     * 
+     *
      * @param newState the new state of the game
      */
     public void setGameState(gameStates newState) {
@@ -282,7 +279,7 @@ public class Game {
 
     /**
      * Getter for movement variable
-     * 
+     *
      * @return if player can move or not
      */
     public boolean isMovementAvailable() {
@@ -291,7 +288,7 @@ public class Game {
 
     /**
      * Getter for action variable
-     * 
+     *
      * @return if player can use an action still or not
      */
     public boolean isActionAvailable() {
@@ -300,7 +297,7 @@ public class Game {
 
     /**
      * sets the movement variable
-     * 
+     *
      * @param value true if player should be able to move and false if they have
      *              just moved
      */
@@ -311,7 +308,7 @@ public class Game {
     /**
      * Sets the action variable. Different from what they are allowed to do, this is
      * meant to indicate if they have used an action this turn or not
-     * 
+     *
      * @param value true if player can make an action, false if they have used one.
      */
     public void setActionAvailability(boolean value) {
@@ -320,7 +317,7 @@ public class Game {
 
     /**
      * Gets the recruiter in the game.
-     * 
+     *
      * @return The recruiter
      */
     public Recruiter getRecruiter() {
