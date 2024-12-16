@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
 import Model.BrainFact;
@@ -29,15 +31,16 @@ public class VisualCell extends Actor {
     private TextureRegion step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
-
+    private Texture highlight = new Texture("highlight.png");
+    private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
-
     private Dictionary<Feature, Integer> features = new Hashtable<>();
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
     private Texture stepImg = new Texture("tokens_3d.png");
+    private boolean highlighted = false;
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -69,6 +72,7 @@ public class VisualCell extends Actor {
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
         setBounds(0, 0, 100, 100);
+        this.setTouchable(Touchable.disabled);
     }
 
     /**
@@ -77,6 +81,14 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
+
+        if (highlighted) {
+            this.setTouchable(Touchable.enabled);
+            highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
+        } else {
+            this.setTouchable(Touchable.disabled);
+        }
+
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         if (cellInfo instanceof NormalCell) {
             drawFeatures(batch);
@@ -225,5 +237,13 @@ public class VisualCell extends Actor {
                 sideSize * (playerNr - 1),
                 0,
                 sideSize, sideSize);
+    }
+
+    void highlightCell(boolean highlight) {
+        if (highlight) {
+            this.highlighted = true;
+        } else {
+            this.highlighted = false;
+        }
     }
 }
