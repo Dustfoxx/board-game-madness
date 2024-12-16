@@ -1,16 +1,19 @@
 package Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
+import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
+import Model.Token;
 import Model.Step;
 
 public class ActionController {
@@ -121,5 +124,63 @@ public class ActionController {
             newCell.addToken(new Step(timestamp));
         }
         return true;
+    }
+
+    /**
+     * Adds a brainnote to a cell, replaces it if one exists already
+     * 
+     * @param text  Text it should contain
+     * @param row   row of the brainnote
+     * @param col   column of the brainnote
+     * @param board board to add the note to
+     * @return true if the operation succeeded, false otherwise
+     */
+    public boolean addBrainNote(String newNote, int row, int col, Board board) {
+        AbstractCell cell = board.getCell(row, col);
+
+        for (Token token : cell.getTokens()) {
+            if (token instanceof BrainNote) {
+                if (newNote == "") {
+                    cell.removeToken(token);
+                } else {
+                    ((BrainNote) token).setNote(newNote);
+                }
+                return true;
+            }
+        }
+        try {
+            BrainNote brainNote = new BrainNote(newNote);
+            cell.addToken(brainNote);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Fetches the information of a cells brains
+     * 
+     * @param row   the row to fetch from
+     * @param col   the columns to fetch from
+     * @param board the board the notes exists on
+     * @return list of brains of a cell
+     */
+    public List<Token> fetchBrains(int row, int col, Board board) {
+        List<Token> tokens = board.getCell(row, col).getTokens();
+        List<Token> brains = new ArrayList<Token>();
+        boolean foundNote = false;
+        for (Token token : tokens) {
+            if (token instanceof BrainNote) {
+                brains.add(token);
+                foundNote = true;
+            } else if (token instanceof BrainFact) {
+                brains.add(token);
+            }
+        }
+        if (!foundNote) {
+            brains.add(new BrainNote(""));
+        }
+
+        return brains;
     }
 }

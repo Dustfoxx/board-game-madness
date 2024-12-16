@@ -26,7 +26,8 @@ public class GameController {
         ASK,
         REVEAL,
         CAPTURE,
-        MINDSLIP
+        MINDSLIP,
+        BRAINNOTE
     }
 
     /**
@@ -232,6 +233,17 @@ public class GameController {
                     int col = (int) additionalInfo[1];
                     actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), new int[] {row, col});
                     gameState.setMovementAvailability(false);
+                }
+                break;
+            case BRAINNOTE:
+                if (additionalInfo[0] instanceof String) {
+                    actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
+                            (Integer) additionalInfo[2],
+                            gameState.getBoard());
+                } else {
+                    gameState.setActiveBrains(
+                            actionController.fetchBrains((int) additionalInfo[0], (int) additionalInfo[1],
+                                    gameState.getBoard()));
                 }
                 break;
         }
