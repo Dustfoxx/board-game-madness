@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import Model.Game.gameStates;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,22 +44,26 @@ class GameTests {
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
-        game = new Game(players, board, player1);
+        game = new Game(players, new ArrayList<User>(), board, player1);
         game.setGameState(gameStates.ONGOING);
     }
 
     @Test
     void testGameConstructorValidation() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(null, board, player1),
+        assertThrows(IllegalArgumentException.class, () -> new Game(null, new ArrayList<User>(), board, player1),
                 "Constructor should throw an exception if players list is null.");
-        assertThrows(IllegalArgumentException.class, () -> new Game(Collections.emptyList(), board, player1),
+        assertThrows(IllegalArgumentException.class,
+                () -> new Game(Collections.emptyList(), new ArrayList<User>(), board, player1),
                 "Constructor should throw an exception if players list is empty.");
-        assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), null, player1),
+        assertThrows(IllegalArgumentException.class,
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), null, player1),
                 "Constructor should throw an exception if board is null.");
-        assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), board, null),
+        assertThrows(IllegalArgumentException.class,
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), board, null),
                 "Constructor should throw an exception if startingPlayer is null.");
         Player player3 = new RougeAgent(2, "Player 3");
-        assertThrows(IllegalArgumentException.class, () -> new Game(Arrays.asList(player1, player2), board, player3),
+        assertThrows(IllegalArgumentException.class,
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), board, player3),
                 "Constructor should throw an exception if startingPlayer is not in the players list.");
     }
 
