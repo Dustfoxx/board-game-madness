@@ -11,6 +11,7 @@ import Model.Footstep;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
+import Model.Step;
 
 public class ActionController {
 
@@ -107,10 +108,17 @@ public class ActionController {
             board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
         }
         // Add player to new cell
-        board.getCell(coords[0], coords[1]).addPlayer(player);
+        AbstractCell newCell = board.getCell(coords[0], coords[1]);
+        newCell.addPlayer(player);
+
         if (player instanceof Recruiter) {
+            // Add new cell to walked path
             Recruiter recruiter = (Recruiter) player;
             recruiter.addToWalkedPath(coords[0], coords[1]);
+            
+            // Add a Step to the cell
+            int timestamp = recruiter.getWalkedPath().size();
+            newCell.addToken(new Step(timestamp));
         }
         return true;
     }
