@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 public class GameControllerTests {
     Csv boardCsv;
-    ArrayList<String> names;
+    ArrayList<User> users;
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,12 @@ public class GameControllerTests {
         };
         boardCsv = mock(Csv.class);
         when(boardCsv.getData()).thenReturn(boardData);
-        names = new ArrayList<>(Arrays.asList("Name1", "Name2", "Name3", "Name4", "Name5"));
+        users = new ArrayList<>(Arrays.asList(
+                new User(0, "User1"),
+                new User(1, "User2"),
+                new User(2, "User3"),
+                new User(3, "User4"),
+                new User(4, "User5")));
     }
 
     @Test
@@ -35,7 +40,7 @@ public class GameControllerTests {
         GameController controller;
 
         // Act
-        controller = new GameController(boardCsv, names);
+        controller = new GameController(boardCsv, users);
 
         // Assert
         assertEquals(Recruiter.class, controller.getGame().getPlayers().get(0).getClass());
@@ -44,32 +49,31 @@ public class GameControllerTests {
     @Test
     public void testOnePlayer() {
         // Arrange
-        names = new ArrayList<String>(Arrays.asList("Name1"));
+        users = new ArrayList<>(Arrays.asList(new User(0, "User1")));
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(boardCsv, names));
+                () -> new GameController(boardCsv, users));
         // Assert
-        assertEquals("Must be more than 1 player", exception.getMessage());
+        assertEquals("Must be more than 1 user", exception.getMessage());
     }
 
     @Test
     public void testNoPlayers() {
         // Arrange
-        names = new ArrayList<String>();
+        users = new ArrayList<>();
 
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(boardCsv, names));
+                () -> new GameController(boardCsv, users));
 
         // Assert
-        assertEquals("Must be more than 1 player", exception.getMessage());
+        assertEquals("Must be more than 1 user", exception.getMessage());
     }
 
     @Test
     public void testTurnOrder() {
         // Arrange
-        GameController controller = new GameController(boardCsv, names);
-        names = new ArrayList<>(Arrays.asList("Name1", "Name2", "Name3"));
+        GameController controller = new GameController(boardCsv, users);
         List<Player> players = controller.getGame().getPlayers();
         controller.getGame().setGameState(gameStates.ONGOING);
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
@@ -91,7 +95,7 @@ public class GameControllerTests {
     @Test
     public void testNrOfTurns() {
         // Arrange
-        GameController controller = new GameController(boardCsv, names);
+        GameController controller = new GameController(boardCsv, users);
         controller.getGame().setGameState(gameStates.ONGOING);
 
         for (int i = 0; i < 6; i++) {
