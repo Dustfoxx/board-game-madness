@@ -11,6 +11,7 @@ import Model.Footstep;
 import Model.Recruiter;
 import Model.RougeAgent;
 import Model.TempleCell;
+import Model.Recruiter.RecruiterType;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,6 +51,7 @@ public class CheckActionTests {
         Recruiter mockedRecruiter = mock(Recruiter.class);
         when(mockedRecruiter.getId()).thenReturn(1);
         when(mockedRecruiter.getWalkedPath()).thenReturn(Arrays.asList(new int[] { 4, 3 }));
+        when(mockedRecruiter.getRecruiterType()).thenReturn(RecruiterType.HORIZONTAL);
 
         board.getCell(5, 3).addPlayer(mockedRecruiter);
 
@@ -66,6 +68,8 @@ public class CheckActionTests {
                 { false, false, false, true, false, false } };
 
         assertArrayEquals(expectedMask, mask);
+
+        when(mockedRecruiter.getRecruiterType()).thenReturn(RecruiterType.DIAGONAL);
 
         mask = checkAction.getValidMoves(mockedRecruiter, board);
 
