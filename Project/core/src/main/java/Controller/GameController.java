@@ -230,13 +230,18 @@ public class GameController {
                 break;
             case MOVE:
                 if (gameState.isMovementAvailable()) {
-                    // TODO: actionController.movePlayer(gameState.getCurrentPlayer(),
-                    // gameState.getBoard(), null,
-                    // new int[] { (int) additionalInfo[0], (int) additionalInfo[1] });
+                    int row = (int) additionalInfo[0];
+                    int col = (int) additionalInfo[1];
+                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), new int[] {row, col});
                     gameState.setMovementAvailability(false);
                 }
                 break;
         }
+
+        if(action != Actions.MOVE){
+            gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+        }
+        
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
