@@ -122,8 +122,44 @@ public class ActionController {
             // Add a Step to the cell
             int timestamp = recruiter.getWalkedPath().size();
             newCell.addToken(new Step(timestamp));
+
+            // Check for matching features and update recruited amount
+            AbstractCell currentCell= board.getCell(coords[0], coords[1]);
+            if(currentCell instanceof NormalCell){
+                NormalCell normalCell = (NormalCell) currentCell;
+                Feature[] features = normalCell.getFeatures();
+                Feature[] featuresOfInterest = recruiter.getFeaturesOfInterest();
+                int commonFeaturesCount = countMatchingFeatures(features, featuresOfInterest);
+                recruiter.addAmountRecruited(commonFeaturesCount);
+            }
         }
         return true;
+    }
+
+    /**
+     * Counts the number of matching features between two arrays of {@link Feature}.
+     *
+     * The iteration stop  if two matches are already found
+     * since the maximum number of matching features is 2.
+     *
+     * @param features             
+     * @param featuresOfInterest
+     * @return The number of matching features, up to a maximum of 2.
+     */
+    private int countMatchingFeatures(Feature[] features, Feature[] featuresOfInterest) {
+        int count = 0;
+        for (Feature feature : features) {
+            for (Feature featureOfInterest : featuresOfInterest) {
+                if (feature == featureOfInterest) {
+                    count++;
+                    break;
+                }
+            }
+            if (count == 2) {
+                return count;
+            }
+        }
+        return count;
     }
 
     /**
