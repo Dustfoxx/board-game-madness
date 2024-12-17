@@ -73,7 +73,6 @@ public class VisualCell extends Actor {
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
         setBounds(0, 0, 100, 100);
-        // this.setTouchable(Touchable.disabled);
     }
 
     /**
@@ -103,7 +102,7 @@ public class VisualCell extends Actor {
      * @param batch the batch currently being composed
      */
     private void drawFeatures(Batch batch) {
-        float featureSize= getWidth() / 2;
+        float featureSize = getWidth() / 2;
 
         float feature1XPos = getX();
         float feature1YPos = getY() + getHeight() - featureSize;
@@ -240,6 +239,6 @@ public class VisualCell extends Actor {
     }
 
     void highlightCell(boolean highlight) {
-            this.highlighted.setBoolean(highlight);
+        this.highlighted.setBoolean(highlight);
     }
 }
