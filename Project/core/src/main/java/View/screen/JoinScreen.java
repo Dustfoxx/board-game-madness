@@ -1,15 +1,16 @@
 package View.screen;
 
 import View.buildingBlocks.MindMGMTStage;
+import View.screen.CommonComponents.ErrorWindow;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,30 +19,55 @@ import io.github.MindMGMT.MindMGMT;
 public class JoinScreen implements Screen {
     private final MindMGMT application;
     private final MindMGMTStage stage;
-
-    private String name;
-    private String code;
-
+    private final Net.HttpResponseListener responseListener;
+    private final ErrorWindow errorWindow;
+    private boolean joined = false;
 
     public JoinScreen(MindMGMT application) {
         this.application = application;
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
-
-        this.name = "";
-        this.code = "";
+        this.responseListener = getResponseListener();
+        this.errorWindow = new ErrorWindow("Error", application.skin);
 
         setupUI();
         Gdx.input.setInputProcessor(stage);
     }
 
+    private Net.HttpResponseListener getResponseListener() {
+        return new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
+                    joined = true;
+                } else if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+                    errorWindow.setMessage(httpResponse.getResultAsString());
+                    stage.addActor(errorWindow);
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                errorWindow.setMessage(t.getMessage());
+                stage.addActor(errorWindow);
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        };
+    }
+
     private void setupUI() {
+        this.errorWindow.setSize(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getHeight() / 4f);
+
         Table root = new Table();
         root.setFillParent(true);
 
         Label nameLabel = new Label("Enter your name here:", application.skin);
-        TextField nameField = new TextField(name, application.skin);
+        TextField nameField = new TextField("", application.skin);
         Label codeLabel = new Label("Enter your code here:", application.skin);
-        TextField codeField = new TextField(code, application.skin);
+        TextField codeField = new TextField("", application.skin);
 
         TextButton backButton = new TextButton("Back", application.skin);
         backButton.addListener(new ChangeListener() {
@@ -56,7 +82,14 @@ public class JoinScreen implements Screen {
         joinButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                application.setScreen(new SetupScreen(application));
+                HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+                Net.HttpRequest httpRequest = requestBuilder
+                    .newRequest()
+                    .method(Net.HttpMethods.POST)
+                    .url("http://localhost:8080/register")
+                    .content(nameField.getText())
+                    .build();
+                Gdx.net.sendHttpRequest(httpRequest, responseListener);
             }
         });
 
@@ -86,6 +119,11 @@ public class JoinScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+
+        if (joined) {
+            String hostName = null; // to indicate that we are not the host
+            application.setScreen(new LobbyScreen(application, hostName));
+        }
     }
 
     @Override

@@ -1,7 +1,9 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Recruiter class represents a player collecting recruits.
@@ -124,5 +126,34 @@ public class Recruiter extends Player {
      */
     public RecruiterType getRecruiterType() {
         return this.chosenRecruiter;
+    }
+
+    @Override
+    public String toString() {
+        return "Recruiter{" +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", amountRecruited=" + amountRecruited +
+                ", walkedPath=" + walkedPath +
+                ", featuresOfInterest=" + Arrays.toString(featuresOfInterest) +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o))
+            return false;
+        Recruiter recruiter = (Recruiter) o;
+        return amountRecruited == recruiter.amountRecruited &&
+                Objects.equals(walkedPath, recruiter.walkedPath) &&
+                Arrays.deepEquals(featuresOfInterest, recruiter.featuresOfInterest);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Objects.hash(amountRecruited, walkedPath);
+        result = 31 * result + Arrays.hashCode(featuresOfInterest);
+        return result;
     }
 }

@@ -34,23 +34,20 @@ public class VisualBoard {
 
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
-                VisualCell cell = new VisualCell(boardInfo.getCell(i, j));
+                VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j]);
                 cell.setName(i + "" + j);
 
                 // This is for movement actions
                 cell.addListener(new ClickListener(Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println("Leftclick");
                         int[] cellCoords = getCellClicked(event);
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
-                        dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println("rightClick");
                         int[] cellCoords = getCellClicked(event);
                         BrainWindow brainNoteWindow = new BrainWindow(
                                 gameInfo.actionHandler(Actions.BRAINNOTE,
@@ -80,7 +77,6 @@ public class VisualBoard {
     public Table getVisualBoard() {
         return this.board;
     }
-
     public void highlightValidCells(boolean[][] mask) {
         int rows = mask.length;
         int cols = mask[0].length;
@@ -92,17 +88,6 @@ public class VisualBoard {
                     if (cell != null) {
                         cell.highlightCell(true);
                     }
-                }
-            }
-        }
-    }
-
-    private void dehighlightValidCells(int dimx, int dimy) {
-        for (int i = 0; i < dimx; i++) {
-            for (int j = 0; j < dimy; j++) {
-                VisualCell cell = getVisualCell(i, j);
-                if (cell != null) {
-                    cell.highlightCell(false);
                 }
             }
         }

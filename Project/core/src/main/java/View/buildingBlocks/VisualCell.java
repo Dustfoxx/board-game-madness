@@ -2,7 +2,6 @@ package View.buildingBlocks;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
@@ -18,6 +16,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
 import Model.Token;
@@ -34,13 +33,13 @@ public class VisualCell extends Actor {
     private Texture highlight = new Texture("highlight.png");
     private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
-    private Dictionary<Feature, Integer> features = new Hashtable<>();
+    private Dictionary<Feature, Integer> features;
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
     private Texture stepImg = new Texture("tokens_3d.png");
-    private boolean highlighted = false;
+    private MutableBoolean highlighted;
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -48,9 +47,10 @@ public class VisualCell extends Actor {
      *
      * @param cellInfo a single cell on the board. contains players and more
      */
-    public VisualCell(AbstractCell cellInfo) {
+    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean) {
         initDict();
         this.cellInfo = cellInfo;
+        this.highlighted = mutableBoolean;
         if (cellInfo instanceof NormalCell) {
             NormalCell convertedCell = (NormalCell) cellInfo;
             Feature[] features = convertedCell.getFeatures();
@@ -72,7 +72,6 @@ public class VisualCell extends Actor {
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
         setBounds(0, 0, 100, 100);
-        this.setTouchable(Touchable.disabled);
     }
 
     /**
@@ -81,12 +80,8 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
-
-        if (highlighted) {
-            this.setTouchable(Touchable.enabled);
+        if (highlighted.getBoolean()) {
             highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
-        } else {
-            this.setTouchable(Touchable.disabled);
         }
 
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
@@ -106,7 +101,7 @@ public class VisualCell extends Actor {
      * @param batch the batch currently being composed
      */
     private void drawFeatures(Batch batch) {
-        float featureSize= getWidth() / 2;
+        float featureSize = getWidth() / 2;
 
         float feature1XPos = getX();
         float feature1YPos = getY() + getHeight() - featureSize;
@@ -185,46 +180,25 @@ public class VisualCell extends Actor {
     }
 
     /**
-     * Dictionary to fetch the proper feature from the texture based on feature name
+     * Initializes the feature dictionary by loading feature mappings.
+     * This dictionary maps each {@link Feature} to its corresponding index in the texture.
+     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate the mapping.
      */
     private void initDict() {
-        features.put(Feature.BOOKSTORE, 0);
-        features.put(Feature.BUS, 1);
-        features.put(Feature.BILLBOARD, 2);
-        features.put(Feature.PARROT, 3);
-        features.put(Feature.FOUNTAIN, 4);
-        features.put(Feature.TREE, 5);
-        features.put(Feature.POOL, 6);
-        features.put(Feature.UMBRELLA, 7);
-        features.put(Feature.IDOL, 8);
-        features.put(Feature.TORCHES, 9);
-        features.put(Feature.GARDEN, 10);
-        features.put(Feature.COFFEE, 11);
-        features.put(Feature.MONKS, 12);
-        features.put(Feature.DOGS, 13);
-        features.put(Feature.COURIER, 14);
-        features.put(Feature.GRAFFITI, 15);
+        this.features=FeatureUtil.initializeFeatureDict();
     }
 
     /**
      * fetches a feature as a textureregion from the main file. Currently using
      * magic numbers to separate them. Should be replaced by atlas
      *
-     * @param feature Feature to be fetched
-     * @return a textureregion containing the feature
+     * @param feature The {@link Feature} to be fetched from the texture.
+     * @return A {@link TextureRegion} containing the image of the specified feature.
+     * @throws IllegalArgumentException If the texture file is missing or the feature is invalid.
      */
     public TextureRegion fetchFeature(Feature feature) {
-        int sideSize = 873 / 4;
-        if (feature != null) {
-            return new TextureRegion(featuresImg,
-                    sideSize * (features.get(feature) % 4),
-                    sideSize * (int) (Math.floor(features.get(feature) / 4)),
-                    sideSize, sideSize);
-        }
-        return new TextureRegion(new Texture("feature_img.png"),
-                0,
-                0,
-                sideSize, sideSize);
+        this.featuresImg = new Texture("feature_img.png");
+        return FeatureUtil.fetchFeature(featuresImg, features, feature);
     }
 
     /**
@@ -243,10 +217,6 @@ public class VisualCell extends Actor {
     }
 
     void highlightCell(boolean highlight) {
-        if (highlight) {
-            this.highlighted = true;
-        } else {
-            this.highlighted = false;
-        }
+        this.highlighted.setBoolean(highlight);
     }
 }

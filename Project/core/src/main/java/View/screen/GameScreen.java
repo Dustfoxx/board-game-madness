@@ -17,13 +17,13 @@ import Model.User;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
-import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import View.screen.GameScreenComponents.RecruiterWindow;
 import View.buildingBlocks.MindMGMTStage;
 import View.screen.GameScreenComponents.SettingWindow;
 import View.screen.GameScreenComponents.TurnBar;
+import View.screen.GameScreenComponents.FeatureSelection;
 
 import java.util.ArrayList;
 
@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     private final TurnBar turnBar;
     private final SettingWindow settingWindow;
     private VisualBoard visualBoard;
+    private final FeatureSelection featureSelection;
 
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
@@ -46,9 +47,15 @@ public class GameScreen implements Screen {
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users);
+
+        if (application.server != null) {
+            // We are host
+            application.server.setGameState(this.gameController.getGame());
+        }
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
+        this.featureSelection = new FeatureSelection(gameController, skin);
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }
@@ -92,6 +99,7 @@ public class GameScreen implements Screen {
 
         Table mindslipBar = new Table();
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
+        mindslipBar.add(featureSelection).expand().fill();
 
         this.visualBoard = new VisualBoard(gameController, skin);
         Table boardSection = this.visualBoard.getVisualBoard();
@@ -111,10 +119,7 @@ public class GameScreen implements Screen {
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
-        MoveButton moveButton = new MoveButton(gameController, skin, visualBoard);
-
         actionBar.add(askButton).expand();
-        actionBar.add(moveButton).expand();
 
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);

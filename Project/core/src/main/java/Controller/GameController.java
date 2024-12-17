@@ -5,6 +5,8 @@ import Model.Game.gameStates;
 import Model.Recruiter.RecruiterType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GameController {
@@ -20,6 +22,7 @@ public class GameController {
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
     private ActionController actionController;
+    private CheckAction checkAction;
     private final int playerPieceAmount = 5;
 
     public enum Actions {
@@ -49,6 +52,7 @@ public class GameController {
         List<RougeAgent> agents = new ArrayList<>();
 
         this.actionController = new ActionController();
+        this.checkAction = new CheckAction();
 
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
@@ -95,9 +99,17 @@ public class GameController {
         }
 
         List<Player> players = new ArrayList<>();
-        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
+
+        // Randomly select three unique features
+        List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));
+        Collections.shuffle(allFeaturesList);
+        Feature[] recruiterFeatures = new Feature[3];
+        for (int i = 0; i < 3; i++) {
+            recruiterFeatures[i] = allFeaturesList.get(i);
+        }
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
+
         players.add(recruiter);
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));
@@ -146,6 +158,8 @@ public class GameController {
             default:
                 break;
         }
+
+        gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
 
     }
 
@@ -247,9 +261,13 @@ public class GameController {
                 if (gameState.isMovementAvailable()) {
                     int row = (int) additionalInfo[0];
                     int col = (int) additionalInfo[1];
-                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState,
+
+                    boolean didMove = actionController.movePlayer(gameState.getCurrentPlayer(), gameState,
                             new int[] { row, col });
-                    gameState.setMovementAvailability(false);
+                    if (didMove) {
+                        gameState.setValidityMask(checkAction.createUniformMask(gameState.getBoard(), false));
+                        gameState.setMovementAvailability(false);
+                    }
                 }
                 break;
             case RECRUITERCHOICE:

@@ -15,7 +15,7 @@
 
   <!-- "Inherits" lines are how GWT knows where to look for code and configuration in other projects or libraries. -->
   <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
-  <inherits name="io.github.MindMGMT.Main" />
+  <inherits name="io.github.MindMGMT.MindMGMT" />
 
   <!-- You must change this if you rename packages later, or rename GwtLauncher. -->
   <entry-point class="io.github.MindMGMT.gwt.GwtLauncher" />

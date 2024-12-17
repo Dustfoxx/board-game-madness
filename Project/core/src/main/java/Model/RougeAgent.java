@@ -23,4 +23,12 @@ public class RougeAgent extends Player {
     public RougeAgent(int id, String name) {
         super(id, name); // Call the parent constructor to set the ID and name
     }
+
+    @Override
+    public String toString() {
+        return "RougeAgent{" +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                '}';
+    }
 }

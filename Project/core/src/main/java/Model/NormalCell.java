@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Arrays;
+
 /**
  * The NormalCell class represents a cell or normal type on the game board.
  * Each normal cell can hold a list of players, tokens, and features.
@@ -40,5 +42,29 @@ public class NormalCell extends AbstractCell {
      */
     public Feature[] getFeatures() {
         return features;
+    }
+
+    @Override
+    public String toString() {
+        return "NormalCell{" +
+                "features=" + Arrays.toString(features) +
+                ", players=" + players +
+                ", tokens=" + tokens +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o))
+            return false;
+        NormalCell cell = (NormalCell) o;
+        return Arrays.deepEquals(features, cell.features);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Arrays.hashCode(features);
+        return result;
     }
 }
