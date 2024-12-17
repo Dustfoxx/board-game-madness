@@ -5,6 +5,8 @@ import Model.Game.gameStates;
 import Model.Recruiter.RecruiterType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GameController {
@@ -95,9 +97,17 @@ public class GameController {
         }
 
         List<Player> players = new ArrayList<>();
-        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
+
+        // Randomly select three unique features
+        List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));        
+        Collections.shuffle(allFeaturesList);        
+        Feature[] recruiterFeatures = new Feature[3];
+        for (int i = 0; i < 3; i++) {
+            recruiterFeatures[i] = allFeaturesList.get(i);
+        }
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
+        
         players.add(recruiter);
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));

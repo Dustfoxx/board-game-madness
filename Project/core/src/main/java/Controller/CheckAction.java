@@ -55,19 +55,10 @@ public class CheckAction {
      * @param maxVal   What the maximum possible coordinate is
      * @return Returns an array of three integers
      */
-    private int[] getCoordRange(int location, int maxVal) {
-        int[] range = { 0, 0 };
-
-        if (location != 0) {
-            range[0] = location - 1;
-        }
-        if (location < maxVal) {
-            range[1] = location + 1;
-        } else {
-            range[1] = maxVal;
-        }
-
-        return range;
+    private int[] getCoordRange(int location, int maxBound) {
+        int start = Math.max(0, location - 1);
+        int end = Math.min(location + 1, maxBound - 1);
+        return new int[] { start, end };
     }
 
     /**
@@ -255,7 +246,7 @@ public class CheckAction {
      * @param board board is only needed for size
      * @return mask for valid placements of agents
      */
-    public boolean[][] getValidPlacements(Board board) {
+    public boolean[][] getValidPlacements(Player currentPlayer, Board board) {
         int[] dims = board.getDims();
 
         boolean[][] mask = new boolean[dims[0]][dims[1]];
@@ -263,7 +254,7 @@ public class CheckAction {
 
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
-                value = false;
+                value = currentPlayer instanceof Recruiter ? false : true;
                 if (i == 0 || i == dims[0] - 1) {
                     value = true;
                 } else if (j == 0 || j == dims[1] - 1) {
@@ -274,7 +265,6 @@ public class CheckAction {
         }
 
         return mask;
-
     }
 
     /**

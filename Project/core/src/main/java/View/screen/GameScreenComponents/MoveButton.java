@@ -26,7 +26,7 @@ public class MoveButton extends TextButton {
                 Player currentPlayer = gameController.getGame().getCurrentPlayer();
                 boolean[][] validMoves;
                 if (gameController.getGame().getBoard().getPlayerCoord(currentPlayer) == null) {
-                    validMoves = checkAction.getValidPlacements(gameController.getGame().getBoard());
+                    validMoves = checkAction.getValidPlacements(currentPlayer, gameController.getGame().getBoard());
                 } else {
                     validMoves = checkAction.getValidMoves(currentPlayer,
                             gameController.getGame().getBoard());
