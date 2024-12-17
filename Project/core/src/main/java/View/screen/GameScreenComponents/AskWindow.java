@@ -19,6 +19,7 @@ import Controller.GameController.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import Model.Feature;
+import Model.MutableBoolean;
 import Model.NormalCell;
 import View.buildingBlocks.VisualCell;
 
@@ -63,7 +64,7 @@ public class AskWindow extends Window {
 
         for (Feature feature : features) {
             // Get the feature image
-            VisualCell visualCell = new VisualCell(cell);
+            VisualCell visualCell = new VisualCell(cell, new MutableBoolean());
             TextureRegion featureTexture = visualCell.fetchFeature(feature);
             // Create an ImageButton based on the feature image
             TextureRegionDrawable drawable = new TextureRegionDrawable(featureTexture);

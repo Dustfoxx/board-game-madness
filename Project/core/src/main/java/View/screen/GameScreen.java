@@ -17,7 +17,6 @@ import Model.User;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
-import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import View.screen.GameScreenComponents.RecruiterWindow;
@@ -115,10 +114,7 @@ public class GameScreen implements Screen {
 
         // Create an ask button
         AskButton askButton = new AskButton(gameController, skin);
-        MoveButton moveButton = new MoveButton(gameController, skin, visualBoard);
-
         actionBar.add(askButton).expand();
-        actionBar.add(moveButton).expand();
 
         // Create a reveal button
         RevealButton revealButton = new RevealButton(gameController, skin);

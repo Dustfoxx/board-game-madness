@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import Controller.CheckAction;
+
 /**
  * The Game class is the top-level class in the game model hierarchy.
  * It oversees and manages the overall game state.
@@ -30,6 +32,8 @@ public class Game {
     private List<User> users; // The list of users connected to the game
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
+    private MutableBoolean[][] validityMask;
+    private CheckAction checkAction;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -66,6 +70,8 @@ public class Game {
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
         this.isMovementAvailable = true;
+        this.checkAction = new CheckAction();
+        this.validityMask = checkAction.createUniformMask(board, true);
     }
 
     /**
@@ -334,6 +340,32 @@ public class Game {
      */
     public void setActionAvailability(boolean value) {
         this.isActionAvailable = value;
+    }
+
+    /**
+     * Sets the validitymask for the board
+     */
+    public void setValidityMask(MutableBoolean[][] mask) {
+        int[] boardDims = board.getDims();
+        if (boardDims[0] != mask.length || boardDims[1] != mask[0].length) {
+            throw new IllegalArgumentException("Size mismatch between mask and board.");
+        } else {
+            for (int i = 0; i < boardDims[0]; i++) {
+                for (int j = 0; j < boardDims[1]; j++) {
+                    validityMask[i][j].setBoolean(mask[i][j].getBoolean());
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the validitymask for the board
+     * 
+     * @return matrix of booleans. True where player can move and false where they
+     *         cannc
+     */
+    public MutableBoolean[][] getValidityMask() {
+        return this.validityMask;
     }
 
     /**

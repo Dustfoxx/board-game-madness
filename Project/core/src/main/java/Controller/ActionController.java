@@ -110,53 +110,60 @@ public class ActionController {
     public boolean movePlayer(Player player, Game gameState, int[] coords) {
         // Did player choose a valid location?
         // If player on board
-        Board board = gameState.getBoard();
-        int[] playerCoords = board.getPlayerCoord(player);
+        int[] playerCoords = gameState.getBoard().getPlayerCoord(player);
 
-        if (playerCoords != null) {
-            board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
-
-            // If recruiter and new spot is two steps away then it was a mindslipmove
-            if (player instanceof Recruiter && (Math.abs(playerCoords[0] - coords[0]) > 1
-                    || Math.abs(playerCoords[1] - coords[1]) > 1)) {
-                Recruiter tmpRecruiter = (Recruiter) player;
-                tmpRecruiter.setRecruiterType(RecruiterType.USED);
-                gameState.addMindSlipEvent();
-            }
-        }
         // Add player to new cell
-        AbstractCell newCell = board.getCell(coords[0], coords[1]);
-        newCell.addPlayer(player);
 
-        if (player instanceof Recruiter) {
-            // Add new cell to walked path
-            Recruiter recruiter = (Recruiter) player;
-            recruiter.addToWalkedPath(coords[0], coords[1]);
+        // Checks whether the new cell is within allowed area
+        if (gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()) {
+            // If player is on the board
+            if (playerCoords != null) {
+                // Remove player from current position
+                gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
 
-            // Add a Step to the cell
-            int timestamp = recruiter.getWalkedPath().size();
-            newCell.addToken(new Step(timestamp));
-
-            // Check for matching features and update recruited amount
-            AbstractCell currentCell= board.getCell(coords[0], coords[1]);
-            if(currentCell instanceof NormalCell){
-                NormalCell normalCell = (NormalCell) currentCell;
-                Feature[] features = normalCell.getFeatures();
-                Feature[] featuresOfInterest = recruiter.getFeaturesOfInterest();
-                int commonFeaturesCount = countMatchingFeatures(features, featuresOfInterest);
-                recruiter.addAmountRecruited(commonFeaturesCount);
+                // If recruiter and new spot is two steps away then it was a mindslipmove
+                if (player instanceof Recruiter && (Math.abs(playerCoords[0] - coords[0]) > 1
+                        || Math.abs(playerCoords[1] - coords[1]) > 1)) {
+                    Recruiter tmpRecruiter = (Recruiter) player;
+                    tmpRecruiter.setRecruiterType(RecruiterType.USED);
+                    gameState.addMindSlipEvent();
+                }
             }
+            AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
+            newCell.addPlayer(player);
+
+            if (player instanceof Recruiter) {
+                // Add new cell to walked path
+                Recruiter recruiter = (Recruiter) player;
+                recruiter.addToWalkedPath(coords[0], coords[1]);
+
+                // Add a Step to the cell
+                int timestamp = recruiter.getWalkedPath().size();
+                newCell.addToken(new Step(timestamp));
+
+                // Check for matching features and update recruited amount
+                AbstractCell currentCell = gameState.getBoard().getCell(coords[0], coords[1]);
+                if (currentCell instanceof NormalCell) {
+                    NormalCell normalCell = (NormalCell) currentCell;
+                    Feature[] features = normalCell.getFeatures();
+                    Feature[] featuresOfInterest = recruiter.getFeaturesOfInterest();
+                    int commonFeaturesCount = countMatchingFeatures(features, featuresOfInterest);
+                    recruiter.addAmountRecruited(commonFeaturesCount);
+                }
+            }
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     /**
      * Counts the number of matching features between two arrays of {@link Feature}.
      *
-     * The iteration stop  if two matches are already found
+     * The iteration stop if two matches are already found
      * since the maximum number of matching features is 2.
      *
-     * @param features             
+     * @param features
      * @param featuresOfInterest
      * @return The number of matching features, up to a maximum of 2.
      */

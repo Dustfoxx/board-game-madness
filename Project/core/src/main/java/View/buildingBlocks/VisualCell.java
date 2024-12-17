@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
@@ -17,6 +16,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
 import Model.Token;
@@ -39,7 +39,7 @@ public class VisualCell extends Actor {
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
     private Texture stepImg = new Texture("tokens_3d.png");
-    private boolean highlighted = false;
+    private MutableBoolean highlighted;
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -47,9 +47,10 @@ public class VisualCell extends Actor {
      *
      * @param cellInfo a single cell on the board. contains players and more
      */
-    public VisualCell(AbstractCell cellInfo) {
+    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean) {
         initDict();
         this.cellInfo = cellInfo;
+        this.highlighted = mutableBoolean;
         if (cellInfo instanceof NormalCell) {
             NormalCell convertedCell = (NormalCell) cellInfo;
             Feature[] features = convertedCell.getFeatures();
@@ -71,7 +72,6 @@ public class VisualCell extends Actor {
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
         setBounds(0, 0, 100, 100);
-        this.setTouchable(Touchable.disabled);
     }
 
     /**
@@ -80,12 +80,8 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
-
-        if (highlighted) {
-            this.setTouchable(Touchable.enabled);
+        if (highlighted.getBoolean()) {
             highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
-        } else {
-            this.setTouchable(Touchable.disabled);
         }
 
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
@@ -105,7 +101,7 @@ public class VisualCell extends Actor {
      * @param batch the batch currently being composed
      */
     private void drawFeatures(Batch batch) {
-        float featureSize= getWidth() / 2;
+        float featureSize = getWidth() / 2;
 
         float feature1XPos = getX();
         float feature1YPos = getY() + getHeight() - featureSize;
@@ -221,10 +217,6 @@ public class VisualCell extends Actor {
     }
 
     void highlightCell(boolean highlight) {
-        if (highlight) {
-            this.highlighted = true;
-        } else {
-            this.highlighted = false;
-        }
+        this.highlighted.setBoolean(highlight);
     }
 }
