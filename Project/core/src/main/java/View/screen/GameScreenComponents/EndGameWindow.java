@@ -8,12 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import Model.Game;
+import Model.Game.gameStates;
 import View.screen.MainMenuScreen;
 import io.github.MindMGMT.MindMGMT;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class EndGameWindow extends Window {
+
+    Game gameState;
+    Label messageLabel;
 
     public EndGameWindow(Game gameState, Skin skin, MindMGMT application) {
         super("EndGame Window", skin);
@@ -22,10 +26,11 @@ public class EndGameWindow extends Window {
         this.setMovable(false);
         this.setResizable(false);
         this.setModal(true);
+        this.gameState = gameState;
 
         // Add a message to the window
         String message = gameState.getWinner() + " Wins!";
-        Label messageLabel = new Label(message, skin);
+        this.messageLabel = new Label(message, skin);
         messageLabel.setFontScale(2f);
         this.add(messageLabel).pad(20).row();
 
@@ -45,6 +50,11 @@ public class EndGameWindow extends Window {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha); // Important
+        this.toBack();
+        this.messageLabel.setText(gameState.getWinner() + " Wins!");
+        if (gameState.getGameState() == gameStates.ENDGAME) {
+            this.toFront();
+            super.draw(batch, parentAlpha); // Important
+        }
     }
 }

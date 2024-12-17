@@ -251,6 +251,11 @@ public class GameController {
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
                         gameState.getBoard());
+                // If Recruiter captured set gameOver
+                if (returnValue) {
+                    gameState.setGameOver();
+                }
+
                 gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
 
                 break;

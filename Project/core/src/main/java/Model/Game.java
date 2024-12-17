@@ -92,12 +92,12 @@ public class Game {
     public void setGameOver() {
         if (!gameOver) {
             this.gameOver = true;
-            setGameState(gameStates.ENDGAME);
             if (this.currentTime >= this.maxTime || this.getAmountRecruited() >= this.maxRecruits) {
                 winner = "Recruiter";
             } else {
                 winner = "Rogue Agents";
             }
+            setGameState(gameStates.ENDGAME);
         } else {
             throw new IllegalStateException("The game is already over.");
         }
