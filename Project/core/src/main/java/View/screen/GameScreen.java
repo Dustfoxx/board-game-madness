@@ -20,6 +20,7 @@ import View.screen.GameScreenComponents.CaptureButton;
 import View.screen.GameScreenComponents.MoveButton;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
+import View.screen.GameScreenComponents.RecruiterWindow;
 import View.buildingBlocks.MindMGMTStage;
 import View.screen.GameScreenComponents.SettingWindow;
 import View.screen.GameScreenComponents.TurnBar;
@@ -40,7 +41,7 @@ public class GameScreen implements Screen {
     private VisualBoard visualBoard;
     private final FeatureSelection featureSelection;
 
-    public GameScreen(MindMGMT application,  ArrayList<User> users) {
+    public GameScreen(MindMGMT application, ArrayList<User> users) {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
@@ -63,6 +64,12 @@ public class GameScreen implements Screen {
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
+        RecruiterWindow recruiterWindow = new RecruiterWindow(skin, gameController.getGame().getRecruiter(),
+                gameController);
+        recruiterWindow.setPosition(
+                Gdx.graphics.getWidth() / 2 - recruiterWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2 - recruiterWindow.getHeight() / 2);
+        stage.addActor(recruiterWindow);
     }
 
     private void setupSettings(Table root) {

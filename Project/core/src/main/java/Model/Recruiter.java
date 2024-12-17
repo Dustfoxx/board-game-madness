@@ -12,7 +12,14 @@ import java.util.Objects;
  */
 public class Recruiter extends Player {
 
+    public enum RecruiterType {
+        HORIZONTAL,
+        DIAGONAL,
+        USED
+    }
+
     private int amountRecruited; // The number of new unrevealed recruits
+    private RecruiterType chosenRecruiter;
     private List<int[]> walkedPath; // A list of coordinates of the cells the recruiter has walked through ordered
                                     // from first step to last step.
     private Feature[] featuresOfInterest; // An array of the 3 features that the recruiter is interested in
@@ -101,6 +108,24 @@ public class Recruiter extends Player {
      */
     public Feature[] getFeaturesOfInterest() {
         return featuresOfInterest;
+    }
+
+    /**
+     * Sets the chosen recruiter for this game
+     * 
+     * @param newType the new recruitertype. Set used to disable MINDSLIP
+     */
+    public void setRecruiterType(RecruiterType newType) {
+        this.chosenRecruiter = newType;
+    }
+
+    /**
+     * Gets the recruitertype of this recruiter
+     * 
+     * @return the chosenRecruiter of this instance
+     */
+    public RecruiterType getRecruiterType() {
+        return this.chosenRecruiter;
     }
 
     @Override

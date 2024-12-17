@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java.lang.Math;
+
 import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.Game;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
 import Model.Token;
+import Model.Recruiter.RecruiterType;
 import Model.Step;
 
 public class ActionController {
@@ -103,12 +107,22 @@ public class ActionController {
      * @param coords       coordinates the player will be placed on
      * @return boolean defining if the action was successful or not
      */
-    public boolean movePlayer(Player player, Board board, int[] coords) {
+    public boolean movePlayer(Player player, Game gameState, int[] coords) {
         // Did player choose a valid location?
         // If player on board
+        Board board = gameState.getBoard();
         int[] playerCoords = board.getPlayerCoord(player);
+
         if (playerCoords != null) {
             board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+
+            // If recruiter and new spot is two steps away then it was a mindslipmove
+            if (player instanceof Recruiter && (Math.abs(playerCoords[0] - coords[0]) > 1
+                    || Math.abs(playerCoords[1] - coords[1]) > 1)) {
+                Recruiter tmpRecruiter = (Recruiter) player;
+                tmpRecruiter.setRecruiterType(RecruiterType.USED);
+                gameState.addMindSlipEvent();
+            }
         }
         // Add player to new cell
         AbstractCell newCell = board.getCell(coords[0], coords[1]);
@@ -118,7 +132,7 @@ public class ActionController {
             // Add new cell to walked path
             Recruiter recruiter = (Recruiter) player;
             recruiter.addToWalkedPath(coords[0], coords[1]);
-            
+
             // Add a Step to the cell
             int timestamp = recruiter.getWalkedPath().size();
             newCell.addToken(new Step(timestamp));

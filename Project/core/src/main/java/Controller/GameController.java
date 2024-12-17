@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Model.Game.gameStates;
+import Model.Recruiter.RecruiterType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class GameController {
         REVEAL,
         CAPTURE,
         MINDSLIP,
+        RECRUITERCHOICE,
         BRAINNOTE
     }
 
@@ -244,9 +246,13 @@ public class GameController {
                 if (gameState.isMovementAvailable()) {
                     int row = (int) additionalInfo[0];
                     int col = (int) additionalInfo[1];
-                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), new int[] {row, col});
+                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState,
+                            new int[] { row, col });
                     gameState.setMovementAvailability(false);
                 }
+                break;
+            case RECRUITERCHOICE:
+                getGame().getRecruiter().setRecruiterType((RecruiterType) additionalInfo[0]);
                 break;
             case BRAINNOTE:
                 if (additionalInfo[0] instanceof String) {
@@ -261,10 +267,10 @@ public class GameController {
                 break;
         }
 
-        if(action != Actions.MOVE){
+        if (action != Actions.MOVE) {
             gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         }
-        
+
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
