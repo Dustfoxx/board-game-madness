@@ -28,8 +28,7 @@ public class CaptureButton extends TextButton {
 
                 // Perform the capture
                 boolean wasCaptureSuccessful = gameController.actionHandler(Actions.CAPTURE);
-                System.out.println("Got here");
-
+                
                 // Create a window displaying the result
                 CaptureWindow window = new CaptureWindow(wasCaptureSuccessful, skin);
                 window.setPosition(
