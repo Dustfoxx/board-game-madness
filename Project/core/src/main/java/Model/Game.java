@@ -343,17 +343,16 @@ public class Game {
 
     /**
      * Sets the validitymask for the board
-    */
-    public void setValidityMask(MutableBoolean[][] mask){
+     */
+    public void setValidityMask(MutableBoolean[][] mask) {
         int[] boardDims = board.getDims();
-        if(boardDims[0] != mask.length || boardDims[1] != mask[0].length){
+        if (boardDims[0] != mask.length || boardDims[1] != mask[0].length) {
             throw new IllegalArgumentException("Size mismatch between mask and board.");
-        }
-        else{
-            for (int i = 0; i < boardDims[0]; i++){
-                for(int j = 0; j < boardDims[1]; j++){
+        } else {
+            for (int i = 0; i < boardDims[0]; i++) {
+                for (int j = 0; j < boardDims[1]; j++) {
                     validityMask[i][j].setBoolean(mask[i][j].getBoolean());
-            }
+                }
             }
         }
     }
@@ -361,9 +360,10 @@ public class Game {
     /**
      * Returns the validitymask for the board
      * 
-     * @return matrix of booleans. True where player can move and false where they cannc
+     * @return matrix of booleans. True where player can move and false where they
+     *         cannc
      */
-    public MutableBoolean[][] getValidityMask(){
+    public MutableBoolean[][] getValidityMask() {
         return this.validityMask;
     }
 
