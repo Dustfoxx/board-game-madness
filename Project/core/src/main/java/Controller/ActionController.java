@@ -109,13 +109,13 @@ public class ActionController {
         // If player on board
         int[] playerCoords = gameState.getBoard().getPlayerCoord(player);
 
-        if (playerCoords != null) {
-            gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
-        }
         // Add player to new cell
 
 
         if(gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()){
+            if (playerCoords != null) {
+            gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+        }
         AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
         newCell.addPlayer(player);
 

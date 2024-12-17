@@ -43,13 +43,11 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         int[] cellCoords = getCellClicked(event);
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
-                        // dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println("rightClick");
                         int[] cellCoords = getCellClicked(event);
                         BrainWindow brainNoteWindow = new BrainWindow(
                                 gameInfo.actionHandler(Actions.BRAINNOTE,
@@ -90,17 +88,6 @@ public class VisualBoard {
                     if (cell != null) {
                         cell.highlightCell(true);
                     }
-                }
-            }
-        }
-    }
-
-    private void dehighlightValidCells(int dimx, int dimy) {
-        for (int i = 0; i < dimx; i++) {
-            for (int j = 0; j < dimy; j++) {
-                VisualCell cell = getVisualCell(i, j);
-                if (cell != null) {
-                    cell.highlightCell(false);
                 }
             }
         }
