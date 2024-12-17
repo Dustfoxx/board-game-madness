@@ -217,19 +217,6 @@ public class GameController {
         }
     }
 
-    public void endGameIfMaskEmpty(boolean[][] mask) {
-        for (boolean[] row : mask) {
-            for (boolean col : row) {
-                // A single value being true means recruiter is not stuck
-                if (col) {
-                    return;
-                }
-            }
-        }
-        // If no true value was found the recruiter cannot move and it is game over
-        gameState.setGameOver();
-    }
-
     public boolean actionHandler(Actions action) {
         return actionHandler(action, new Object[] {});
     }
