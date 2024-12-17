@@ -49,6 +49,10 @@ public class LobbyScreen implements Screen {
         this.gameStarted = false;
 
         if (this.isHost) {
+            if (this.application.server != null) {
+                this.application.server.stop();
+            }
+
             this.application.server = new MindMGMTServer(8080, players);
             this.application.server.start();
         } else {
