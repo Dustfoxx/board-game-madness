@@ -1,5 +1,6 @@
 package View.screen.GameScreenComponents;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -42,16 +43,17 @@ public class SettingWindow extends Window {
         mainMenuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                if (application.server != null) {
+                    application.server.stop();
+                }
                 application.setScreen(new MainMenuScreen(application));
+                remove();
             }
         });
         //the size can be responsive
         this.add(mainMenuButton).pad(10).row();
     }
-    public void init(){
-        updateSize();
 
-    }
     public void updateSize(){
         this.setSize(stage.getWidth(), stage.getHeight());
     }

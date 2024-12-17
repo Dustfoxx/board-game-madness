@@ -1,5 +1,6 @@
 package io.github.MindMGMT;
 
+import Controller.ServerComponents.MindMGMTServer;
 import Model.Csv;
 import View.loader.CsvLoader;
 import View.screen.MainMenuScreen;
@@ -26,13 +27,14 @@ public class MindMGMT extends Game {
     public Skin skin;
     public int nrOfUsers;
     public AssetManager assets;
-    boolean moving = false;
+    public MindMGMTServer server;
 
     @Override
     public void create() {
         ScreenViewport viewport = new ScreenViewport();
         stage = new Stage(viewport);
         assets = new AssetManager();
+        server = null; // Will be set if player chooses to host game
         loadAssets();
         progressBar = new ProgressBar(0, 1, 0.1f, false, new ProgressBar.ProgressBarStyle());
         progressBar.setX(viewport.getCamera().viewportWidth / 2);
@@ -92,6 +94,9 @@ public class MindMGMT extends Game {
 
     @Override
     public void dispose() {
+        if (server != null) {
+            server.stop();
+        }
         stage.dispose();
     }
 }
