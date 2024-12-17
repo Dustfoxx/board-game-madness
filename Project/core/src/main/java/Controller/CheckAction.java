@@ -55,19 +55,10 @@ public class CheckAction {
      * @param maxVal   What the maximum possible coordinate is
      * @return Returns an array of three integers
      */
-    private int[] getCoordRange(int location, int maxVal) {
-        int[] range = { 0, 0 };
-
-        if (location != 0) {
-            range[0] = location - 1;
-        }
-        if (location < maxVal) {
-            range[1] = location + 1;
-        } else {
-            range[1] = maxVal;
-        }
-
-        return range;
+    private int[] getCoordRange(int location, int maxBound) {
+        int start = Math.max(0, location - 1);
+        int end = Math.min(location + 1, maxBound - 1);
+        return new int[] { start, end };
     }
 
     /**
