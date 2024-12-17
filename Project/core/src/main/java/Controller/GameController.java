@@ -248,8 +248,12 @@ public class GameController {
                 if (gameState.isMovementAvailable()) {
                     int row = (int) additionalInfo[0];
                     int col = (int) additionalInfo[1];
-                    actionController.movePlayer(gameState.getCurrentPlayer(), gameState.getBoard(), new int[] {row, col});
-                    gameState.setMovementAvailability(false);
+
+                    boolean didMove = actionController.movePlayer(gameState.getCurrentPlayer(), gameState, new int[] {row, col});
+                    if(didMove){
+                        gameState.setValidityMask(checkAction.createUniformMask(gameState.getBoard(), false));
+                        gameState.setMovementAvailability(false);
+                    }
                 }
                 break;
             case BRAINNOTE:

@@ -12,9 +12,10 @@ import Model.Recruiter;
 import Model.RougeAgent;
 import Model.Token;
 import Model.Footstep;
+import Model.MutableBoolean;
 
 public class CheckAction {
-
+    
     /**
      * Takes player position and returns a list of all valid single step coordinates
      * All orthogonal and including diagonal if some are temples
@@ -108,14 +109,33 @@ public class CheckAction {
      * @param foundMoves allowed movement coordinates
      * @return a matrix of zeroes and ones. ones are possible movement
      */
-    private boolean[][] createMask(int rows, int cols, List<int[]> foundMoves) {
-        boolean[][] possibleMoves = new boolean[rows][cols];
+    private MutableBoolean[][] createMask(int rows, int cols, List<int[]> foundMoves) {
+        MutableBoolean[][] possibleMoves = new MutableBoolean[rows][cols];
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                possibleMoves[i][j] = new MutableBoolean();
+            }
+        }
 
         for (int i = 0; i < foundMoves.size(); i++) {
-            possibleMoves[foundMoves.get(i)[0]][foundMoves.get(i)[1]] = true;
+            possibleMoves[foundMoves.get(i)[0]][foundMoves.get(i)[1]] = new MutableBoolean(true);
         }
 
         return possibleMoves;
+    }
+
+    public MutableBoolean[][] createUniformMask(Board board, boolean newVal){
+        int[] dims = board.getDims();
+
+        MutableBoolean[][] mask = new MutableBoolean[dims[0]][dims[1]];
+
+        for (int i = 0; i < dims[0]; i++) {
+            for (int j = 0; j < dims[1]; j++) {
+                mask[i][j] = new MutableBoolean(newVal);
+            }
+        }
+        return mask;
     }
 
     /**
@@ -170,9 +190,13 @@ public class CheckAction {
 
     }
 
-    public boolean[][] getValidMoves(Player player, Board board){
+    public MutableBoolean[][] getValidMoves(Player player, Board board){
+        if(board.getPlayerCoord(player) == null){
+            return getValidPlacements(board);
+        }
+
         if(player instanceof Recruiter){
-            return getValidMoves((Recruiter) player, board);
+            return getValidMoves((Recruiter) player, board, 0);
         } else {
             return getValidMoves((RougeAgent) player, board);
         }
@@ -186,7 +210,7 @@ public class CheckAction {
      * @return Returns a mask that contains booleans saying where a player
      *         can move
      */
-    public boolean[][] getValidMoves(RougeAgent player, Board board) {
+    public MutableBoolean[][] getValidMoves(RougeAgent player, Board board) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
@@ -209,7 +233,7 @@ public class CheckAction {
      * @return Returns a mask that contains booleans saying where a player
      *         can move
      */
-    public boolean[][] getValidMoves(Recruiter player, Board board, int type) {
+    public MutableBoolean[][] getValidMoves(Recruiter player, Board board, int type) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
@@ -234,10 +258,10 @@ public class CheckAction {
      * @param board board is only needed for size
      * @return mask for valid placements of agents
      */
-    public boolean[][] getValidPlacements(Board board) {
+    public MutableBoolean[][] getValidPlacements(Board board) {
         int[] dims = board.getDims();
 
-        boolean[][] mask = new boolean[dims[0]][dims[1]];
+        MutableBoolean[][] mask = new MutableBoolean[dims[0]][dims[1]];
         boolean value = false;
 
         for (int i = 0; i < dims[0]; i++) {
@@ -248,7 +272,7 @@ public class CheckAction {
                 } else if (j == 0 || j == dims[1] - 1) {
                     value = true;
                 }
-                mask[i][j] = value;
+                mask[i][j] = new MutableBoolean(value);
             }
         }
 

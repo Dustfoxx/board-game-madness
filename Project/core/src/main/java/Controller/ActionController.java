@@ -10,6 +10,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.Game;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
@@ -103,15 +104,19 @@ public class ActionController {
      * @param coords       coordinates the player will be placed on
      * @return boolean defining if the action was successful or not
      */
-    public boolean movePlayer(Player player, Board board, int[] coords) {
+    public boolean movePlayer(Player player, Game gameState, int[] coords) {
         // Did player choose a valid location?
         // If player on board
-        int[] playerCoords = board.getPlayerCoord(player);
+        int[] playerCoords = gameState.getBoard().getPlayerCoord(player);
+
         if (playerCoords != null) {
-            board.getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+            gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
         }
         // Add player to new cell
-        AbstractCell newCell = board.getCell(coords[0], coords[1]);
+
+
+        if(gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()){
+        AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
         newCell.addPlayer(player);
 
         if (player instanceof Recruiter) {
@@ -124,6 +129,9 @@ public class ActionController {
             newCell.addToken(new Step(timestamp));
         }
         return true;
+        }
+
+        return false;
     }
 
     /**
