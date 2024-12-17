@@ -111,24 +111,23 @@ public class ActionController {
 
         // Add player to new cell
 
-
-        if(gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()){
+        if (gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()) {
             if (playerCoords != null) {
-            gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
-        }
-        AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
-        newCell.addPlayer(player);
+                gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+            }
+            AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
+            newCell.addPlayer(player);
 
-        if (player instanceof Recruiter) {
-            // Add new cell to walked path
-            Recruiter recruiter = (Recruiter) player;
-            recruiter.addToWalkedPath(coords[0], coords[1]);
-            
-            // Add a Step to the cell
-            int timestamp = recruiter.getWalkedPath().size();
-            newCell.addToken(new Step(timestamp));
-        }
-        return true;
+            if (player instanceof Recruiter) {
+                // Add new cell to walked path
+                Recruiter recruiter = (Recruiter) player;
+                recruiter.addToWalkedPath(coords[0], coords[1]);
+
+                // Add a Step to the cell
+                int timestamp = recruiter.getWalkedPath().size();
+                newCell.addToken(new Step(timestamp));
+            }
+            return true;
         }
 
         return false;
