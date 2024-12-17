@@ -26,8 +26,8 @@ public class CheckAction {
      */
     private List<int[]> checkSurroundingCells(int[] coord, Board board) {
         int[] boardDims = board.getDims();
-        int[] validRows = getCoordRange(coord[0], boardDims[0]);
-        int[] validCols = getCoordRange(coord[1], boardDims[1]);
+        int[] validRows = getCoordRange(coord[0], boardDims[0], 1);
+        int[] validCols = getCoordRange(coord[1], boardDims[1], 1);
         List<int[]> possibleCoords = new ArrayList<int[]>();
 
         for (int row = validRows[0]; row <= validRows[1]; row++) {
@@ -54,11 +54,11 @@ public class CheckAction {
      * 
      * @param location Position in single dimension
      * @param maxVal   What the maximum possible coordinate is
-     * @return Returns an array of three integers
+     * @return Returns an array of two integers, minimum value and maximum value
      */
-    private int[] getCoordRange(int location, int maxBound) {
-        int start = Math.max(0, location - 1);
-        int end = Math.min(location + 1, maxBound - 1);
+    private int[] getCoordRange(int location, int maxBound, int range) {
+        int start = Math.max(0, location - range);
+        int end = Math.min(location + range, maxBound - 1);
         return new int[] { start, end };
     }
 
@@ -156,40 +156,54 @@ public class CheckAction {
      * @return Possible coordinates to visit after mindslip
      */
     private List<int[]> mindSlip(Recruiter player, Board board) {
-        int mindSlipType = 0;
+        int[] coords = board.getPlayerCoord(player);
+        int[] dims = board.getDims();
+
+        List<int[]> possibleSlips = new ArrayList<int[]>();
+
+        int[] rowRange = getCoordRange(coords[0], dims[0], 2);
+        int[] colRange = getCoordRange(coords[1], dims[1], 2);
+
+        boolean minRow = coords[0] - rowRange[0] >= 2;
+        boolean maxRow = rowRange[1] - coords[0] >= 2;
+
+        boolean minCol = coords[1] - colRange[0] >= 2;
+        boolean maxCol = colRange[1] - coords[1] >= 2;
 
         switch (player.getRecruiterType()) {
             // Sets the correct type for validation. If its been used empty list is sent
             case HORIZONTAL:
-                mindSlipType = 0;
+                if (minRow) {
+                    possibleSlips.add(new int[] { rowRange[0], coords[1] });
+                }
+                if (maxRow) {
+                    possibleSlips.add(new int[] { rowRange[1], coords[1] });
+                }
+                if (minCol) {
+                    possibleSlips.add(new int[] { coords[0], colRange[0] });
+                }
+                if (maxCol) {
+                    possibleSlips.add(new int[] { coords[0], colRange[1] });
+                }
                 break;
             case DIAGONAL:
-                mindSlipType = 1;
+                if (minRow && minCol) {
+                    possibleSlips.add(new int[] { rowRange[0], colRange[0] });
+                }
+                if (maxRow && minCol) {
+                    possibleSlips.add(new int[] { rowRange[1], colRange[0] });
+                }
+                if (minRow && maxCol) {
+                    possibleSlips.add(new int[] { rowRange[0], colRange[1] });
+                }
+                if (maxRow && maxCol) {
+                    possibleSlips.add(new int[] { rowRange[1], colRange[1] });
+                }
                 break;
             case USED:
                 return new ArrayList<int[]>();
         }
 
-        int[] coords = board.getPlayerCoord(player);
-        int[] dims = board.getDims();
-
-        int[] movement = new int[] { -2, 2 };
-
-        List<int[]> possibleSlips = new ArrayList<int[]>();
-        int[] newCoord;
-
-        for (int i = 0; i < movement.length; i++) {
-            for (int j = 0; j < movement.length; j++) {
-                if (j + i % 2 == 0) {
-                    newCoord = new int[] { coords[0] + movement[i], coords[1] + movement[j] * mindSlipType };
-                } else {
-                    newCoord = new int[] { coords[0] + movement[i] * mindSlipType, coords[1] + movement[j] };
-                }
-                if (newCoord[0] >= 0 && newCoord[0] < dims[0] && newCoord[1] >= 0 && newCoord[1] < dims[1]) {
-                    possibleSlips.add(newCoord);
-                }
-            }
-        }
         return possibleSlips;
 
     }
