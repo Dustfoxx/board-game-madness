@@ -71,26 +71,18 @@ public class ActionController {
     /**
      * Replaces a footstep with a brain-fact token
      * 
-     * @param footstep   the footstep to be replaced
-     * @param board      the game of the board
-     * @param position   The position of the footstep Note: could be calculated, but
-     *                   game manager probably has it ready
-     * @param walkedPath the path walked by the recruit
+     * @param cell the cell which contains the footstep to reveal
      * @return void
      */
-    public void reveal(Footstep footstep, Board board, int[] position, List<int[]> walkedPath) {
-        int time = 0;
-
-        // Finds the index of the position in walked path
-        for (int i = 0; i < walkedPath.size(); i++) {
-            if (Arrays.equals(walkedPath.get(i), position)) {
-                time = i + 1;
-                BrainFact brainFact = new BrainFact(time);
-
-                NormalCell cell = (NormalCell) board.getCell(position[0], position[1]);
-
-                cell.addToken(brainFact);
-                cell.removeToken(footstep);
+    public void reveal(AbstractCell cell) {
+        // Find the step token in the cell
+        List<Token> tokens = cell.getTokens();
+        for (Token token : tokens) { 
+            if (token instanceof Step) {
+                int timestamp = ((Step) token).timestamp; // Get the timestamp of the step
+                BrainFact brainfact = new BrainFact(timestamp); // Create a new brainfact with the timestamp
+                cell.removeToken(cell.getFootstep()); // Remove the old footstep
+                cell.addToken(brainfact); // Replace with the new brainfact
                 break;
             }
         }
