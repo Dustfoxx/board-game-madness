@@ -17,7 +17,8 @@ public class TempleCell extends AbstractCell {
      * Adds a token to the cell and ensures it is of type BrainNote.
      * 
      * @param newToken The token to add to the cell.
-     * @throws IllegalArgumentException If the token is not of type BrainNote or if a BrainNote already exists.
+     * @throws IllegalArgumentException If the token is not of type BrainNote or if
+     *                                  a BrainNote already exists.
      */
     @Override
     public void addToken(Token newToken) {
@@ -26,5 +27,13 @@ public class TempleCell extends AbstractCell {
         } else {
             throw new IllegalArgumentException("Only BrainNote tokens can be added to a TempelCell.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TempleCell{" +
+                "players=" + players +
+                ", tokens=" + tokens +
+                '}';
     }
 }

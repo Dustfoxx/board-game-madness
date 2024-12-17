@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java.lang.Math;
+
 import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
@@ -15,6 +17,7 @@ import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
 import Model.Token;
+import Model.Recruiter.RecruiterType;
 import Model.Step;
 
 public class ActionController {
@@ -111,9 +114,20 @@ public class ActionController {
 
         // Add player to new cell
 
+        // Checks whether the new cell is within allowed area
         if (gameState.getValidityMask()[coords[0]][coords[1]].getBoolean()) {
+            // If player is on the board
             if (playerCoords != null) {
+                // Remove player from current position
                 gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).removePlayer(player);
+
+                // If recruiter and new spot is two steps away then it was a mindslipmove
+                if (player instanceof Recruiter && (Math.abs(playerCoords[0] - coords[0]) > 1
+                        || Math.abs(playerCoords[1] - coords[1]) > 1)) {
+                    Recruiter tmpRecruiter = (Recruiter) player;
+                    tmpRecruiter.setRecruiterType(RecruiterType.USED);
+                    gameState.addMindSlipEvent();
+                }
             }
             AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
             newCell.addPlayer(player);
@@ -126,11 +140,47 @@ public class ActionController {
                 // Add a Step to the cell
                 int timestamp = recruiter.getWalkedPath().size();
                 newCell.addToken(new Step(timestamp));
+
+                // Check for matching features and update recruited amount
+                AbstractCell currentCell = gameState.getBoard().getCell(coords[0], coords[1]);
+                if (currentCell instanceof NormalCell) {
+                    NormalCell normalCell = (NormalCell) currentCell;
+                    Feature[] features = normalCell.getFeatures();
+                    Feature[] featuresOfInterest = recruiter.getFeaturesOfInterest();
+                    int commonFeaturesCount = countMatchingFeatures(features, featuresOfInterest);
+                    recruiter.addAmountRecruited(commonFeaturesCount);
+                }
             }
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Counts the number of matching features between two arrays of {@link Feature}.
+     *
+     * The iteration stop if two matches are already found
+     * since the maximum number of matching features is 2.
+     *
+     * @param features
+     * @param featuresOfInterest
+     * @return The number of matching features, up to a maximum of 2.
+     */
+    private int countMatchingFeatures(Feature[] features, Feature[] featuresOfInterest) {
+        int count = 0;
+        for (Feature feature : features) {
+            for (Feature featureOfInterest : featuresOfInterest) {
+                if (feature == featureOfInterest) {
+                    count++;
+                    break;
+                }
+            }
+            if (count == 2) {
+                return count;
+            }
+        }
+        return count;
     }
 
     /**

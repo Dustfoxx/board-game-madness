@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  * The Player class is an abstract class representing a player in the game.
  * It contains basic information about the player, such as their ID and name.
@@ -57,5 +59,28 @@ public abstract class Player {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Player player = (Player) o;
+        return id == player.id && Objects.equals(name, player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

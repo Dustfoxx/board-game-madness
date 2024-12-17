@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Model.Game.gameStates;
+import Model.Recruiter.RecruiterType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class GameController {
         REVEAL,
         CAPTURE,
         MINDSLIP,
+        RECRUITERCHOICE,
         BRAINNOTE
     }
 
@@ -99,15 +101,15 @@ public class GameController {
         List<Player> players = new ArrayList<>();
 
         // Randomly select three unique features
-        List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));        
-        Collections.shuffle(allFeaturesList);        
+        List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));
+        Collections.shuffle(allFeaturesList);
         Feature[] recruiterFeatures = new Feature[3];
         for (int i = 0; i < 3; i++) {
             recruiterFeatures[i] = allFeaturesList.get(i);
         }
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
-        
+
         players.add(recruiter);
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));
@@ -158,7 +160,7 @@ public class GameController {
         }
 
         gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
-        
+
     }
 
     private void preGameLogic() {
@@ -249,12 +251,16 @@ public class GameController {
                     int row = (int) additionalInfo[0];
                     int col = (int) additionalInfo[1];
 
-                    boolean didMove = actionController.movePlayer(gameState.getCurrentPlayer(), gameState, new int[] {row, col});
-                    if(didMove){
+                    boolean didMove = actionController.movePlayer(gameState.getCurrentPlayer(), gameState,
+                            new int[] { row, col });
+                    if (didMove) {
                         gameState.setValidityMask(checkAction.createUniformMask(gameState.getBoard(), false));
                         gameState.setMovementAvailability(false);
                     }
                 }
+                break;
+            case RECRUITERCHOICE:
+                getGame().getRecruiter().setRecruiterType((RecruiterType) additionalInfo[0]);
                 break;
             case BRAINNOTE:
                 if (additionalInfo[0] instanceof String) {
@@ -269,10 +275,10 @@ public class GameController {
                 break;
         }
 
-        if(action != Actions.MOVE){
+        if (action != Actions.MOVE) {
             gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         }
-        
+
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }

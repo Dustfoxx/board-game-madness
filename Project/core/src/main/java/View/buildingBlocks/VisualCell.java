@@ -2,7 +2,6 @@ package View.buildingBlocks;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
@@ -34,7 +33,7 @@ public class VisualCell extends Actor {
     private Texture highlight = new Texture("highlight.png");
     private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
-    private Dictionary<Feature, Integer> features = new Hashtable<>();
+    private Dictionary<Feature, Integer> features;
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
@@ -181,46 +180,25 @@ public class VisualCell extends Actor {
     }
 
     /**
-     * Dictionary to fetch the proper feature from the texture based on feature name
+     * Initializes the feature dictionary by loading feature mappings.
+     * This dictionary maps each {@link Feature} to its corresponding index in the texture.
+     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate the mapping.
      */
     private void initDict() {
-        features.put(Feature.BOOKSTORE, 0);
-        features.put(Feature.BUS, 1);
-        features.put(Feature.BILLBOARD, 2);
-        features.put(Feature.PARROT, 3);
-        features.put(Feature.FOUNTAIN, 4);
-        features.put(Feature.TREE, 5);
-        features.put(Feature.POOL, 6);
-        features.put(Feature.UMBRELLA, 7);
-        features.put(Feature.IDOL, 8);
-        features.put(Feature.TORCHES, 9);
-        features.put(Feature.GARDEN, 10);
-        features.put(Feature.COFFEE, 11);
-        features.put(Feature.MONKS, 12);
-        features.put(Feature.DOGS, 13);
-        features.put(Feature.COURIER, 14);
-        features.put(Feature.GRAFFITI, 15);
+        this.features=FeatureUtil.initializeFeatureDict();
     }
 
     /**
      * fetches a feature as a textureregion from the main file. Currently using
      * magic numbers to separate them. Should be replaced by atlas
      *
-     * @param feature Feature to be fetched
-     * @return a textureregion containing the feature
+     * @param feature The {@link Feature} to be fetched from the texture.
+     * @return A {@link TextureRegion} containing the image of the specified feature.
+     * @throws IllegalArgumentException If the texture file is missing or the feature is invalid.
      */
     public TextureRegion fetchFeature(Feature feature) {
-        int sideSize = 873 / 4;
-        if (feature != null) {
-            return new TextureRegion(featuresImg,
-                    sideSize * (features.get(feature) % 4),
-                    sideSize * (int) (Math.floor(features.get(feature) / 4)),
-                    sideSize, sideSize);
-        }
-        return new TextureRegion(new Texture("feature_img.png"),
-                0,
-                0,
-                sideSize, sideSize);
+        this.featuresImg = new Texture("feature_img.png");
+        return FeatureUtil.fetchFeature(featuresImg, features, feature);
     }
 
     /**

@@ -49,7 +49,7 @@ public class TurnBar extends Table {
         // Label for displaying the current turn time
         timeTracker = new Label(timeValue + ": 00", skin, "half-tone");
         timeTracker.setAlignment(Align.center);
-        turnClock.add(timeTracker).expandX().fillX().pad(10);
+        turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
 
         // Table for tracking past turns
         pastTurn = new Table();

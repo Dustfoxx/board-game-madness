@@ -15,7 +15,7 @@ import Model.Footstep;
 import Model.MutableBoolean;
 
 public class CheckAction {
-    
+
     /**
      * Takes player position and returns a list of all valid single step coordinates
      * All orthogonal and including diagonal if some are temples
@@ -56,19 +56,10 @@ public class CheckAction {
      * @param maxVal   What the maximum possible coordinate is
      * @return Returns an array of three integers
      */
-    private int[] getCoordRange(int location, int maxVal) {
-        int[] range = { 0, 0 };
-
-        if (location != 0) {
-            range[0] = location - 1;
-        }
-        if (location < maxVal) {
-            range[1] = location + 1;
-        } else {
-            range[1] = maxVal;
-        }
-
-        return range;
+    private int[] getCoordRange(int location, int maxBound) {
+        int start = Math.max(0, location - 1);
+        int end = Math.min(location + 1, maxBound - 1);
+        return new int[] { start, end };
     }
 
     /**
@@ -112,8 +103,8 @@ public class CheckAction {
     private MutableBoolean[][] createMask(int rows, int cols, List<int[]> foundMoves) {
         MutableBoolean[][] possibleMoves = new MutableBoolean[rows][cols];
 
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < cols; j++){
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 possibleMoves[i][j] = new MutableBoolean();
             }
         }
@@ -125,7 +116,7 @@ public class CheckAction {
         return possibleMoves;
     }
 
-    public MutableBoolean[][] createUniformMask(Board board, boolean newVal){
+    public MutableBoolean[][] createUniformMask(Board board, boolean newVal) {
         int[] dims = board.getDims();
 
         MutableBoolean[][] mask = new MutableBoolean[dims[0]][dims[1]];
@@ -164,8 +155,21 @@ public class CheckAction {
      * @param type   Type of mindslip equipped. 0 for orhogonal and 1 for diagonal
      * @return Possible coordinates to visit after mindslip
      */
-    private List<int[]> mindSlip(Recruiter player, Board board, int type) {
-        int mindSlipType = type;// player.getMindSlip() NEEDS TO BE AVAILABLE
+    private List<int[]> mindSlip(Recruiter player, Board board) {
+        int mindSlipType = 0;
+
+        switch (player.getRecruiterType()) {
+            // Sets the correct type for validation. If its been used empty list is sent
+            case HORIZONTAL:
+                mindSlipType = 0;
+                break;
+            case DIAGONAL:
+                mindSlipType = 1;
+                break;
+            case USED:
+                return new ArrayList<int[]>();
+        }
+
         int[] coords = board.getPlayerCoord(player);
         int[] dims = board.getDims();
 
@@ -190,13 +194,21 @@ public class CheckAction {
 
     }
 
-    public MutableBoolean[][] getValidMoves(Player player, Board board){
-        if(board.getPlayerCoord(player) == null){
+    /**
+     * Gets valid moves for a player, works for both recruiter and rougeagents
+     * 
+     * @param player player that is being considered
+     * @param board  Board that the player inhabits
+     * @return Returns a mask that contains booleans saying where a player
+     *         can move
+     */
+    public MutableBoolean[][] getValidMoves(Player player, Board board) {
+        if (board.getPlayerCoord(player) == null) {
             return getValidPlacements(board);
         }
 
-        if(player instanceof Recruiter){
-            return getValidMoves((Recruiter) player, board, 0);
+        if (player instanceof Recruiter) {
+            return getValidMoves((Recruiter) player, board);
         } else {
             return getValidMoves((RougeAgent) player, board);
         }
@@ -233,13 +245,13 @@ public class CheckAction {
      * @return Returns a mask that contains booleans saying where a player
      *         can move
      */
-    public MutableBoolean[][] getValidMoves(Recruiter player, Board board, int type) {
+    public MutableBoolean[][] getValidMoves(Recruiter player, Board board) {
         int[] dims = board.getDims();
 
         List<int[]> firstMove = initialMove(player, board);
         List<int[]> walkedList = player.getWalkedPath();
 
-        firstMove.addAll(mindSlip(player, board, type));
+        firstMove.addAll(mindSlip(player, board));
 
         for (int i = 0; i < walkedList.size(); i++) {
             for (int j = 0; j < firstMove.size(); j++) {
@@ -266,7 +278,6 @@ public class CheckAction {
 
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
-                value = false;
                 if (i == 0 || i == dims[0] - 1) {
                     value = true;
                 } else if (j == 0 || j == dims[1] - 1) {
@@ -277,7 +288,6 @@ public class CheckAction {
         }
 
         return mask;
-
     }
 
     /**
