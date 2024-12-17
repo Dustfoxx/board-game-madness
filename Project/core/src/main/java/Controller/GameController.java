@@ -21,6 +21,7 @@ public class GameController {
     private Model.Player playerTurnOrder[] = new Player[6];
     private Recruiter recruiter = null;
     private ActionController actionController;
+    private CheckAction checkAction;
     private final int playerPieceAmount = 5;
 
     public enum Actions {
@@ -49,6 +50,7 @@ public class GameController {
         List<RougeAgent> agents = new ArrayList<>();
 
         this.actionController = new ActionController();
+        this.checkAction = new CheckAction();
 
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
@@ -155,6 +157,8 @@ public class GameController {
                 break;
         }
 
+        gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
+        
     }
 
     private void preGameLogic() {

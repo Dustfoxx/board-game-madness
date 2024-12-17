@@ -81,12 +81,8 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
-
         if (highlighted) {
-            this.setTouchable(Touchable.enabled);
             highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
-        } else {
-            this.setTouchable(Touchable.disabled);
         }
 
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);

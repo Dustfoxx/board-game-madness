@@ -29,6 +29,7 @@ public class Game {
     private List<User> users; // The list of users connected to the game
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
+    private boolean[][] validityMask;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -65,6 +66,7 @@ public class Game {
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
         this.isMovementAvailable = true;
+        this.validityMask = null;
     }
 
     /**
@@ -333,6 +335,28 @@ public class Game {
      */
     public void setActionAvailability(boolean value) {
         this.isActionAvailable = value;
+    }
+
+    /**
+     * Sets the validitymask for the board
+    */
+    public void setValidityMask(boolean[][] mask){
+        int[] boardDims = board.getDims();
+        if(boardDims[0] != mask.length || boardDims[1] != mask[0].length){
+            throw new IllegalArgumentException("Size mismatch between mask and board.");
+        }
+        else{
+            validityMask = mask;
+        }
+    }
+
+    /**
+     * Returns the validitymask for the board
+     * 
+     * @return matrix of booleans. True where player can move and false where they cannc
+     */
+    public boolean[][] getValidityMask(){
+        return this.validityMask;
     }
 
     /**

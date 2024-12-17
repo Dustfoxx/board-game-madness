@@ -170,6 +170,14 @@ public class CheckAction {
 
     }
 
+    public boolean[][] getValidMoves(Player player, Board board){
+        if(player instanceof Recruiter){
+            return getValidMoves((Recruiter) player, board);
+        } else {
+            return getValidMoves((RougeAgent) player, board);
+        }
+    }
+
     /**
      * Gets valid moves for an agent
      * 

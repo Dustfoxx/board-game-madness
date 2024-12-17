@@ -41,10 +41,9 @@ public class VisualBoard {
                 cell.addListener(new ClickListener(Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println("Leftclick");
                         int[] cellCoords = getCellClicked(event);
                         gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
-                        dehighlightValidCells(dimensions[0], dimensions[1]);
+                        // dehighlightValidCells(dimensions[0], dimensions[1]);
                     }
                 });
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
@@ -80,7 +79,6 @@ public class VisualBoard {
     public Table getVisualBoard() {
         return this.board;
     }
-
     public void highlightValidCells(boolean[][] mask) {
         int rows = mask.length;
         int cols = mask[0].length;
