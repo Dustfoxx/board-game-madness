@@ -96,7 +96,7 @@ public class GameController {
         }
 
         List<Player> players = new ArrayList<>();
-        
+
         // Randomly select three unique features
         List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));        
         Collections.shuffle(allFeaturesList);        
@@ -106,6 +106,7 @@ public class GameController {
         }
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
+        
         players.add(recruiter);
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));
