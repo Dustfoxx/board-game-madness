@@ -209,6 +209,24 @@ public class CheckAction {
     }
 
     /**
+     * Check if mask has no valid moves. Used to end game when recruiter is stuck
+     * 
+     * @param mask mask that is checked
+     * @return false if it contains a true value, true otherwise
+     */
+    public boolean isMaskEmpty(MutableBoolean[][] mask) {
+        for (MutableBoolean[] row : mask) {
+            for (MutableBoolean cell : row) {
+                if (cell.getBoolean()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+
+    }
+
+    /**
      * Gets valid moves for a player, works for both recruiter and rougeagents
      * 
      * @param player player that is being considered

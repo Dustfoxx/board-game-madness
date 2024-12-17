@@ -160,6 +160,9 @@ public class GameController {
         }
 
         gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
+        if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
+            gameState.setGameOver();
+        }
 
     }
 
