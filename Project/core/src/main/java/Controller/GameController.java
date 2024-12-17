@@ -4,7 +4,10 @@ import Model.*;
 import Model.Game.gameStates;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class GameController {
     // Check for new turn
@@ -93,7 +96,14 @@ public class GameController {
         }
 
         List<Player> players = new ArrayList<>();
-        Feature[] recruiterFeatures = new Feature[] { Feature.FOUNTAIN, Feature.BILLBOARD, Feature.BUS };
+        
+        // Randomly select three unique features
+        List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));        
+        Collections.shuffle(allFeaturesList);        
+        Feature[] recruiterFeatures = new Feature[3];
+        for (int i = 0; i < 3; i++) {
+            recruiterFeatures[i] = allFeaturesList.get(i);
+        }
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
         players.add(recruiter);
