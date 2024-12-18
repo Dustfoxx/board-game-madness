@@ -47,7 +47,7 @@ public class TurnBar extends Table {
         }
 
         // Label for displaying the current turn time
-        timeTracker = new Label(timeValue + ": 00", skin, "half-tone");
+        timeTracker = new Label("Current Turn: "+ timeValue + ": 00", skin, "half-tone");
         timeTracker.setAlignment(Align.center);
         turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
 
@@ -72,7 +72,7 @@ public class TurnBar extends Table {
         }
 
         // Update the time tracker label
-        timeTracker.setText(updatedTime + ": 00");
+        timeTracker.setText("Current Turn: "+ updatedTime + ": 00");
 
         int currentTurn = gameController.getGame().getCurrentTime();
 
@@ -98,24 +98,38 @@ public class TurnBar extends Table {
         turnRow.setDebug(true); // Enables debug mode for layout visualization
         turnRow.align(Align.center);
 
-        // Mindslip/Recruits (Placeholder for additional data display)
-
-        if (gameController.getGame().getMindSlipHistory().contains(turn)) {
-            Label msLabel = new Label("Mindslip", skin, "big");
-            msLabel.setAlignment(Align.center);
-            turnRow.add(msLabel).expandX().pad(5);
-        }
-
         // Add recruited information
+        Label recruitedTitle = new Label("Recruits: ", skin, "half-tone");
+        recruitedTitle.setAlignment(Align.center);
+        turnRow.add(recruitedTitle).expandX().pad(5);
+        Label turnTitle = new Label("Turn: ", skin, "half-tone");
+        turnTitle.setAlignment(Align.center);
+        turnRow.add(turnTitle).expandX().pad(5);
+        Label msTitle = new Label("Mindslip: ", skin, "half-tone");
+        msTitle.setAlignment(Align.center);
+        turnRow.add(msTitle).expandX().pad(5);
+
+        turnRow.row();
+
+        // Add recruited amount
         int unrevealedRecruits = gameController.getGame().getRecruitAtTime(turn)[1];
-        Label recruitedLabel = new Label(String.valueOf(unrevealedRecruits), skin, "big");
+        Label recruitedLabel = new Label(String.valueOf(unrevealedRecruits), skin, "half-tone");
         recruitedLabel.setAlignment(Align.center);
         turnRow.add(recruitedLabel).expandX().pad(5);
 
         // Add turn time
-        Label turnLabel = new Label(turnString + ":00", skin, "big");
+        Label turnLabel = new Label(turnString + ":00", skin, "half-tone");
         turnLabel.setAlignment(Align.center);
         turnRow.add(turnLabel).expandX().pad(5);
+
+        // Add mindslip information
+        String msinformation = "Not used";
+        if (turn == 5 && !gameController.getGame().getMindSlipHistory().isEmpty()) {
+            msinformation = String.valueOf(gameController.getGame().getMindSlipHistory().get(0));
+        }
+        Label msLabel = new Label(msinformation, skin, "half-tone");
+        msLabel.setAlignment(Align.center);
+        turnRow.add(msLabel).expandX().pad(5);
 
         // Add the turn row to the past turns table if not already revealed
         if (!revealedTurns.contains(turnRow)) {
