@@ -4,30 +4,10 @@ import java.util.Objects;
 
 public class Step extends Token {
     public int timestamp;
-    private boolean isVisible;
 
     public Step(int timestamp) {
         super();
-        this.isVisible = false;
         this.timestamp = timestamp;
-    }
-
-    /**
-     * Sets the visibility of the recruiter
-     * 
-     * @param visibility true if visible, false if not
-     */
-    public void setVisibility(boolean visibility) {
-        this.isVisible = visibility;
-    }
-
-    /**
-     * Gets the visibilityvalue of a step
-     * 
-     * @return the visibility of the player
-     */
-    public boolean getVisibility() {
-        return this.isVisible;
     }
 
     @Override
