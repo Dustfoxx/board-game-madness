@@ -28,7 +28,7 @@ public class EndGameWindow extends Window {
         this.setModal(true);
         this.gameState = gameState;
 
-        // Add a message to the window
+        // Add string to label
         String message = gameState.getWinner() + " Wins!";
         this.messageLabel = new Label(message, skin);
         messageLabel.setFontScale(2f);
@@ -50,9 +50,12 @@ public class EndGameWindow extends Window {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        // Send window to back of drawing if its not ENDGAME
         this.toBack();
-        this.messageLabel.setText(gameState.getWinner() + " Wins!");
         if (gameState.getGameState() == gameStates.ENDGAME) {
+            // Set the message to the current winner
+            this.messageLabel.setText(gameState.getWinner() + " Wins!");
+            // Sends window to front so that it is the only interactable part
             this.toFront();
             super.draw(batch, parentAlpha); // Important
         }

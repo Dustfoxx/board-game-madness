@@ -161,9 +161,11 @@ public class CheckAction {
 
         List<int[]> possibleSlips = new ArrayList<int[]>();
 
+        // Find range of possible moves on board
         int[] rowRange = getCoordRange(coords[0], dims[0], 2);
         int[] colRange = getCoordRange(coords[1], dims[1], 2);
 
+        // Figure out if two steps are available in each direction
         boolean minRow = coords[0] - rowRange[0] >= 2;
         boolean maxRow = rowRange[1] - coords[0] >= 2;
 
@@ -173,6 +175,7 @@ public class CheckAction {
         switch (player.getRecruiterType()) {
             // Sets the correct type for validation. If its been used empty list is sent
             case HORIZONTAL:
+                // If two steps available in any direction then add possible step
                 if (minRow) {
                     possibleSlips.add(new int[] { rowRange[0], coords[1] });
                 }
@@ -187,6 +190,7 @@ public class CheckAction {
                 }
                 break;
             case DIAGONAL:
+                // If specific combos of directions are available then add to possible steps
                 if (minRow && minCol) {
                     possibleSlips.add(new int[] { rowRange[0], colRange[0] });
                 }
@@ -201,6 +205,7 @@ public class CheckAction {
                 }
                 break;
             case USED:
+                // If mindslip used then we add no steps
                 return new ArrayList<int[]>();
         }
 
