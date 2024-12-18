@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -15,14 +17,17 @@ import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.BrainFact;
 import Model.BrainNote;
+import Model.Game;
+import Model.Recruiter;
 import Model.Token;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class BrainWindow extends Window {
 
-    private List<Token> cellBrains;
     private String brainNoteString = "";
+    private GameController gameController;
+    private TextField brainField;
 
     public BrainWindow(GameController gameController, int row, int col, Skin skin) {
         super("Brain Window", skin);
@@ -31,8 +36,9 @@ public class BrainWindow extends Window {
         this.setMovable(false);
         this.setResizable(false);
         this.setModal(true);
+        this.gameController = gameController;
 
-        cellBrains = gameController.getGame().getBoard().getCell(row, col).getBrains();
+        List<Token> cellBrains = gameController.getGame().getBoard().getCell(row, col).getBrains();
 
         for (Token brain : cellBrains) {
             if (brain instanceof BrainFact) {
@@ -46,11 +52,11 @@ public class BrainWindow extends Window {
         }
 
         Label brainNoteLabel = new Label("Brain Note:", skin);
-        TextField nameField = new TextField(brainNoteString, skin);
-        nameField.setMaxLength(30);
+        this.brainField = new TextField(brainNoteString, skin);
+        brainField.setMaxLength(30);
         brainNoteLabel.setFontScale(2f);
         this.add(brainNoteLabel).pad(20).row();
-        this.add(nameField).expandX().fillX().row();
+        this.add(brainField).expandX().fillX().row();
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
@@ -73,6 +79,11 @@ public class BrainWindow extends Window {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        if (gameController.getGame().getCurrentPlayer() instanceof Recruiter) {
+            brainField.setTouchable(Touchable.disabled);
+        } else {
+            brainField.setTouchable(Touchable.enabled);
+        }
         super.draw(batch, parentAlpha); // Important
     }
 }

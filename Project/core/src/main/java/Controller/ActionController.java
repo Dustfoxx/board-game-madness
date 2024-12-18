@@ -16,6 +16,7 @@ import Model.Game;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
+import Model.RougeAgent;
 import Model.Token;
 import Model.Recruiter.RecruiterType;
 import Model.Step;
@@ -193,27 +194,30 @@ public class ActionController {
      * @param board board to add the note to
      * @return true if the operation succeeded, false otherwise
      */
-    public boolean addBrainNote(String newNote, int row, int col, Board board) {
-        AbstractCell cell = board.getCell(row, col);
+    public boolean addBrainNote(String newNote, int row, int col, Game gameState) {
+        AbstractCell cell = gameState.getBoard().getCell(row, col);
 
-        for (Token token : cell.getBrains()) {
-            if (token instanceof BrainNote) {
-                if (newNote == "") {
-                    cell.removeToken(token);
-                } else {
-                    ((BrainNote) token).setNote(newNote);
+        if (gameState.getCurrentPlayer() instanceof RougeAgent) {
+            for (Token token : cell.getBrains()) {
+                if (token instanceof BrainNote) {
+                    if (newNote == "") {
+                        cell.removeToken(token);
+                    } else {
+                        ((BrainNote) token).setNote(newNote);
+                    }
+                    return true;
+                }
+            }
+            try {
+                if (newNote != "") {
+                    BrainNote brainNote = new BrainNote(newNote);
+                    cell.addToken(brainNote);
                 }
                 return true;
+            } catch (Exception e) {
+                return false;
             }
         }
-        try {
-            if (newNote != "") {
-                BrainNote brainNote = new BrainNote(newNote);
-                cell.addToken(brainNote);
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return false;
     }
 }

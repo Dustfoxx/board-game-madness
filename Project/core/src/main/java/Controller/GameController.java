@@ -266,7 +266,7 @@ public class GameController {
             case BRAINNOTE:
                 actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
                         (Integer) additionalInfo[2],
-                        gameState.getBoard());
+                        gameState);
                 break;
         }
 
