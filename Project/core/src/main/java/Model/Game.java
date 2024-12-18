@@ -30,7 +30,6 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
-    private List<Token> activeBrains;
     private List<User> users; // The list of users connected to the game
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
@@ -67,7 +66,6 @@ public class Game {
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
-        this.activeBrains = new ArrayList<>();
         this.users = users;
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
@@ -259,24 +257,6 @@ public class Game {
     }
 
     /**
-     * Sets active brains. These display when brainWindow is called
-     * 
-     * @param brains the list of brains to display
-     */
-    public List<Token> getActiveBrains() {
-        return this.activeBrains;
-    }
-
-    /**
-     * Sets active brains. These display when brainWindow is called
-     * 
-     * @param brains the list of brains to display
-     */
-    public void setActiveBrains(List<Token> brains) {
-        this.activeBrains = brains;
-    }
-
-    /**
      * Gets the list of users in the game.
      *
      * @return The list of users.
@@ -425,7 +405,6 @@ public class Game {
                 ", recruitHistory=" + recruitHistory +
                 ", mindSlipHistory=" + mindSlipHistory +
                 ", players=" + players +
-                ", activeBrains=" + activeBrains +
                 ", users=" + users +
                 ", isMovementAvailable=" + isMovementAvailable +
                 ", isActionAvailable=" + isActionAvailable +
@@ -451,14 +430,13 @@ public class Game {
                 Objects.equals(recruitHistory, game.recruitHistory) &&
                 Objects.equals(mindSlipHistory, game.mindSlipHistory) &&
                 Objects.equals(players, game.players) &&
-                Objects.equals(activeBrains, game.activeBrains) &&
                 Objects.equals(users, game.users);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
-                board, recruitHistory, mindSlipHistory, players, activeBrains,
+                board, recruitHistory, mindSlipHistory, players,
                 users, isMovementAvailable, isActionAvailable);
     }
 

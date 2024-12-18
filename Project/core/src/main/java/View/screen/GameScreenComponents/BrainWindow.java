@@ -21,7 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class BrainWindow extends Window {
 
-    public BrainWindow(boolean isBrainsActive, GameController gameController, int row, int col, Skin skin) {
+    private List<Token> cellBrains;
+    private String brainNoteString = "";
+
+    public BrainWindow(GameController gameController, int row, int col, Skin skin) {
         super("Brain Window", skin);
 
         // Create the window
@@ -29,31 +32,30 @@ public class BrainWindow extends Window {
         this.setResizable(false);
         this.setModal(true);
 
-        List<Token> cellBrains = gameController.getGame().getActiveBrains();
-        BrainNote tmpBrainNote = new BrainNote("");
+        cellBrains = gameController.getGame().getBoard().getCell(row, col).getBrains();
 
         for (Token brain : cellBrains) {
-            if (brain instanceof BrainNote) {
-                tmpBrainNote = (BrainNote) brain;
-                Label brainNoteLabel = new Label("Brain Note:", skin);
-                TextField nameField = new TextField(tmpBrainNote.getNote(), skin);
-                nameField.setMaxLength(30);
-                brainNoteLabel.setFontScale(2f);
-                this.add(brainNoteLabel).pad(20).row();
-                this.add(nameField).expandX().fillX().row();
-            } else {
-                BrainFact tempBrain = (BrainFact) brain;
-                Label brainFactLabel = new Label("Recruiter was here turn " + tempBrain.getTimestamp(), skin);
+            if (brain instanceof BrainFact) {
+                Label brainFactLabel = new Label("Recruiter was here turn " + ((BrainFact) brain).getTimestamp(),
+                        skin);
                 brainFactLabel.setFontScale(2f);
                 this.add(brainFactLabel).pad(20).row();
+            } else {
+                brainNoteString = ((BrainNote) brain).getNote();
             }
         }
+
+        Label brainNoteLabel = new Label("Brain Note:", skin);
+        TextField nameField = new TextField(brainNoteString, skin);
+        nameField.setMaxLength(30);
+        brainNoteLabel.setFontScale(2f);
+        this.add(brainNoteLabel).pad(20).row();
+        this.add(nameField).expandX().fillX().row();
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                String brainNoteString = "";
                 SnapshotArray<Actor> children = actor.getParent().getChildren();
                 for (Actor child : children) {
                     if (child instanceof TextField) {
