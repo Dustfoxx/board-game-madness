@@ -177,8 +177,6 @@ public class VisualCell extends Actor {
                 tokens.add(brains[0]);
             } else if (token instanceof BrainFact) {
                 tokens.add(brains[1]);
-            }else if (token instanceof MindSlip) {
-                tokens.add(mindslip);
             }
             else {
                 tokens.add(step);

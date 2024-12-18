@@ -26,8 +26,6 @@ public class TurnBar extends Table {
     private final Set<Integer> revealedTurnsInt; // Set of integers representing revealed turn indices
     private final Skin skin;
     private boolean titlesAdded = false;
-    private Recruiter.RecruiterType recruiterType;
-    private final Label msType;
 
     /**
      * Constructor for TurnBar. Initializes the UI elements and prepares the
@@ -42,8 +40,7 @@ public class TurnBar extends Table {
         Table turnClock = new Table();
         this.add(turnClock).expandX().fillX().top().row();
         this.timeValue = String.valueOf(gameController.getGame().getCurrentTime());
-        this.recruiterType = gameController.getGame().getRecruiter().getRecruiterType();
-        this.msType = new Label("Mindslip Type: " + recruiterType, skin, "half-tone");
+
         // Add leading zero to single-digit times
         if (timeValue.length() == 1) {
             timeValue = "0" + timeValue;
@@ -53,10 +50,6 @@ public class TurnBar extends Table {
         timeTracker = new Label("Current Turn: " + timeValue + ": 00", skin, "half-tone");
         timeTracker.setAlignment(Align.center);
         turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
-
-        //Mindslip Type
-        msType.setAlignment(Align.center);
-        this.add(msType).expandX().top().fillX().pad(10).row();
 
         // Table for tracking past turns
         pastTurn = new Table();
@@ -70,9 +63,6 @@ public class TurnBar extends Table {
      * past turns. Reveals additional turns based on the current turn number.
      */
     public void updateTurnbar() {
-
-        recruiterType = gameController.getGame().getRecruiter().getRecruiterType();
-        msType.setText("Mindslip Type: " + recruiterType);
 
         String updatedTime = String.valueOf(gameController.getGame().getCurrentTime());
 
