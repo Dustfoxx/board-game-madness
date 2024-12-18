@@ -79,6 +79,7 @@ public class ActionController {
 
         if (cell != null) {
             if (cell.containsFootstep()) {
+                if(cell.containsBrainFact()){
                 List<Token> tokens = cell.getTokens();
                 for (Token token : tokens) {
                     if (token instanceof Step) {
@@ -89,6 +90,10 @@ public class ActionController {
                         break;
                     }
                 }
+            }
+            else{
+                throw new IllegalStateException("Cell already contains a BrainFact");
+            }
             } else {
                 throw new IllegalStateException("Footstep missing in cell");
             }
