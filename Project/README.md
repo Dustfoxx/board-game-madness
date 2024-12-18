@@ -2,7 +2,9 @@
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+The project can be run using `gradlew lwjgl3:run` from a command line within the `project` folder. A java distribution must exist on path.
+The architecture follows the MVC model and consists of the folders in `core/src/main/java`. This is where you will find the bulk of the work.
+`src`also contains a test folder with a few tests written for the control and model parts of the code.
 
 ## Platforms
 
@@ -13,7 +15,7 @@ This project was generated with a template including simple application launcher
 ## Gradle
 
 This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
+The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands. 
 Useful Gradle tasks and flags:
 
 - `--continue`: when using this flag, errors will not stop the tasks from running.
