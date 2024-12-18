@@ -228,14 +228,9 @@ public class GameController {
                 gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case REVEAL:
-                // TODO: int[] playerCoord =
-                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
-                // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
-                // playerCoord[1]).getFootstep(),
-                // gameState.getBoard(),
-                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
-                // gameState.getRecruiter().getWalkedPath());
-                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+                AbstractCell cell = gameState.getCurrentPlayerCell();
+                actionController.reveal(cell);
+                gameState.setActionAvailability(false);
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
