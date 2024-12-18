@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
@@ -66,7 +64,7 @@ public class VisualCell extends Actor {
         // These are currently magic numbers and pretty ugly. Find better way of doing
         // this
         this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
-        this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
+        this.footstep = new TextureRegion(stepImg, 170, 360, 70, 70);
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
