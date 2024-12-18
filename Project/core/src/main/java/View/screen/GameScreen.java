@@ -17,6 +17,7 @@ import Model.User;
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.EndGameWindow;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import View.screen.GameScreenComponents.RecruiterWindow;
@@ -58,6 +59,11 @@ public class GameScreen implements Screen {
         this.featureSelection = new FeatureSelection(gameController, skin);
         Gdx.input.setInputProcessor(stage);
         setupUI();
+        EndGameWindow endGameWindow = new EndGameWindow(gameController.getGame(), skin, application);
+        endGameWindow.setPosition(
+                Gdx.graphics.getWidth() / 2 - endGameWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2 - endGameWindow.getHeight() / 2);
+        stage.addActor(endGameWindow);
     }
 
     private void setupUI() {
