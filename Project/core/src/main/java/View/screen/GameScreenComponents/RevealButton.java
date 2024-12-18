@@ -3,7 +3,6 @@ package View.screen.GameScreenComponents;
 import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.RougeAgent;
-import Model.AbstractCell;
 import Model.Player;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -25,10 +24,7 @@ public class RevealButton extends TextButton {
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AbstractCell cell = gameController.getGame().getCurrentPlayerCell();
-                if (cell.containsFootstep()) {
-                    gameController.actionHandler(Actions.REVEAL);
-                }
+                gameController.actionHandler(Actions.REVEAL);
             }
         });
     }

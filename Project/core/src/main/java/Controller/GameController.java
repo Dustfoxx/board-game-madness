@@ -230,7 +230,7 @@ public class GameController {
             case REVEAL:
                 AbstractCell cell = gameState.getCurrentPlayerCell();
                 actionController.reveal(cell);
-                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+                gameState.setActionAvailability(false);
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),

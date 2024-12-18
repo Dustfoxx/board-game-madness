@@ -76,15 +76,24 @@ public class ActionController {
      */
     public void reveal(AbstractCell cell) {
         // Find the step token in the cell
-        List<Token> tokens = cell.getTokens();
-        for (Token token : tokens) { 
-            if (token instanceof Step) {
-                int timestamp = ((Step) token).timestamp; // Get the timestamp of the step
-                BrainFact brainfact = new BrainFact(timestamp); // Create a new brainfact with the timestamp
-                cell.removeToken(cell.getFootstep()); // Remove the old footstep
-                cell.addToken(brainfact); // Replace with the new brainfact
-                break;
+
+        if (cell != null) {
+            if (cell.containsFootstep()) {
+                List<Token> tokens = cell.getTokens();
+                for (Token token : tokens) {
+                    if (token instanceof Step) {
+                        int timestamp = ((Step) token).timestamp; // Get the timestamp of the step
+                        BrainFact brainfact = new BrainFact(timestamp); // Create a new brainfact with the timestamp
+                        cell.removeToken(cell.getFootstep()); // Remove the old footstep
+                        cell.addToken(brainfact); // Replace with the new brainfact
+                        break;
+                    }
+                }
+            } else {
+                throw new IllegalStateException("Footstep missing in cell");
             }
+        } else {
+            throw new IllegalStateException("Reveal should not be possible when player is not placed");
         }
     }
 
