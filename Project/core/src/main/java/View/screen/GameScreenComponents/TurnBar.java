@@ -24,6 +24,7 @@ public class TurnBar extends Table {
     private final Set<Table> revealedTurns; // Set of tables representing revealed turns
     private final Set<Integer> revealedTurnsInt; // Set of integers representing revealed turn indices
     private final Skin skin;
+    private boolean titlesAdded = false;
 
     /**
      * Constructor for TurnBar.
@@ -98,18 +99,25 @@ public class TurnBar extends Table {
         turnRow.setDebug(true); // Enables debug mode for layout visualization
         turnRow.align(Align.center);
 
-        // Add recruited information
-        Label recruitedTitle = new Label("Recruits: ", skin, "half-tone");
-        recruitedTitle.setAlignment(Align.center);
-        turnRow.add(recruitedTitle).expandX().pad(5);
-        Label turnTitle = new Label("Turn: ", skin, "half-tone");
-        turnTitle.setAlignment(Align.center);
-        turnRow.add(turnTitle).expandX().pad(5);
-        Label msTitle = new Label("Mindslip: ", skin, "half-tone");
-        msTitle.setAlignment(Align.center);
-        turnRow.add(msTitle).expandX().pad(5);
+        if (!titlesAdded) {
 
-        turnRow.row();
+            // Add titles
+            Label recruitedTitle = new Label("Recruits: ", skin, "half-tone");
+            recruitedTitle.setAlignment(Align.center);
+            turnRow.add(recruitedTitle).expandX().pad(5);
+
+            Label turnTitle = new Label("Turn: ", skin, "half-tone");
+            turnTitle.setAlignment(Align.center);
+            turnRow.add(turnTitle).expandX().pad(5);
+
+            Label msTitle = new Label("Mindslip: ", skin, "half-tone");
+            msTitle.setAlignment(Align.center);
+            turnRow.add(msTitle).expandX().pad(5);
+
+            turnRow.row();
+            titlesAdded = true;
+
+        }
 
         // Add recruited amount
         int unrevealedRecruits = gameController.getGame().getRecruitAtTime(turn)[1];
