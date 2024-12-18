@@ -2,6 +2,7 @@ package View.screen;
 
 import Controller.GameController;
 
+import Model.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,36 +32,56 @@ import io.github.MindMGMT.MindMGMT;
 
 public class GameScreen implements Screen {
     private final GameController gameController;
-    private final MindMGMTStage stage;
-    private final Skin skin;
-    private final Texture boardTexture;
-    private final PlayerBar playerBar;
-    private final TurnBar turnBar;
-    private final SettingWindow settingWindow;
+    private MindMGMTStage stage;
+    private Skin skin;
+    private Texture boardTexture;
+    private PlayerBar playerBar;
+    private TurnBar turnBar;
+    private SettingWindow settingWindow;
     private VisualBoard visualBoard;
-    private final FeatureSelection featureSelection;
+    private FeatureSelection featureSelection;
+    private boolean isHost;
 
+    /**
+     * Main game screen. This constructor is intended for client use.
+     * @param application Reference to the application
+     * @param gameState An initial cop of the hosts game state
+     */
+    public GameScreen(MindMGMT application, Game gameState) {
+        this.gameController = new GameController(gameState);
+        this.isHost = false;
+        setupUI(application);
+    }
+
+    /**
+     * Main game screen. This constructor is intended for host use.
+     * @param application Reference to the application
+     * @param users A list of users each representing a client
+     */
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
-        this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
-        this.skin = application.skin;
-        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users);
+        this.isHost = true;
 
         if (application.server != null) {
             // We are host
             application.server.setGameState(this.gameController.getGame());
         }
+
+        setupUI(application);
+    }
+
+    private void setupUI(MindMGMT application) {
+
+        this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
+        this.skin = application.skin;
+        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
         this.featureSelection = new FeatureSelection(gameController, skin);
         Gdx.input.setInputProcessor(stage);
-        setupUI();
-    }
-
-    private void setupUI() {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);

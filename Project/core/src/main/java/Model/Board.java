@@ -154,5 +154,4 @@ public class Board {
         result = 31 * result + Arrays.deepHashCode(cells);
         return result;
     }
-
 }

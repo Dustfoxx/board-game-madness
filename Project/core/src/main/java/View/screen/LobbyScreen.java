@@ -1,7 +1,7 @@
 package View.screen;
 
 import Controller.ServerComponents.MindMGMTServer;
-import Model.User;
+import Model.*;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
@@ -16,11 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import io.github.MindMGMT.MindMGMT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class LobbyScreen implements Screen {
     private final MindMGMT application;
@@ -33,7 +35,7 @@ public class LobbyScreen implements Screen {
     private int frameCount;
     private final boolean isHost;
 
-    private boolean gameStarted;
+    private Game gameState;
 
     public LobbyScreen(MindMGMT application, String hostName)  {
         this.application = application;
@@ -46,7 +48,7 @@ public class LobbyScreen implements Screen {
         this.frameCount = 0;
         this.pollingFrequency = 30;
         this.isHost = hostName != null;
-        this.gameStarted = false;
+        this.gameState = null;
 
         if (this.isHost) {
             if (this.application.server != null) {
@@ -116,13 +118,19 @@ public class LobbyScreen implements Screen {
     private Net.HttpResponseListener getPollListener() {
         return new Net.HttpResponseListener() {
 
+            private final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Player .class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token .class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
+
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String msg = httpResponse.getResultAsString();
-
-                if (msg.equals("ingame")) {
-                    gameStarted = true;
-                } else {
+                System.out.println(msg);
+                try {
+                    gameState = gson.fromJson(msg, Game.class);
+                } catch (JsonSyntaxException e) {
                     String[] incomingPlayers = msg.split(",");
 
                     players.clear();
@@ -132,13 +140,11 @@ public class LobbyScreen implements Screen {
 
             @Override
             public void failed(Throwable t) {
-
+                System.out.println(t.getMessage());
             }
 
             @Override
-            public void cancelled() {
-
-            }
+            public void cancelled() {}
         };
     }
 
@@ -149,12 +155,13 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (gameStarted) {
+        if (!isHost && gameState != null) {
+            // Game has started
             ArrayList<User> users = new ArrayList<>();
             for (int i = 0; i < players.size(); i++) {
                 users.add(new User(i, players.get(i)));
             }
-            application.setScreen(new GameScreen(application, users));
+            application.setScreen(new GameScreen(application, gameState));
             dispose();
         } else if (!isHost && frameCount >= pollingFrequency) {
             frameCount = 0;

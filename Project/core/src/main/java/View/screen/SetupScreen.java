@@ -39,7 +39,6 @@ public class SetupScreen implements Screen {
         root.row().height(height * 0.05f);
 
         for (int i = 2; i <= 5; i++) {
-            final int value = i;
             TextButton usersButton = new TextButton(i + " players", application.skin);
             root.add(usersButton).pad(20);
             usersButton.addListener(new ChangeListener() {
@@ -49,6 +48,7 @@ public class SetupScreen implements Screen {
                     dispose();
                 }
             });
+
             // Start a new row for last 2 buttons
             if (i == 3) {
                 root.row();

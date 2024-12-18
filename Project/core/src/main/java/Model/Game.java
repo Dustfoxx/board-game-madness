@@ -244,7 +244,7 @@ public class Game {
 
     /**
      * Sets active brains. These display when brainWindow is called
-     * 
+     *
      * @param brains the list of brains to display
      */
     public List<Token> getActiveBrains() {
@@ -253,7 +253,7 @@ public class Game {
 
     /**
      * Sets active brains. These display when brainWindow is called
-     * 
+     *
      * @param brains the list of brains to display
      */
     public void setActiveBrains(List<Token> brains) {
@@ -360,7 +360,7 @@ public class Game {
 
     /**
      * Returns the validitymask for the board
-     * 
+     *
      * @return matrix of booleans. True where player can move and false where they
      *         cannc
      */
@@ -384,7 +384,7 @@ public class Game {
 
     /**
      * Gets the cell which the current player is at.
-     * 
+     *
      * @return The cell which the current player is at, otherwise null.
      */
     public AbstractCell getCurrentPlayerCell() {

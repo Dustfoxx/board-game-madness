@@ -37,17 +37,28 @@ public class GameController {
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
-     * are next in queue to play. This is the constructor. Currently does not track
-     * when
-     * recruits and similar have been added timewise.
+     * are next in queue to play. This is the constructor mainly inteded for clients.
+     */
+    public GameController(Game gameState) {
+        initController(gameState);
+    }
+
+    /**
+     * The main gameController. Keeps an eye on victory conditions and which players
+     * are next in queue to play. This is the constructor intended for the host.
      */
 
     public GameController(Csv boardCsv, ArrayList<User> users) {
+        Game game = initializeGame(boardCsv, users);
+        initController(game);
+    }
+
+    private void initController(Game game) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
-                               // controlled
-        gameState = initializeGame(boardCsv, users);
+        // controlled
+        this.gameState = game;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
 

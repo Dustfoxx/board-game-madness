@@ -51,7 +51,7 @@ class SerializationTests {
         }
 
         board = new Board(cells);
-        board.getCell(0,0).addPlayer(new RougeAgent(10, null));
+        board.getCell(0,0).addPlayer(new Recruiter(10, null, featuresOfInterest));
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
@@ -63,29 +63,27 @@ class SerializationTests {
     void testGameConstructorValidation() {
 
         Gson gson = new GsonBuilder()
-        .registerTypeAdapter(Player.class, new GeneralAdapter<>(new Gson()))
-        .registerTypeAdapter(Token.class, new GeneralAdapter<>(new Gson()))
-        .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>(new Gson()))
-        .create();
+            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+            .create();
 
 
         // Serialize Java object to JSON
         String jsonGame = gson.toJson(game);
-        System.out.println("Serialized JSON: " + jsonGame);
 
         // Deserialize JSON to Java object
         Game newGame = gson.fromJson(jsonGame, Game.class);
-        System.out.println("Deserialized Object: " + newGame);
 
-        assertTrue(game.equals(newGame));
+        assertEquals(game, newGame);
     }
 
     @Test
     void testGameSerialization() {
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Player.class, new GeneralAdapter<>(new Gson()))
-            .registerTypeAdapter(Token.class, new GeneralAdapter<>(new Gson()))
-            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>(new Gson()))
+            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
             .create();
 
         StringBuilder json = new StringBuilder();
@@ -101,7 +99,6 @@ class SerializationTests {
             e.printStackTrace();
         }
 
-        System.out.println("Serialized JSON: " + json);
         Game game = gson.fromJson(json.toString(), Game.class);
         assertNotNull(game);
     }

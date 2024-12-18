@@ -2,17 +2,64 @@
   "gameState": "ONGOING",
   "gameOver": false,
   "currentPlayer": {
-    "id": 1,
-    "name": "Agent1",
-    "type": "Model.RougeAgent"
+    "amountRecruited": 0,
+    "walkedPath": [],
+    "featuresOfInterest": [
+      null,
+      null,
+      null
+    ],
+    "id": 0,
+    "type": "Model.Recruiter"
   },
-  "currentTime": 6,
+  "currentTime": 0,
   "maxTime": 14,
   "maxRecruits": 9,
   "board": {
-    "rowsDim": 7,
-    "colsDim": 6,
+    "rowsDim": 3,
+    "colsDim": 3,
     "cells": [
+      [
+        {
+          "features": [
+            "BILLBOARD",
+            "BOOKSTORE"
+          ],
+          "players": [
+            {
+              "amountRecruited": 0,
+              "walkedPath": [],
+              "featuresOfInterest": [
+                null,
+                null,
+                null
+              ],
+              "id": 10,
+              "type": "Model.Recruiter"
+            }
+          ],
+          "tokens": [],
+          "type": "Model.NormalCell"
+        },
+        {
+          "features": [
+            "BILLBOARD",
+            "BOOKSTORE"
+          ],
+          "players": [],
+          "tokens": [],
+          "type": "Model.NormalCell"
+        },
+        {
+          "features": [
+            "BILLBOARD",
+            "BOOKSTORE"
+          ],
+          "players": [],
+          "tokens": [],
+          "type": "Model.NormalCell"
+        }
+      ],
       [
         {
           "features": [
@@ -25,78 +72,8 @@
         },
         {
           "features": [
-            "COFFEE",
-            "BUS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "TREE",
-            "UMBRELLA"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "GRAFFITI",
-            "IDOL"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "GARDEN",
-            "DOGS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "FOUNTAIN",
-            "POOL"
-          ],
-          "players": [
-            {
-              "id": 2,
-              "name": "Agent2"
-            }
-          ],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        }
-      ],
-      [
-        {
-          "features": [
-            "GRAFFITI",
-            "FOUNTAIN"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "PARROT",
-            "DOGS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "TORCHES",
-            "MONKS"
+            "BILLBOARD",
+            "BOOKSTORE"
           ],
           "players": [],
           "tokens": [],
@@ -105,331 +82,18 @@
         {
           "features": [
             "BILLBOARD",
-            "COFFEE"
+            "BOOKSTORE"
           ],
           "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "BUS",
-            "COURIER"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "BOOKSTORE",
-            "TORCHES"
-          ],
-          "players": [
-            {
-              "id": 1,
-              "name": "Agent1"
-            }
-          ],
           "tokens": [],
           "type": "Model.NormalCell"
         }
       ],
       [
-        {
-          "features": [
-            "TORCHES",
-            "POOL"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "UMBRELLA",
-            "GARDEN"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "players": [],
-          "tokens": [],
-          "type": "Model.TempleCell"
-        },
-        {
-          "features": [
-            "PARROT",
-            "TREE"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "POOL",
-            "GRAFFITI"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "IDOL",
-            "DOGS"
-          ],
-          "players": [
-            {
-              "amountRecruited": 0,
-              "chosenRecruiter": "USED",
-              "walkedPath": [
-                [
-                  4,
-                  2
-                ],
-                [
-                  4,
-                  3
-                ],
-                [
-                  4,
-                  5
-                ],
-                [
-                  3,
-                  5
-                ],
-                [
-                  2,
-                  5
-                ]
-              ],
-              "featuresOfInterest": [
-                "GRAFFITI",
-                "UMBRELLA",
-                "PARROT"
-              ],
-              "id": 0,
-              "name": "Recruiter"
-            },
-            {
-              "id": 3,
-              "name": "Agent3"
-            },
-            {
-              "id": 4,
-              "name": "Agent4"
-            }
-          ],
-          "tokens": [
-            {
-              "timestamp": 5
-            }
-          ],
-          "type": "Model.NormalCell"
-        }
-      ],
-      [
-        {
-          "features": [
-            "MONKS",
-            "COURIER"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "TREE",
-            "BILLBOARD"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "POOL",
-            "IDOL"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "FOUNTAIN",
-            "UMBRELLA"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "BOOKSTORE",
-            "MONKS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "PARROT",
-            "COFFEE"
-          ],
-          "players": [],
-          "tokens": [
-            {
-              "timestamp": 4
-            }
-          ],
-          "type": "Model.NormalCell"
-        }
-      ],
-      [
-        {
-          "features": [
-            "BOOKSTORE",
-            "GRAFFITI"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "COFFEE",
-            "TORCHES"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "DOGS",
-            "MONKS"
-          ],
-          "players": [],
-          "tokens": [
-            {
-              "timestamp": 1
-            },
-            {
-              "timestamp": 1
-            }
-          ],
-          "type": "Model.NormalCell"
-        },
         {
           "features": [
             "BILLBOARD",
-            "GARDEN"
-          ],
-          "players": [],
-          "tokens": [
-            {
-              "timestamp": 2
-            }
-          ],
-          "type": "Model.NormalCell"
-        },
-        {
-          "players": [],
-          "tokens": [],
-          "type": "Model.TempleCell"
-        },
-        {
-          "features": [
-            "POOL",
-            "COURIER"
-          ],
-          "players": [],
-          "tokens": [
-            {
-              "timestamp": 3
-            }
-          ],
-          "type": "Model.NormalCell"
-        }
-      ],
-      [
-        {
-          "features": [
-            "TREE",
-            "BUS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "UMBRELLA",
-            "IDOL"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "COURIER",
-            "GRAFFITI"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "BOOKSTORE",
-            "BUS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "FOUNTAIN",
-            "IDOL"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "TREE",
-            "GARDEN"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        }
-      ],
-      [
-        {
-          "features": [
-            "PARROT",
-            "GARDEN"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "MONKS",
-            "FOUNTAIN"
+            "BOOKSTORE"
           ],
           "players": [],
           "tokens": [],
@@ -438,7 +102,7 @@
         {
           "features": [
             "BILLBOARD",
-            "TORCHES"
+            "BOOKSTORE"
           ],
           "players": [],
           "tokens": [],
@@ -446,26 +110,8 @@
         },
         {
           "features": [
-            "COFFEE",
-            "UMBRELLA"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "COURIER",
-            "DOGS"
-          ],
-          "players": [],
-          "tokens": [],
-          "type": "Model.NormalCell"
-        },
-        {
-          "features": [
-            "BUS",
-            "PARROT"
+            "BILLBOARD",
+            "BOOKSTORE"
           ],
           "players": [],
           "tokens": [],
@@ -474,106 +120,33 @@
       ]
     ]
   },
-  "recruitHistory": [
-    [
-      5,
-      1
-    ]
-  ],
-  "mindSlipHistory": [
-    2
-  ],
+  "recruitHistory": [],
+  "mindSlipHistory": [],
   "players": [
     {
       "amountRecruited": 0,
-      "chosenRecruiter": "USED",
-      "walkedPath": [
-        [
-          4,
-          2
-        ],
-        [
-          4,
-          3
-        ],
-        [
-          4,
-          5
-        ],
-        [
-          3,
-          5
-        ],
-        [
-          2,
-          5
-        ]
-      ],
+      "walkedPath": [],
       "featuresOfInterest": [
-        "GRAFFITI",
-        "UMBRELLA",
-        "PARROT"
+        null,
+        null,
+        null
       ],
       "id": 0,
-      "name": "Recruiter",
       "type": "Model.Recruiter"
     },
     {
       "id": 1,
-      "name": "Agent1",
-      "type": "Model.RougeAgent"
-    },
-    {
-      "id": 2,
-      "name": "Agent2",
-      "type": "Model.RougeAgent"
-    },
-    {
-      "id": 3,
-      "name": "Agent3",
-      "type": "Model.RougeAgent"
-    },
-    {
-      "id": 4,
-      "name": "Agent4",
       "type": "Model.RougeAgent"
     }
   ],
   "activeBrains": [],
-  "users": [
-    {
-      "playerPieces": [
-        0
-      ],
-      "userId": 0,
-      "userName": "Admin"
-    },
-    {
-      "playerPieces": [
-        1,
-        2,
-        3,
-        4
-      ],
-      "userId": 1,
-      "userName": "Dummy player"
-    }
-  ],
+  "users": [],
   "isMovementAvailable": true,
   "isActionAvailable": false,
   "validityMask": [
     [
       {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
+        "mutableBoolean": true
       },
       {
         "mutableBoolean": true
@@ -583,15 +156,6 @@
       }
     ],
     [
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
       {
         "mutableBoolean": true
       },
@@ -604,102 +168,13 @@
     ],
     [
       {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
+        "mutableBoolean": true
       },
       {
         "mutableBoolean": true
       },
       {
         "mutableBoolean": true
-      }
-    ],
-    [
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": true
-      }
-    ],
-    [
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      }
-    ],
-    [
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      }
-    ],
-    [
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
-      },
-      {
-        "mutableBoolean": false
       }
     ]
   ],
