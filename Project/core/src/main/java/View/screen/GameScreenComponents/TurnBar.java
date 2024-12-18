@@ -6,23 +6,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.graphics.g2d.Batch;
-
 
 import java.util.HashSet;
 import Controller.GameController;
 import Model.Recruiter;
 
-
 /**
  * The TurnBar class represents a UI component that displays the current turn
- * and tracks
- * previous turns in a game.
- * This class is responsible for updating the turn display and managing revealed
- * turns.
+ * and tracks previous turns in a game. This class is responsible for updating
+ * the turn display and managing revealed turns.
  */
-
 public class TurnBar extends Table {
+
     private final GameController gameController;
     private String timeValue; // The current time value as a string
     private final Label timeTracker; // Label for displaying the current time
@@ -32,17 +27,15 @@ public class TurnBar extends Table {
     private final Skin skin;
     private boolean titlesAdded = false;
     private Recruiter.RecruiterType recruiterType;
-    private Label msType;
+    private final Label msType;
 
     /**
-     * Constructor for TurnBar.
-     * Initializes the UI elements and prepares the turn bar for updates.
+     * Constructor for TurnBar. Initializes the UI elements and prepares the
+     * turn bar for updates.
      *
      * @param gameController The GameController that manages game state.
      */
-
     public TurnBar(GameController gameController, Skin skin) {
-        this.setDebug(true); // Enables debug mode for visualizing layout borders
         this.gameController = gameController;
         this.skin = skin;
         // Table for displaying the turn clock
@@ -57,14 +50,13 @@ public class TurnBar extends Table {
         }
 
         // Label for displaying the current turn time
-        timeTracker = new Label("Current Turn: "+ timeValue + ": 00", skin, "half-tone");
+        timeTracker = new Label("Current Turn: " + timeValue + ": 00", skin, "half-tone");
         timeTracker.setAlignment(Align.center);
         turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
 
         //Mindslip Type
-
         msType.setAlignment(Align.center);
-        this.add(msType).expandX().top().fillX().pad(10);
+        this.add(msType).expandX().top().fillX().pad(10).row();
 
         // Table for tracking past turns
         pastTurn = new Table();
@@ -75,8 +67,7 @@ public class TurnBar extends Table {
 
     /**
      * Updates the turn bar by refreshing the current turn display and revealing
-     * past turns.
-     * Reveals additional turns based on the current turn number.
+     * past turns. Reveals additional turns based on the current turn number.
      */
     public void updateTurnbar() {
 
@@ -91,7 +82,7 @@ public class TurnBar extends Table {
         }
 
         // Update the time tracker label
-        timeTracker.setText("Current Turn: "+ updatedTime + ": 00");
+        timeTracker.setText("Current Turn: " + updatedTime + ": 00");
 
         int currentTurn = gameController.getGame().getCurrentTime();
 
@@ -108,7 +99,6 @@ public class TurnBar extends Table {
      *
      * @param turn The turn number to reveal.
      */
-
     private void revealTurn(int turn) {
         String turnString = (turn > 9) ? String.valueOf(turn) : "0" + turn;
 
@@ -164,11 +154,6 @@ public class TurnBar extends Table {
             pastTurn.row();
             revealedTurns.add(turnRow);
         }
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
     }
 
 }
