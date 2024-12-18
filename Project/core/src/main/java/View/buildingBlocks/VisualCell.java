@@ -157,7 +157,9 @@ public class VisualCell extends Actor {
     private void updatePlayers() {
         players.clear();
         for (Player player : cellInfo.getPlayers()) {
-            players.add(fetchPlayer(player.getId()));
+            if (player.getVisibility()) {
+                players.add(fetchPlayer(player.getId()));
+            }
         }
     }
 
@@ -167,25 +169,29 @@ public class VisualCell extends Actor {
     private void updateTokens() {
         tokens.clear();
         for (Token token : cellInfo.getTokens()) {
-            if (token instanceof Footstep) {
-                tokens.add(footstep);
-            } else if (token instanceof BrainNote) {
-                tokens.add(brains[0]);
-            } else if (token instanceof BrainFact) {
-                tokens.add(brains[1]);
-            } else {
-                tokens.add(step);
+            if (token.getVisibility()) {
+                if (token instanceof Footstep) {
+                    tokens.add(footstep);
+                } else if (token instanceof BrainNote) {
+                    tokens.add(brains[0]);
+                } else if (token instanceof BrainFact) {
+                    tokens.add(brains[1]);
+                } else {
+                    tokens.add(step);
+                }
             }
         }
     }
 
     /**
      * Initializes the feature dictionary by loading feature mappings.
-     * This dictionary maps each {@link Feature} to its corresponding index in the texture.
-     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate the mapping.
+     * This dictionary maps each {@link Feature} to its corresponding index in the
+     * texture.
+     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate
+     * the mapping.
      */
     private void initDict() {
-        this.features=FeatureUtil.initializeFeatureDict();
+        this.features = FeatureUtil.initializeFeatureDict();
     }
 
     /**
@@ -193,8 +199,10 @@ public class VisualCell extends Actor {
      * magic numbers to separate them. Should be replaced by atlas
      *
      * @param feature The {@link Feature} to be fetched from the texture.
-     * @return A {@link TextureRegion} containing the image of the specified feature.
-     * @throws IllegalArgumentException If the texture file is missing or the feature is invalid.
+     * @return A {@link TextureRegion} containing the image of the specified
+     *         feature.
+     * @throws IllegalArgumentException If the texture file is missing or the
+     *                                  feature is invalid.
      */
     public TextureRegion fetchFeature(Feature feature) {
         this.featuresImg = new Texture("feature_img.png");
