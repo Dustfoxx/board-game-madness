@@ -16,6 +16,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.MindSlip;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
@@ -28,6 +29,7 @@ public class VisualCell extends Actor {
     private TextureRegion footstep;
     private TextureRegion[] brains;
     private TextureRegion step;
+    private TextureRegion mindslip;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
     private Texture highlight = new Texture("highlight.png");
@@ -39,6 +41,7 @@ public class VisualCell extends Actor {
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
     private Texture stepImg = new Texture("tokens_3d.png");
+    private Texture mindslipImg=new Texture("tokens_3d.png");
     private MutableBoolean highlighted;
 
     /**
@@ -66,6 +69,7 @@ public class VisualCell extends Actor {
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
         this.step = new TextureRegion(stepImg, 170, 360, 70, 70);
+        this.mindslip=new TextureRegion(mindslipImg, 303, 365, 60, 60);
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
         updatePlayers();
@@ -173,7 +177,10 @@ public class VisualCell extends Actor {
                 tokens.add(brains[0]);
             } else if (token instanceof BrainFact) {
                 tokens.add(brains[1]);
-            } else {
+            }else if (token instanceof MindSlip) {
+                tokens.add(mindslip);
+            }
+            else {
                 tokens.add(step);
             }
         }

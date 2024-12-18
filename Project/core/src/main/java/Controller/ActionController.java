@@ -13,6 +13,7 @@ import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
 import Model.Game;
+import Model.MindSlip;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
@@ -24,7 +25,7 @@ public class ActionController {
 
     /**
      * Performs the capture action
-     * 
+     *
      * @param player    The player that performed the action
      * @param recruiter A reference to the recruiter
      * @param board     A reference to the board state
@@ -46,7 +47,7 @@ public class ActionController {
      * Instead it searches the recruiter's walked path for the first cell (earliest
      * step) containing the specified feature and adds a Footstep token to that cell
      * (if its found).
-     * 
+     *
      * @param feature   the feature being searched for
      * @param recruiter the recruiter of the game
      * @param board     the board of the game
@@ -70,7 +71,7 @@ public class ActionController {
 
     /**
      * Replaces a footstep with a brain-fact token
-     * 
+     *
      * @param footstep   the footstep to be replaced
      * @param board      the game of the board
      * @param position   The position of the footstep Note: could be calculated, but
@@ -99,7 +100,7 @@ public class ActionController {
     /**
      * Places a player on the board. Mask
      * decides valid spots
-     * 
+     *
      * @param player       the player that is being placed
      * @param board        the board it is being placed on
      * @param validityMask the mask defining valid positions. Null if all options
@@ -127,6 +128,7 @@ public class ActionController {
                     Recruiter tmpRecruiter = (Recruiter) player;
                     tmpRecruiter.setRecruiterType(RecruiterType.USED);
                     gameState.addMindSlipEvent();
+                    gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).addToken(new MindSlip());
                 }
             }
             AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
@@ -185,7 +187,7 @@ public class ActionController {
 
     /**
      * Adds a brainnote to a cell, replaces it if one exists already
-     * 
+     *
      * @param text  Text it should contain
      * @param row   row of the brainnote
      * @param col   column of the brainnote
@@ -216,7 +218,7 @@ public class ActionController {
 
     /**
      * Fetches the information of a cells brains
-     * 
+     *
      * @param row   the row to fetch from
      * @param col   the columns to fetch from
      * @param board the board the notes exists on
