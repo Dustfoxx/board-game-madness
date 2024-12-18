@@ -140,7 +140,7 @@ public class TurnBar extends Table {
 
         // Add mindslip information
         String msinformation = "Not used";
-        if (turn == 5 && !gameController.getGame().getMindSlipHistory().isEmpty()) {
+        if (turn >4 && !gameController.getGame().getMindSlipHistory().isEmpty()) {
             msinformation = String.valueOf(gameController.getGame().getMindSlipHistory().get(0));
         }
         Label msLabel = new Label(msinformation, skin, "half-tone");
