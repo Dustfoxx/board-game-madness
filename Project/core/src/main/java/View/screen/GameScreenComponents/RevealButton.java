@@ -31,7 +31,6 @@ public class RevealButton extends TextButton {
         });
     }
 
-
     @Override
     public Actor hit(float x, float y, boolean touchable) {
         // This override prevents the button from being clickable when disabled
@@ -46,17 +45,15 @@ public class RevealButton extends TextButton {
     public void draw(Batch batch, float parentAlpha) {
         this.player = gameController.getGame().getCurrentPlayer();
         if (player.getClass().equals(RougeAgent.class)) {
-            super.draw(batch, parentAlpha);
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
-                if (currentCell != null && currentCell.containsFootstep() && !currentCell.containsBrainFact()) {
-                    this.setColor(Color.WHITE);
-                    this.setDisabled(false);
-                } else {
-                    this.setColor(0.6f, 0.6f, 0.6f, 1f);
-                    this.setDisabled(true);
-                }
+            if (currentCell != null && currentCell.containsFootstep() && !currentCell.containsBrainFact()) {
+                this.setColor(Color.WHITE);
+                this.setDisabled(false);
+            } else {
+                this.setColor(0.6f, 0.6f, 0.6f, 1f);
+                this.setDisabled(true);
+            }
             super.draw(batch, parentAlpha);
-            this.setDisabled(false);
         } else {
             this.setDisabled(true);
         }

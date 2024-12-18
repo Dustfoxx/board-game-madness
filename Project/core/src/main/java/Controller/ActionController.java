@@ -79,7 +79,7 @@ public class ActionController {
 
         if (cell != null) {
             if (cell.containsFootstep()) {
-                if(cell.containsBrainFact()){
+                if(!cell.containsBrainFact()){
                 List<Token> tokens = cell.getTokens();
                 for (Token token : tokens) {
                     if (token instanceof Step) {
