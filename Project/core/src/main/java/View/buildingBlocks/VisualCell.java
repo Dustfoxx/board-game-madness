@@ -7,8 +7,11 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import Model.AbstractCell;
@@ -19,6 +22,7 @@ import Model.Footstep;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
+import Model.Step;
 import Model.Token;
 
 public class VisualCell extends Actor {
@@ -27,13 +31,14 @@ public class VisualCell extends Actor {
     private TextureRegion temple;
     private TextureRegion footstep;
     private TextureRegion[] brains;
-    private TextureRegion step;
+    private BitmapFont step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
     private Texture highlight = new Texture("highlight.png");
     private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
     private Dictionary<Feature, Integer> features;
+    private String stepText;
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
@@ -65,9 +70,10 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
-        this.step = new TextureRegion(stepImg, 170, 360, 70, 70);
+        this.step = new BitmapFont();
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
+        this.stepText = "";
         updatePlayers();
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
@@ -93,6 +99,8 @@ public class VisualCell extends Actor {
         }
         drawPlayers(batch);
         drawTokens(batch);
+        this.step.getData().setScale(getScaleX() * 3);
+        this.step.draw(batch, this.stepText, getX(), getY() + getHeight() / 2);
     }
 
     /**
@@ -174,18 +182,20 @@ public class VisualCell extends Actor {
             } else if (token instanceof BrainFact) {
                 tokens.add(brains[1]);
             } else {
-                tokens.add(step);
+                this.stepText = String.valueOf(((Step) token).timestamp);
             }
         }
     }
 
     /**
      * Initializes the feature dictionary by loading feature mappings.
-     * This dictionary maps each {@link Feature} to its corresponding index in the texture.
-     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate the mapping.
+     * This dictionary maps each {@link Feature} to its corresponding index in the
+     * texture.
+     * It uses the {@link FeatureUtil#initializeFeatureDict()} method to populate
+     * the mapping.
      */
     private void initDict() {
-        this.features=FeatureUtil.initializeFeatureDict();
+        this.features = FeatureUtil.initializeFeatureDict();
     }
 
     /**
@@ -193,8 +203,10 @@ public class VisualCell extends Actor {
      * magic numbers to separate them. Should be replaced by atlas
      *
      * @param feature The {@link Feature} to be fetched from the texture.
-     * @return A {@link TextureRegion} containing the image of the specified feature.
-     * @throws IllegalArgumentException If the texture file is missing or the feature is invalid.
+     * @return A {@link TextureRegion} containing the image of the specified
+     *         feature.
+     * @throws IllegalArgumentException If the texture file is missing or the
+     *                                  feature is invalid.
      */
     public TextureRegion fetchFeature(Feature feature) {
         this.featuresImg = new Texture("feature_img.png");

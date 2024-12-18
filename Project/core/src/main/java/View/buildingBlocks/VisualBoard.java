@@ -77,6 +77,7 @@ public class VisualBoard {
     public Table getVisualBoard() {
         return this.board;
     }
+
     public void highlightValidCells(boolean[][] mask) {
         int rows = mask.length;
         int cols = mask[0].length;
