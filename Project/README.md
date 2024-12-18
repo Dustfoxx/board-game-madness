@@ -6,6 +6,12 @@ The project can be run using `gradlew lwjgl3:run` from a command line within the
 The architecture follows the MVC model and consists of the folders in `core/src/main/java`. This is where you will find the bulk of the work.
 `src`also contains a test folder with a few tests written for the control and model parts of the code.
 
+Currently the game is playable through an entire game but some important features are missing.
+- The recruiter should be invisible when agents are playing which is not the case right now.
+- Should the game crash you have to completely restart the game if you're using vscode.
+- No rules are shown in game so to understand the goal you'll have to check out the rulebook: https://offthepagegames.com/wp-content/uploads/2020/10/mm-RULEBOOK-v6.pdf.
+- The game is supposed to be played on multiple computers. It will be done soon but is not in this current version.
+
 ## Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
