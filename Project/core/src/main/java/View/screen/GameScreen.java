@@ -238,6 +238,7 @@ public class GameScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+        // TODO: Should be draw
         turnBar.updateTurnbar();
         frameCount++;
     }

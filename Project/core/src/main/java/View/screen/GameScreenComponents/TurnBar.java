@@ -69,6 +69,7 @@ public class TurnBar extends Table {
      * Updates the turn bar by refreshing the current turn display and revealing
      * past turns. Reveals additional turns based on the current turn number.
      */
+    // TODO: Convert into draw
     public void updateTurnbar() {
 
         String updatedTime = String.valueOf(gameController.getGame().getCurrentTime());
