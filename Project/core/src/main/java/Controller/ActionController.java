@@ -205,7 +205,7 @@ public class ActionController {
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             for (Token token : cell.getBrains()) {
                 if (token instanceof BrainNote) {
-                    if (newNote == "") {
+                    if (newNote.isEmpty()) {
                         cell.removeToken(token);
                     } else {
                         ((BrainNote) token).setNote(newNote);
@@ -214,7 +214,7 @@ public class ActionController {
                 }
             }
             try {
-                if (newNote != "") {
+                if (!newNote.isEmpty()) {
                     BrainNote brainNote = new BrainNote(newNote);
                     cell.addToken(brainNote);
                 }
