@@ -4,6 +4,8 @@ import Model.*;
 import Model.Game.gameStates;
 import Model.Recruiter.RecruiterType;
 
+import View.screen.GameScreen;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,12 +44,20 @@ public class GameController {
      * recruits and similar have been added timewise.
      */
 
-    public GameController(Csv boardCsv, ArrayList<User> users) {
+    public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
                                // controlled
         gameState = initializeGame(boardCsv, users);
+
+        gameState.setMindSlipListener(new Game.MindSlipListener() {
+            @Override
+            public void onMindSlip(String message) {
+                gameScreen.showDialogue(message);
+            }
+        });
+
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
 

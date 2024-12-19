@@ -34,6 +34,7 @@ public class Game {
     private boolean isActionAvailable;
     private MutableBoolean[][] validityMask;
     private CheckAction checkAction;
+    private MindSlipListener mindSlipListener;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -231,6 +232,10 @@ public class Game {
             throw new IllegalStateException("Mind slip can only be used once per round.");
         }
         this.mindSlipHistory.add(currentTime);
+
+        if (mindSlipListener != null) {
+            mindSlipListener.onMindSlip("The recruiter made a MindSlip!");
+        }
     }
 
     /**
@@ -244,7 +249,7 @@ public class Game {
 
     /**
      * Sets active brains. These display when brainWindow is called
-     * 
+     *
      * @param brains the list of brains to display
      */
     public List<Token> getActiveBrains() {
@@ -253,7 +258,7 @@ public class Game {
 
     /**
      * Sets active brains. These display when brainWindow is called
-     * 
+     *
      * @param brains the list of brains to display
      */
     public void setActiveBrains(List<Token> brains) {
@@ -360,7 +365,7 @@ public class Game {
 
     /**
      * Returns the validitymask for the board
-     * 
+     *
      * @return matrix of booleans. True where player can move and false where they
      *         cannc
      */
@@ -384,7 +389,7 @@ public class Game {
 
     /**
      * Gets the cell which the current player is at.
-     * 
+     *
      * @return The cell which the current player is at, otherwise null.
      */
     public AbstractCell getCurrentPlayerCell() {
@@ -444,6 +449,13 @@ public class Game {
         return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
                 board, recruitHistory, mindSlipHistory, players, activeBrains,
                 users, isMovementAvailable, isActionAvailable);
+    }
+    public interface MindSlipListener  {
+        void onMindSlip(String message);
+    }
+
+    public void setMindSlipListener(MindSlipListener  listener) {
+        this.mindSlipListener  = listener;
     }
 
 }

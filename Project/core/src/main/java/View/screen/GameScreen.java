@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(boardCsv, users);
+        this.gameController = new GameController(boardCsv, users, this);
 
         if (application.server != null) {
             // We are host
@@ -128,6 +128,17 @@ public class GameScreen implements Screen {
         // Create a capture button
         CaptureButton captureButton = new CaptureButton(gameController, skin);
         actionBar.add(captureButton).expand();
+    }
+
+    public void showDialogue(String message) {
+        Dialog dialog = new Dialog("Notice", skin) {
+            @Override
+            protected void result(Object object) {
+            }
+        };
+        dialog.text(message);
+        dialog.button("OK");
+        dialog.show(stage);
     }
 
     @Override
