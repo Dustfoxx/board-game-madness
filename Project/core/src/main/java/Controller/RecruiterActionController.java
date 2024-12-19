@@ -32,19 +32,6 @@ public class RecruiterActionController {
         newCellPosition.addPlayer(recruiter);
     }
 
-    /**
-     * Moves the recruiter with mindslip
-     * 
-     * @param recruiter   Reference to the recruiter object
-     * @param board       Reference to the Game instance
-     * @param newPosition The desired position
-     * @return True if footstep placed, else false
-     */
-    public void mindSlip(Game game, Player recruiter, int[] newPosition) {
-        move(game.getBoard(), recruiter, newPosition);
-        game.addMindSlipEvent();
-    }
-
     // Placement for input from view
     int[] answerView(List<int[]> viableChoices) {
         return viableChoices.get(0);

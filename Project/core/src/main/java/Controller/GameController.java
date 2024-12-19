@@ -4,6 +4,8 @@ import Model.*;
 import Model.Game.gameStates;
 import Model.Recruiter.RecruiterType;
 
+import View.screen.GameScreen;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,10 +48,16 @@ public class GameController {
      * The main gameController. Keeps an eye on victory conditions and which players
      * are next in queue to play. This is the constructor intended for the host.
      */
-
-    public GameController(Csv boardCsv, ArrayList<User> users) {
+    public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         Game game = initializeGame(boardCsv, users);
         initController(game);
+        // TODO: Move
+        gameState.setMindSlipListener(new Game.MindSlipListener() {
+            @Override
+            public void onMindSlip(String message) {
+                gameScreen.showDialogue(message);
+            }
+        });
     }
 
     private void initController(Game game) {

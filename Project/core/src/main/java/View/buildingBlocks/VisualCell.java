@@ -17,6 +17,7 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
+import Model.MindSlip;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
@@ -29,6 +30,7 @@ public class VisualCell extends Actor {
     private TextureRegion temple;
     private TextureRegion footstep;
     private TextureRegion[] brains;
+    private TextureRegion mindslip;
     private BitmapFont step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
@@ -42,6 +44,7 @@ public class VisualCell extends Actor {
     private Texture tokensImg = new Texture("tokens_temple.png");
     private Texture playersImg = new Texture("players_tmp.png");
     private Texture stepImg = new Texture("tokens_3d.png");
+    private Texture mindslipImg=new Texture("tokens_3d.png");
     private MutableBoolean highlighted;
 
     /**
@@ -68,6 +71,7 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
+        this.mindslip=new TextureRegion(mindslipImg, 303, 365, 60, 60);
         this.step = new BitmapFont();
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();

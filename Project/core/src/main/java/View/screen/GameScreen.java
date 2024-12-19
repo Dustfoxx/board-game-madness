@@ -72,7 +72,7 @@ public class GameScreen implements Screen {
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(boardCsv, users);
+        this.gameController = new GameController(boardCsv, users, this);
         this.isHost = true;
 
         if (application.server != null) {
@@ -201,6 +201,18 @@ public class GameScreen implements Screen {
         actionBar.add(captureButton).expand();
     }
 
+    public void showDialogue(String message) {
+        Dialog dialog = new Dialog("Notice", skin) {
+            @Override
+            protected void result(Object object) {
+            }
+        };
+        dialog.pad(20);
+        dialog.text(message);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
     @Override
     public void show() {
     }
@@ -226,6 +238,7 @@ public class GameScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+        // TODO: Should be draw
         turnBar.updateTurnbar();
         frameCount++;
     }

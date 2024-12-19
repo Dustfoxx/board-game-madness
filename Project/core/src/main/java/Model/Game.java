@@ -35,6 +35,7 @@ public class Game {
     private boolean isActionAvailable;
     private MutableBoolean[][] validityMask;
     private CheckAction checkAction;
+    private MindSlipListener mindSlipListener;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -245,6 +246,10 @@ public class Game {
             throw new IllegalStateException("Mind slip can only be used once per round.");
         }
         this.mindSlipHistory.add(currentTime);
+
+        if (mindSlipListener != null) {
+            mindSlipListener.onMindSlip("The recruiter made a MindSlip!");
+        }
     }
 
     /**
@@ -456,6 +461,13 @@ public class Game {
         return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
                 board, recruitHistory, mindSlipHistory, players,
                 users, isMovementAvailable, isActionAvailable);
+    }
+    public interface MindSlipListener  {
+        void onMindSlip(String message);
+    }
+
+    public void setMindSlipListener(MindSlipListener  listener) {
+        this.mindSlipListener  = listener;
     }
 
 }
