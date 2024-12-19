@@ -24,7 +24,7 @@ public class ActionControllerTests {
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
+                cells[i][j] = new NormalCell(new Feature[] { Feature.BILLBOARD, Feature.BOOKSTORE });
             }
         }
         board = new Board(cells);
@@ -34,7 +34,7 @@ public class ActionControllerTests {
     void testAsk() {
         // Prepare
         Feature feature = Feature.BILLBOARD;
-        Recruiter recruiter = new Recruiter(0, "", new Feature[]{Feature.BILLBOARD, Feature.BUS, Feature.BOOKSTORE});
+        Recruiter recruiter = new Recruiter(0, "", new Feature[] { Feature.BILLBOARD, Feature.BUS, Feature.BOOKSTORE });
         recruiter.addToWalkedPath(0, 0);
         recruiter.addToWalkedPath(0, 1);
 
@@ -53,22 +53,21 @@ public class ActionControllerTests {
 
     @Test
     void testRevealSingle() {
-        int[] position = {0, 0};
+        int[] position = { 0, 0 };
         AbstractCell cell = board.getCell(position[0], position[1]);
         cell.addToken(new Step(1));
         cell.addToken(new Footstep());
         actionController.reveal(cell);
-        assert(cell.getTokens().size() == 2);
-        assert(!cell.containsFootstep());
-        assertEquals(1, ((BrainFact) cell.getTokens().get(1)).getTimestamp(), 
-        "Expected timestamp to be 1 but was: " + ((BrainFact) cell.getTokens().get(1)).getTimestamp());
+        assert (cell.getTokens().size() == 2);
+        assert (!cell.containsFootstep());
+        assertEquals(1, ((BrainFact) cell.getTokens().get(1)).getTimestamp(),
+                "Expected timestamp to be 1 but was: " + ((BrainFact) cell.getTokens().get(1)).getTimestamp());
     }
 
     @Test
     void testRevealEmpty() {
-        int[] position = {1, 1};
+        int[] position = { 1, 1 };
         AbstractCell cell = board.getCell(position[0], position[1]);
-        actionController.reveal(cell);
-        assert(cell.getTokens().size() == 0);
+        assertThrows(IllegalStateException.class, () -> actionController.reveal(cell));
     }
 }

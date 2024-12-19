@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -15,45 +17,51 @@ import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.BrainFact;
 import Model.BrainNote;
+import Model.Game;
+import Model.Recruiter;
 import Model.Token;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class BrainWindow extends Window {
 
-    public BrainWindow(boolean isBrainsActive, GameController gameController, int row, int col, Skin skin) {
+    private String brainNoteString = "";
+    private GameController gameController;
+    private TextField brainField;
+
+    public BrainWindow(GameController gameController, int row, int col, Skin skin) {
         super("Brain Window", skin);
 
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
         this.setModal(true);
+        this.gameController = gameController;
 
-        List<Token> cellBrains = gameController.getGame().getActiveBrains();
-        BrainNote tmpBrainNote = new BrainNote("");
+        List<Token> cellBrains = gameController.getGame().getBoard().getCell(row, col).getBrains();
 
         for (Token brain : cellBrains) {
-            if (brain instanceof BrainNote) {
-                tmpBrainNote = (BrainNote) brain;
-                Label brainNoteLabel = new Label("Brain Note:", skin);
-                TextField nameField = new TextField(tmpBrainNote.getNote(), skin);
-                nameField.setMaxLength(30);
-                brainNoteLabel.setFontScale(2f);
-                this.add(brainNoteLabel).pad(20).row();
-                this.add(nameField).expandX().fillX().row();
-            } else {
-                BrainFact tempBrain = (BrainFact) brain;
-                Label brainFactLabel = new Label("Recruiter was here turn " + tempBrain.getTimestamp(), skin);
+            if (brain instanceof BrainFact) {
+                Label brainFactLabel = new Label("Recruiter was here turn " + ((BrainFact) brain).getTimestamp(),
+                        skin);
                 brainFactLabel.setFontScale(2f);
                 this.add(brainFactLabel).pad(20).row();
+            } else {
+                brainNoteString = ((BrainNote) brain).getNote();
             }
         }
+
+        Label brainNoteLabel = new Label("Brain Note:", skin);
+        this.brainField = new TextField(brainNoteString, skin);
+        brainField.setMaxLength(30);
+        brainNoteLabel.setFontScale(2f);
+        this.add(brainNoteLabel).pad(20).row();
+        this.add(brainField).expandX().fillX().row();
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                String brainNoteString = "";
                 SnapshotArray<Actor> children = actor.getParent().getChildren();
                 for (Actor child : children) {
                     if (child instanceof TextField) {
@@ -71,6 +79,11 @@ public class BrainWindow extends Window {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        if (gameController.getGame().getCurrentPlayer() instanceof Recruiter) {
+            brainField.setTouchable(Touchable.disabled);
+        } else {
+            brainField.setTouchable(Touchable.enabled);
+        }
         super.draw(batch, parentAlpha); // Important
     }
 }
