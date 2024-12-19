@@ -121,6 +121,15 @@ public abstract class AbstractCell {
         return false;
     }
 
+    public boolean containsBrainFact() {
+        for (Token token : tokens) {
+            if (token.getClass().equals(BrainFact.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "AbstractCell{" +

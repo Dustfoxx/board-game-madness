@@ -183,6 +183,7 @@ public class VisualCell extends Actor {
      */
     private void updateTokens() {
         tokens.clear();
+        stepText = "";
         for (Token token : cellInfo.getTokens()) {
             if (token.getVisibility()) {
                 if (token instanceof Footstep) {
