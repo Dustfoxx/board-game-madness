@@ -13,9 +13,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import View.screen.GameScreen;
+
 public class GameControllerTests {
     Csv boardCsv;
     ArrayList<User> users;
+    GameScreen  gameScreen;
 
     @BeforeEach
     void setUp() {
@@ -32,6 +35,7 @@ public class GameControllerTests {
                 new User(2, "User3"),
                 new User(3, "User4"),
                 new User(4, "User5")));
+        gameScreen = mock(GameScreen.class);
     }
 
     @Test
@@ -40,7 +44,7 @@ public class GameControllerTests {
         GameController controller;
 
         // Act
-        controller = new GameController(boardCsv, users);
+        controller = new GameController(boardCsv, users,gameScreen);
 
         // Assert
         assertEquals(Recruiter.class, controller.getGame().getPlayers().get(0).getClass());
@@ -52,7 +56,7 @@ public class GameControllerTests {
         users = new ArrayList<>(Arrays.asList(new User(0, "User1")));
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(boardCsv, users));
+                () -> new GameController(boardCsv, users,gameScreen));
         // Assert
         assertEquals("Must be more than 1 user", exception.getMessage());
     }
@@ -64,7 +68,7 @@ public class GameControllerTests {
 
         // Act
         Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(boardCsv, users));
+                () -> new GameController(boardCsv, users,gameScreen));
 
         // Assert
         assertEquals("Must be more than 1 user", exception.getMessage());
@@ -73,7 +77,7 @@ public class GameControllerTests {
     @Test
     public void testTurnOrder() {
         // Arrange
-        GameController controller = new GameController(boardCsv, users);
+        GameController controller = new GameController(boardCsv, users,gameScreen);
         List<Player> players = controller.getGame().getPlayers();
         controller.getGame().setGameState(gameStates.ONGOING);
         List<Player> expectedOrder = new ArrayList<>(Arrays.asList(
@@ -95,7 +99,7 @@ public class GameControllerTests {
     @Test
     public void testNrOfTurns() {
         // Arrange
-        GameController controller = new GameController(boardCsv, users);
+        GameController controller = new GameController(boardCsv, users,gameScreen);
         controller.getGame().setGameState(gameStates.ONGOING);
 
         for (int i = 0; i < 6; i++) {
