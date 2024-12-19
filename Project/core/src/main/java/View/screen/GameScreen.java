@@ -136,6 +136,7 @@ public class GameScreen implements Screen {
             protected void result(Object object) {
             }
         };
+        dialog.pad(20);
         dialog.text(message);
         dialog.button("OK");
         dialog.show(stage);
