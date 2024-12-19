@@ -2,16 +2,14 @@ package Controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import Model.Feature;
 import Model.Footstep;
 import Model.NormalCell;
 import Model.Recruiter;
+import Model.Step;
+import Model.AbstractCell;
 import Model.Board;
 import Model.BrainFact;
 
@@ -19,7 +17,6 @@ public class ActionControllerTests {
     private final ActionController actionController = new ActionController();
 
     private Board board;
-    private Footstep footstep;
 
     @BeforeEach
     void setUp() {
@@ -27,18 +24,17 @@ public class ActionControllerTests {
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = new NormalCell(new Feature[]{Feature.BILLBOARD, Feature.BOOKSTORE});
+                cells[i][j] = new NormalCell(new Feature[] { Feature.BILLBOARD, Feature.BOOKSTORE });
             }
         }
         board = new Board(cells);
-        footstep = new Footstep();
     }
 
     @Test
     void testAsk() {
         // Prepare
         Feature feature = Feature.BILLBOARD;
-        Recruiter recruiter = new Recruiter(0, "", new Feature[]{Feature.BILLBOARD, Feature.BUS, Feature.BOOKSTORE});
+        Recruiter recruiter = new Recruiter(0, "", new Feature[] { Feature.BILLBOARD, Feature.BUS, Feature.BOOKSTORE });
         recruiter.addToWalkedPath(0, 0);
         recruiter.addToWalkedPath(0, 1);
 
@@ -57,26 +53,21 @@ public class ActionControllerTests {
 
     @Test
     void testRevealSingle() {
-        int[] position = {0, 0};
-        List<int[]> walkedPath = new ArrayList<>();
-        walkedPath.add(new int[]{position[0], position[1]});
-        walkedPath.add(new int[]{0, 1});
-
-        actionController.reveal(footstep, board, position, walkedPath);
-        NormalCell boardCell = (NormalCell) board.getCell(position[0], position[1]);
-        assert(boardCell.getTokens().size() == 1);
-        assertEquals(1, ((BrainFact) boardCell.getTokens().get(0)).getTimestamp(), 
-        "Expected timestamp to be 1 but was: " + ((BrainFact) boardCell.getTokens().get(0)).getTimestamp());
+        int[] position = { 0, 0 };
+        AbstractCell cell = board.getCell(position[0], position[1]);
+        cell.addToken(new Step(1));
+        cell.addToken(new Footstep());
+        actionController.reveal(cell);
+        assert (cell.getTokens().size() == 2);
+        assert (!cell.containsFootstep());
+        assertEquals(1, ((BrainFact) cell.getTokens().get(1)).getTimestamp(),
+                "Expected timestamp to be 1 but was: " + ((BrainFact) cell.getTokens().get(1)).getTimestamp());
     }
 
     @Test
     void testRevealEmpty() {
-        int[] position = {1, 1};
-        List<int[]> walkedPath = new ArrayList<>();
-        walkedPath.add(new int[]{2, 2});
-        actionController.reveal(footstep, board, position, walkedPath);
-
-        NormalCell boardCell = (NormalCell) board.getCell(position[0], position[1]);
-        assert(boardCell.getTokens().size() == 0);
+        int[] position = { 1, 1 };
+        AbstractCell cell = board.getCell(position[0], position[1]);
+        assertThrows(IllegalStateException.class, () -> actionController.reveal(cell));
     }
 }

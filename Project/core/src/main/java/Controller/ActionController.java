@@ -1,6 +1,5 @@
 package Controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,10 +12,10 @@ import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
 import Model.Game;
-import Model.MindSlip;
 import Model.NormalCell;
 import Model.Player;
 import Model.Recruiter;
+import Model.RougeAgent;
 import Model.Token;
 import Model.Recruiter.RecruiterType;
 import Model.Step;
@@ -71,29 +70,35 @@ public class ActionController {
 
     /**
      * Replaces a footstep with a brain-fact token
-     *
-     * @param footstep   the footstep to be replaced
-     * @param board      the game of the board
-     * @param position   The position of the footstep Note: could be calculated, but
-     *                   game manager probably has it ready
-     * @param walkedPath the path walked by the recruit
+     * 
+     * @param cell the cell which contains the footstep to reveal
      * @return void
      */
-    public void reveal(Footstep footstep, Board board, int[] position, List<int[]> walkedPath) {
-        int time = 0;
+    public void reveal(AbstractCell cell) {
+        // Find the step token in the cell
 
-        // Finds the index of the position in walked path
-        for (int i = 0; i < walkedPath.size(); i++) {
-            if (Arrays.equals(walkedPath.get(i), position)) {
-                time = i + 1;
-                BrainFact brainFact = new BrainFact(time);
-
-                NormalCell cell = (NormalCell) board.getCell(position[0], position[1]);
-
-                cell.addToken(brainFact);
-                cell.removeToken(footstep);
-                break;
+        if (cell != null) {
+            if (cell.containsFootstep()) {
+                if(!cell.containsBrainFact()){
+                List<Token> tokens = cell.getTokens();
+                for (Token token : tokens) {
+                    if (token instanceof Step) {
+                        int timestamp = ((Step) token).timestamp; // Get the timestamp of the step
+                        BrainFact brainfact = new BrainFact(timestamp); // Create a new brainfact with the timestamp
+                        cell.removeToken(cell.getFootstep()); // Remove the old footstep
+                        cell.addToken(brainfact); // Replace with the new brainfact
+                        break;
+                    }
+                }
             }
+            else{
+                throw new IllegalStateException("Cell already contains a BrainFact");
+            }
+            } else {
+                throw new IllegalStateException("Footstep missing in cell");
+            }
+        } else {
+            throw new IllegalStateException("Reveal should not be possible when player is not placed");
         }
     }
 
@@ -193,52 +198,30 @@ public class ActionController {
      * @param board board to add the note to
      * @return true if the operation succeeded, false otherwise
      */
-    public boolean addBrainNote(String newNote, int row, int col, Board board) {
-        AbstractCell cell = board.getCell(row, col);
+    public boolean addBrainNote(String newNote, int row, int col, Game gameState) {
+        AbstractCell cell = gameState.getBoard().getCell(row, col);
 
-        for (Token token : cell.getTokens()) {
-            if (token instanceof BrainNote) {
-                if (newNote == "") {
-                    cell.removeToken(token);
-                } else {
-                    ((BrainNote) token).setNote(newNote);
+        if (gameState.getCurrentPlayer() instanceof RougeAgent) {
+            for (Token token : cell.getBrains()) {
+                if (token instanceof BrainNote) {
+                    if (newNote.isEmpty()) {
+                        cell.removeToken(token);
+                    } else {
+                        ((BrainNote) token).setNote(newNote);
+                    }
+                    return true;
+                }
+            }
+            try {
+                if (!newNote.isEmpty()) {
+                    BrainNote brainNote = new BrainNote(newNote);
+                    cell.addToken(brainNote);
                 }
                 return true;
+            } catch (Exception e) {
+                return false;
             }
         }
-        try {
-            BrainNote brainNote = new BrainNote(newNote);
-            cell.addToken(brainNote);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * Fetches the information of a cells brains
-     *
-     * @param row   the row to fetch from
-     * @param col   the columns to fetch from
-     * @param board the board the notes exists on
-     * @return list of brains of a cell
-     */
-    public List<Token> fetchBrains(int row, int col, Board board) {
-        List<Token> tokens = board.getCell(row, col).getTokens();
-        List<Token> brains = new ArrayList<Token>();
-        boolean foundNote = false;
-        for (Token token : tokens) {
-            if (token instanceof BrainNote) {
-                brains.add(token);
-                foundNote = true;
-            } else if (token instanceof BrainFact) {
-                brains.add(token);
-            }
-        }
-        if (!foundNote) {
-            brains.add(new BrainNote(""));
-        }
-
-        return brains;
+        return false;
     }
 }

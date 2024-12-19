@@ -2,21 +2,22 @@ package View.screen;
 
 import Controller.GameController;
 
+import Model.*;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.Gdx;
 
-import Model.Csv;
-import Model.User;
-
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
 import View.screen.GameScreenComponents.CaptureButton;
+import View.screen.GameScreenComponents.EndGameWindow;
 import View.screen.GameScreenComponents.RevealButton;
 import View.screen.GameScreenComponents.PlayerBar;
 import View.screen.GameScreenComponents.RecruiterWindow;
@@ -27,37 +28,107 @@ import View.screen.GameScreenComponents.FeatureSelection;
 
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import io.github.MindMGMT.MindMGMT;
 
 public class GameScreen implements Screen {
     private final GameController gameController;
-    private final MindMGMTStage stage;
-    private final Skin skin;
-    private final Texture boardTexture;
-    private final PlayerBar playerBar;
-    private final TurnBar turnBar;
-    private final SettingWindow settingWindow;
+    private MindMGMTStage stage;
+    private Skin skin;
+    private Texture boardTexture;
+    private PlayerBar playerBar;
+    private TurnBar turnBar;
+    private SettingWindow settingWindow;
     private VisualBoard visualBoard;
-    private final FeatureSelection featureSelection;
+    private FeatureSelection featureSelection;
 
+    private int pollingFrequency;
+    private Net.HttpResponseListener pollListener;
+    private int frameCount;
+    private boolean isHost;
+
+    /**
+     * Main game screen. This constructor is intended for client use.
+     * @param application Reference to the application
+     * @param gameState An initial cop of the hosts game state
+     */
+    public GameScreen(MindMGMT application, Game gameState) {
+        this.gameController = new GameController(gameState);
+        this.isHost = false;
+        this.pollingFrequency = 30;
+        this.frameCount = 0;
+        this.pollListener = getPollListener();
+
+        setupUI(application);
+    }
+
+    /**
+     * Main game screen. This constructor is intended for host use.
+     * @param application Reference to the application
+     * @param users A list of users each representing a client
+     */
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
-        this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
-        this.skin = application.skin;
-        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users, this);
+        this.isHost = true;
 
         if (application.server != null) {
             // We are host
             application.server.setGameState(this.gameController.getGame());
         }
+
+        setupUI(application);
+    }
+
+    private Net.HttpResponseListener getPollListener() {
+        return new Net.HttpResponseListener() {
+
+            private final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
+
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String msg = httpResponse.getResultAsString();
+                try {
+                    Game gameState = gson.fromJson(msg, Game.class);
+                    gameController.deeplySetGameState(gameState);
+                } catch (JsonSyntaxException e) {
+                    // Handle game end?
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void cancelled() {}
+        };
+    }
+
+    private void setupUI(MindMGMT application) {
+
+        this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
+        this.skin = application.skin;
+        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
         this.featureSelection = new FeatureSelection(gameController, skin);
         Gdx.input.setInputProcessor(stage);
         setupUI();
+        EndGameWindow endGameWindow = new EndGameWindow(gameController.getGame(), skin, application);
+        endGameWindow.setPosition(
+                Gdx.graphics.getWidth() / 2f - endGameWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - endGameWindow.getHeight() / 2);
+        stage.addActor(endGameWindow);
     }
 
     private void setupUI() {
@@ -71,8 +142,8 @@ public class GameScreen implements Screen {
         RecruiterWindow recruiterWindow = new RecruiterWindow(skin, gameController.getGame().getRecruiter(),
                 gameController);
         recruiterWindow.setPosition(
-                Gdx.graphics.getWidth() / 2 - recruiterWindow.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2 - recruiterWindow.getHeight() / 2);
+                Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
         stage.addActor(recruiterWindow);
     }
 
@@ -151,9 +222,24 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (frameCount >= pollingFrequency) {
+            frameCount = 0;
+            if (!isHost) {
+                HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+                Net.HttpRequest httpRequest = requestBuilder
+                    .newRequest()
+                    .method(Net.HttpMethods.GET)
+                    .url("http://localhost:8080/poll")
+                    .build();
+                Gdx.net.sendHttpRequest(httpRequest, pollListener);
+            }
+        }
+
         stage.act(delta);
         stage.draw();
         turnBar.updateTurnbar();
+        frameCount++;
     }
 
     @Override

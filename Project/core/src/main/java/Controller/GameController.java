@@ -21,11 +21,10 @@ public class GameController {
 
     private Game gameState;
     private int activePlayer = 0;
-    private Model.Player playerTurnOrder[] = new Player[6];
+    private final Model.Player[] playerTurnOrder = new Player[6];
     private Recruiter recruiter = null;
     private ActionController actionController;
     private CheckAction checkAction;
-    private final int playerPieceAmount = 5;
 
     public enum Actions {
         MOVE,
@@ -39,25 +38,34 @@ public class GameController {
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
-     * are next in queue to play. This is the constructor. Currently does not track
-     * when
-     * recruits and similar have been added timewise.
+     * are next in queue to play. This is the constructor mainly inteded for clients.
      */
+    public GameController(Game gameState) {
+        initController(gameState);
+    }
 
+    /**
+     * The main gameController. Keeps an eye on victory conditions and which players
+     * are next in queue to play. This is the constructor intended for the host.
+     */
     public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
-        // Create turn order
-        // This controller will use this to know which player controls what unit
-        int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
-                               // controlled
-        gameState = initializeGame(boardCsv, users);
-
+        Game game = initializeGame(boardCsv, users);
+        initController(game);
+        // TODO: Move
         gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
             public void onMindSlip(String message) {
                 gameScreen.showDialogue(message);
             }
         });
+    }
 
+    private void initController(Game game) {
+        // Create turn order
+        // This controller will use this to know which player controls what unit
+        int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
+        // controlled
+        this.gameState = game;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
 
@@ -104,8 +112,8 @@ public class GameController {
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
         int userAmount = users.size();
 
-        if (userAmount <= 1) {
-            throw new IllegalArgumentException("Must be more than 1 user");
+        if (userAmount < 1) {
+            throw new IllegalArgumentException("No users registered!");
         }
 
         List<Player> players = new ArrayList<>();
@@ -121,6 +129,7 @@ public class GameController {
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
 
         players.add(recruiter);
+        int playerPieceAmount = 5;
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));
         }
@@ -128,7 +137,13 @@ public class GameController {
         users.get(0).addPlayerPiece(recruiter);
 
         List<Player> rogueAgents = players.subList(1, players.size());
-        distributePlayers(rogueAgents, users, 1);
+        if (users.size() == 1) {
+            // Single player mode
+            distributePlayers(rogueAgents, users, 0);
+        } else {
+            // multiplayer mode
+            distributePlayers(rogueAgents, users, 1);
+        }
 
         Board board = new Board(boardCsv);
         return new Game(players, users, board, recruiter);
@@ -162,7 +177,7 @@ public class GameController {
                 ongoingLogic();
                 break;
             case ENDGAME:
-                // Save stats?
+
                 break;
 
             default:
@@ -170,7 +185,42 @@ public class GameController {
         }
 
         gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
+        if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
+            gameState.setGameOver();
+        }
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            setRecruiterVisibility(true);
+        } else {
+            setRecruiterVisibility(false);
+        }
+    }
 
+    /**
+     * Sets the visibility of all steps for the recruiter
+     *
+     * @param visibility what to set visibility to
+     */
+    private void setRecruiterVisibility(boolean visibility) {
+        int[] dims = gameState.getBoard().getDims();
+        for (int row = 0; row < dims[0]; row++) {
+            for (int col = 0; col < dims[1]; col++) {
+                AbstractCell cell = gameState.getBoard().getCell(row, col);
+                List<Player> players = cell.getPlayers();
+                List<Token> tokens = cell.getTokens();
+
+                for (Player player : players) {
+                    if (player instanceof Recruiter) {
+                        player.setVisibility(visibility);
+                    }
+                }
+
+                for (Token token : tokens) {
+                    if (token instanceof Step) {
+                        token.setVisibility(visibility);
+                    }
+                }
+            }
+        }
     }
 
     private void preGameLogic() {
@@ -221,8 +271,6 @@ public class GameController {
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
-            // TODO: Should who won exist here or in model?
-            // I think model
         }
     }
 
@@ -238,18 +286,18 @@ public class GameController {
                 gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
                 break;
             case REVEAL:
-                // TODO: int[] playerCoord =
-                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer());
-                // actionController.reveal(gameState.getBoard().getCell(playerCoord[0],
-                // playerCoord[1]).getFootstep(),
-                // gameState.getBoard(),
-                // gameState.getBoard().getPlayerCoord(gameState.getCurrentPlayer()),
-                // gameState.getRecruiter().getWalkedPath());
-                gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
+                AbstractCell cell = gameState.getCurrentPlayerCell();
+                actionController.reveal(cell);
+                gameState.setActionAvailability(false);
                 break;
             case CAPTURE:
                 returnValue = actionController.capture(gameState.getCurrentPlayer(), gameState.getRecruiter(),
                         gameState.getBoard());
+                // If Recruiter captured set gameOver
+                if (returnValue) {
+                    gameState.setGameOver();
+                }
+
                 gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
 
                 break;
@@ -273,15 +321,9 @@ public class GameController {
                 getGame().getRecruiter().setRecruiterType((RecruiterType) additionalInfo[0]);
                 break;
             case BRAINNOTE:
-                if (additionalInfo[0] instanceof String) {
-                    actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
-                            (Integer) additionalInfo[2],
-                            gameState.getBoard());
-                } else {
-                    gameState.setActiveBrains(
-                            actionController.fetchBrains((int) additionalInfo[0], (int) additionalInfo[1],
-                                    gameState.getBoard()));
-                }
+                actionController.addBrainNote((String) additionalInfo[0], (Integer) additionalInfo[1],
+                        (Integer) additionalInfo[2],
+                        gameState);
                 break;
         }
 
@@ -293,6 +335,10 @@ public class GameController {
             newTurn();
         }
         return returnValue;
+    }
+
+    public void deeplySetGameState(Game newGameState) {
+        this.gameState.updateDeeply(newGameState);
     }
 
 }
