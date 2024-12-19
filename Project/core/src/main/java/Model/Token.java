@@ -16,7 +16,7 @@ public abstract class Token {
     }
 
     /**
-     * Sets the visibility of the player
+     * Sets the visibility of the Token
      * 
      * @param visibility true if visible, false if not
      */
@@ -27,7 +27,7 @@ public abstract class Token {
     /**
      * Gets the visibilityvalue of a step
      * 
-     * @return the visibility of the player
+     * @return the visibility of the Token
      */
     public boolean getVisibility() {
         return this.isVisible;
