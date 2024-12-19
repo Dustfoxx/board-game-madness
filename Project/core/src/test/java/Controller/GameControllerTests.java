@@ -51,10 +51,9 @@ public class GameControllerTests {
         // Arrange
         users = new ArrayList<>(Arrays.asList(new User(0, "User1")));
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> new GameController(boardCsv, users));
+        GameController controller = new GameController(boardCsv, users);
         // Assert
-        assertEquals("Must be more than 1 user", exception.getMessage());
+        assertNotNull(controller);
     }
 
     @Test
@@ -67,7 +66,7 @@ public class GameControllerTests {
                 () -> new GameController(boardCsv, users));
 
         // Assert
-        assertEquals("Must be more than 1 user", exception.getMessage());
+        assertEquals("No users registered!", exception.getMessage());
     }
 
     @Test

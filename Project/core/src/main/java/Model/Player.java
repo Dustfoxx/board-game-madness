@@ -11,6 +11,7 @@ import java.util.Objects;
 public abstract class Player {
     private int id; // The unique identifier for the player
     private String name; // The name of the player
+    private boolean isVisible;
 
     /**
      * Constructor to initialize a player with a unique ID.
@@ -21,6 +22,7 @@ public abstract class Player {
     public Player(int id) {
         this.id = id;
         this.name = "Player " + id;
+        this.isVisible = true;
     }
 
     /**
@@ -32,6 +34,7 @@ public abstract class Player {
     public Player(int id, String name) {
         this.id = id;
         this.name = name;
+        this.isVisible = true;
     }
 
     /**
@@ -59,6 +62,24 @@ public abstract class Player {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the visibility of the player
+     * 
+     * @param visibility true if visible, false if not
+     */
+    public void setVisibility(boolean visibility) {
+        this.isVisible = visibility;
+    }
+
+    /**
+     * Gets the visibilityvalue of a step
+     * 
+     * @return the visibility of the player
+     */
+    public boolean getVisibility() {
+        return this.isVisible;
     }
 
     @Override

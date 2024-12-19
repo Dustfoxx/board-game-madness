@@ -59,17 +59,19 @@ public class PlayerBar extends Table {
 
     /**
      * Creates a table containing the player name and which characters they control
-     * 
+     *
      * @param user User to display
      * @param skin skin for the labels
      * @return table containing the correct labels
      */
     Table createUserSlot(User user, Skin skin) {
         Table userSlot = new Table();
-        Label userLabel = new Label(user.getUserName(), skin, "narration");
-        userLabel.setFontScale(2f);
-        userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount());
-        userSlot.row();
+        if (!user.getUserName().isEmpty()) {
+            Label userLabel = new Label(user.getUserName(), skin, "narration");
+            userLabel.setFontScale(2f);
+            userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount());
+            userSlot.row();
+        }
 
         for (Player player : gameController.getGame().getPlayers()) {
             if (user.ownsPlayerPiece(player)) {

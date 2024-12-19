@@ -17,6 +17,7 @@ public class BrainFact extends Token {
      * @param timestamp The timestamp of the BrainFact token.
      */
     public BrainFact(int timestamp) {
+        super();
         this.timestamp = timestamp;
     }
 

@@ -63,9 +63,25 @@ public abstract class AbstractCell {
     }
 
     /**
+     * Gets all brain tokens
+     * 
+     * @return new list of token references
+     */
+    public List<Token> getBrains() {
+        List<Token> brains = new ArrayList<Token>();
+
+        for (Token token : this.tokens) {
+            if (token instanceof BrainFact || token instanceof BrainNote) {
+                brains.add(token);
+            }
+        }
+        return brains;
+    }
+
+    /**
      * Adds a token to the cell.
      * *
-     * 
+     *
      * * @throws IllegalArgumentException If a token of the same class is already in
      *
      */

@@ -6,6 +6,7 @@ public class Step extends Token {
     public int timestamp;
 
     public Step(int timestamp) {
+        super();
         this.timestamp = timestamp;
     }
 

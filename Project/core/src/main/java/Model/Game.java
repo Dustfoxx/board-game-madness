@@ -30,7 +30,6 @@ public class Game {
     private List<int[]> recruitHistory; // Tracks history of revealed recruits as (time, amount) pairs.
     private List<Integer> mindSlipHistory; // Tracks history og when mind slips were used
     private List<Player> players; // The list of players in the game
-    private List<Token> activeBrains;
     private List<User> users; // The list of users connected to the game
     private boolean isMovementAvailable;
     private boolean isActionAvailable;
@@ -67,7 +66,6 @@ public class Game {
         this.recruitHistory = new ArrayList<>();
         this.mindSlipHistory = new ArrayList<>();
         this.players = players;
-        this.activeBrains = new ArrayList<>();
         this.users = users;
         this.gameState = gameStates.PREGAME;
         this.isActionAvailable = false;
@@ -105,7 +103,7 @@ public class Game {
 
     /**
      * Gets the winning team
-     * 
+     *
      * @return string name of the winning team
      */
     public String getWinner() {
@@ -259,24 +257,6 @@ public class Game {
     }
 
     /**
-     * Sets active brains. These display when brainWindow is called
-     * 
-     * @param brains the list of brains to display
-     */
-    public List<Token> getActiveBrains() {
-        return this.activeBrains;
-    }
-
-    /**
-     * Sets active brains. These display when brainWindow is called
-     * 
-     * @param brains the list of brains to display
-     */
-    public void setActiveBrains(List<Token> brains) {
-        this.activeBrains = brains;
-    }
-
-    /**
      * Gets the list of users in the game.
      *
      * @return The list of users.
@@ -376,7 +356,7 @@ public class Game {
 
     /**
      * Returns the validitymask for the board
-     * 
+     *
      * @return matrix of booleans. True where player can move and false where they
      *         cannc
      */
@@ -400,7 +380,7 @@ public class Game {
 
     /**
      * Gets the cell which the current player is at.
-     * 
+     *
      * @return The cell which the current player is at, otherwise null.
      */
     public AbstractCell getCurrentPlayerCell() {
@@ -410,6 +390,24 @@ public class Game {
         } else {
             return null;
         }
+    }
+
+    public void updateDeeply(Game newGameState) {
+        this.gameState = newGameState.gameState;
+        this.gameOver = newGameState.gameOver;
+        this.currentPlayer = newGameState.currentPlayer;
+        this.currentTime = newGameState.currentTime;
+        this.maxTime = newGameState.maxTime;
+        this.maxRecruits = newGameState.maxRecruits;
+        this.board.updateDeeply(newGameState.board);
+        this.recruitHistory = newGameState.recruitHistory;
+        this.mindSlipHistory = newGameState.mindSlipHistory;
+        this.players = newGameState.players;
+        this.users = newGameState.users;
+        this.isMovementAvailable = newGameState.isMovementAvailable;
+        this.isActionAvailable = newGameState.isActionAvailable;
+        this.validityMask = newGameState.validityMask;
+        this.checkAction  = newGameState.checkAction;
     }
 
     @Override
@@ -425,7 +423,6 @@ public class Game {
                 ", recruitHistory=" + recruitHistory +
                 ", mindSlipHistory=" + mindSlipHistory +
                 ", players=" + players +
-                ", activeBrains=" + activeBrains +
                 ", users=" + users +
                 ", isMovementAvailable=" + isMovementAvailable +
                 ", isActionAvailable=" + isActionAvailable +
@@ -451,14 +448,13 @@ public class Game {
                 Objects.equals(recruitHistory, game.recruitHistory) &&
                 Objects.equals(mindSlipHistory, game.mindSlipHistory) &&
                 Objects.equals(players, game.players) &&
-                Objects.equals(activeBrains, game.activeBrains) &&
                 Objects.equals(users, game.users);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
-                board, recruitHistory, mindSlipHistory, players, activeBrains,
+                board, recruitHistory, mindSlipHistory, players,
                 users, isMovementAvailable, isActionAvailable);
     }
 
