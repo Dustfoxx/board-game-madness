@@ -128,7 +128,6 @@ public class ActionController {
                     Recruiter tmpRecruiter = (Recruiter) player;
                     tmpRecruiter.setRecruiterType(RecruiterType.USED);
                     gameState.addMindSlipEvent();
-                    gameState.getBoard().getCell(playerCoords[0], playerCoords[1]).addToken(new MindSlip());
                 }
             }
             AbstractCell newCell = gameState.getBoard().getCell(coords[0], coords[1]);
