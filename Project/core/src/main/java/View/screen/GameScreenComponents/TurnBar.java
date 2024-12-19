@@ -51,6 +51,13 @@ public class TurnBar extends Table {
         timeTracker.setAlignment(Align.center);
         turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
 
+        //Mindslip Information
+        String msMsg = "Recruiter has one turn where they can move two steps horizontal or diagonal.\n You will be notified when this happens";
+        Label msInfo = new Label(msMsg, skin, "half-tone");
+        //msInfo.setAlignment(Align.center);
+        msInfo.setWrap(true);
+        this.add(msInfo).expandX().fillX().pad(10).row();
+
         // Table for tracking past turns
         pastTurn = new Table();
         this.add(pastTurn).expand().fill().top();
