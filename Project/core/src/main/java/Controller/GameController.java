@@ -180,7 +180,39 @@ public class GameController {
         if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
             gameState.setGameOver();
         }
+        if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            setRecruiterVisibility(true);
+        } else {
+            setRecruiterVisibility(false);
+        }
+    }
 
+    /**
+     * Sets the visibility of all steps for the recruiter
+     *
+     * @param visibility what to set visibility to
+     */
+    private void setRecruiterVisibility(boolean visibility) {
+        int[] dims = gameState.getBoard().getDims();
+        for (int row = 0; row < dims[0]; row++) {
+            for (int col = 0; col < dims[1]; col++) {
+                AbstractCell cell = gameState.getBoard().getCell(row, col);
+                List<Player> players = cell.getPlayers();
+                List<Token> tokens = cell.getTokens();
+
+                for (Player player : players) {
+                    if (player instanceof Recruiter) {
+                        player.setVisibility(visibility);
+                    }
+                }
+
+                for (Token token : tokens) {
+                    if (token instanceof Step) {
+                        token.setVisibility(visibility);
+                    }
+                }
+            }
+        }
     }
 
     private void preGameLogic() {

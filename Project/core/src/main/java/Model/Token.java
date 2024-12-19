@@ -9,6 +9,30 @@ import java.util.Objects;
  */
 public abstract class Token {
 
+    private boolean isVisible;
+
+    public Token() {
+        this.isVisible = true;
+    }
+
+    /**
+     * Sets the visibility of the Token
+     * 
+     * @param visibility true if visible, false if not
+     */
+    public void setVisibility(boolean visibility) {
+        this.isVisible = visibility;
+    }
+
+    /**
+     * Gets the visibilityvalue of a step
+     * 
+     * @return the visibility of the Token
+     */
+    public boolean getVisibility() {
+        return this.isVisible;
+    }
+
     @Override
     public String toString() {
         return "Token{}";
