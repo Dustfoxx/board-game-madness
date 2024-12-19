@@ -73,8 +73,8 @@ public class MindMGMTServer {
                 } else {
                     InputStream stream = httpExchange.getRequestBody();
                     String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
-                        .lines()
-                        .collect(Collectors.joining("\n"));
+                            .lines()
+                            .collect(Collectors.joining("\n"));
                     System.out.println(body);
                     users.add(body);
                     response = "ok";

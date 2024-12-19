@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -19,6 +20,7 @@ import Model.Footstep;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
+import Model.Step;
 import Model.Token;
 
 public class VisualCell extends Actor {
@@ -27,13 +29,14 @@ public class VisualCell extends Actor {
     private TextureRegion temple;
     private TextureRegion footstep;
     private TextureRegion[] brains;
-    private TextureRegion step;
+    private BitmapFont step;
     private List<TextureRegion> players;
     private List<TextureRegion> tokens;
     private Texture highlight = new Texture("highlight.png");
     private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
     private AbstractCell cellInfo;
     private Dictionary<Feature, Integer> features;
+    private String stepText;
 
     private Texture featuresImg = new Texture("feature_img.png");
     private Texture tokensImg = new Texture("tokens_temple.png");
@@ -61,13 +64,14 @@ public class VisualCell extends Actor {
         // These are currently magic numbers and pretty ugly. Find better way of doing
         // this
         this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
-        this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
+        this.footstep = new TextureRegion(stepImg, 170, 360, 70, 70);
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
-        this.step = new TextureRegion(stepImg, 170, 360, 70, 70);
+        this.step = new BitmapFont();
         this.players = new ArrayList<TextureRegion>();
         this.tokens = new ArrayList<TextureRegion>();
+        this.stepText = "";
         updatePlayers();
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
@@ -93,6 +97,7 @@ public class VisualCell extends Actor {
         }
         drawPlayers(batch);
         drawTokens(batch);
+        drawNumbers(batch);
     }
 
     /**
@@ -152,6 +157,16 @@ public class VisualCell extends Actor {
     }
 
     /**
+     * Draws numbers representing the recruiters steps on the current cell
+     * 
+     * @param batch batch being composed
+     */
+    void drawNumbers(Batch batch) {
+        this.step.getData().setScale(getScaleX() * 3);
+        this.step.draw(batch, this.stepText, getX(), getY() + getHeight() / 2);
+    }
+
+    /**
      * Updates the textures to be drawn from the current players in the cell
      */
     private void updatePlayers() {
@@ -177,7 +192,7 @@ public class VisualCell extends Actor {
                 } else if (token instanceof BrainFact) {
                     tokens.add(brains[1]);
                 } else {
-                    tokens.add(step);
+                    this.stepText = String.valueOf(((Step) token).timestamp);
                 }
             }
         }
