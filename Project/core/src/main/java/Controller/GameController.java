@@ -19,11 +19,10 @@ public class GameController {
 
     private Game gameState;
     private int activePlayer = 0;
-    private Model.Player playerTurnOrder[] = new Player[6];
+    private final Model.Player[] playerTurnOrder = new Player[6];
     private Recruiter recruiter = null;
     private ActionController actionController;
     private CheckAction checkAction;
-    private final int playerPieceAmount = 5;
 
     public enum Actions {
         MOVE,
@@ -37,17 +36,28 @@ public class GameController {
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
-     * are next in queue to play. This is the constructor. Currently does not track
-     * when
-     * recruits and similar have been added timewise.
+     * are next in queue to play. This is the constructor mainly inteded for clients.
+     */
+    public GameController(Game gameState) {
+        initController(gameState);
+    }
+
+    /**
+     * The main gameController. Keeps an eye on victory conditions and which players
+     * are next in queue to play. This is the constructor intended for the host.
      */
 
     public GameController(Csv boardCsv, ArrayList<User> users) {
+        Game game = initializeGame(boardCsv, users);
+        initController(game);
+    }
+
+    private void initController(Game game) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
-                               // controlled
-        gameState = initializeGame(boardCsv, users);
+        // controlled
+        this.gameState = game;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
 
@@ -94,8 +104,8 @@ public class GameController {
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
         int userAmount = users.size();
 
-        if (userAmount <= 1) {
-            throw new IllegalArgumentException("Must be more than 1 user");
+        if (userAmount < 1) {
+            throw new IllegalArgumentException("No users registered!");
         }
 
         List<Player> players = new ArrayList<>();
@@ -111,6 +121,7 @@ public class GameController {
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
 
         players.add(recruiter);
+        int playerPieceAmount = 5;
         for (int i = 1; i < playerPieceAmount; i++) {
             players.add(new RougeAgent(i, "Agent" + i));
         }
@@ -118,7 +129,13 @@ public class GameController {
         users.get(0).addPlayerPiece(recruiter);
 
         List<Player> rogueAgents = players.subList(1, players.size());
-        distributePlayers(rogueAgents, users, 1);
+        if (users.size() == 1) {
+            // Single player mode
+            distributePlayers(rogueAgents, users, 0);
+        } else {
+            // multiplayer mode
+            distributePlayers(rogueAgents, users, 1);
+        }
 
         Board board = new Board(boardCsv);
         return new Game(players, users, board, recruiter);
@@ -278,6 +295,10 @@ public class GameController {
             newTurn();
         }
         return returnValue;
+    }
+
+    public void deeplySetGameState(Game newGameState) {
+        this.gameState.updateDeeply(newGameState);
     }
 
 }

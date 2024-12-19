@@ -81,7 +81,7 @@ public abstract class AbstractCell {
     /**
      * Adds a token to the cell.
      * *
-     * 
+     *
      * * @throws IllegalArgumentException If a token of the same class is already in
      *
      */

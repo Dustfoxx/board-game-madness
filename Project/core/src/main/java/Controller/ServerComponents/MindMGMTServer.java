@@ -1,6 +1,8 @@
 package Controller.ServerComponents;
 
-import Model.Game;
+import Model.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -16,10 +18,17 @@ public class MindMGMTServer {
     private HttpServer server;
     private Game gameState;
     private final ArrayList<String> users;
+    private final Gson gson;
 
     public MindMGMTServer(int port, ArrayList<String> users) {
         this.gameState = null;
         this.users = users;
+        this.gson = new GsonBuilder()
+            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+            .create();
+
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/poll", createPollHandler());
@@ -38,7 +47,7 @@ public class MindMGMTServer {
                 response = users.stream().filter(Objects::nonNull).collect(Collectors.joining(","));
             } else {
                 // We have an ongoing game
-                response = "ingame";
+                response = gson.toJson(gameState);
             }
 
             httpExchange.sendResponseHeaders(200, response.length());
