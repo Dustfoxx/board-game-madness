@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.gson.Gson;
@@ -42,7 +43,6 @@ public class LobbyScreen implements Screen {
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.players = new ArrayList<>();
         this.players.add(hostName);
-        this.players.add("Dummy player");
         this.labels = new Label[5];
 
         this.frameCount = 0;
@@ -69,13 +69,21 @@ public class LobbyScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         root.debug();
-        root.add(new Label("Lobby", application.skin, "narration")).padTop(10).colspan(2);
+        Label title = new Label("Lobby", application.skin, "narration");
+        title.setAlignment(Align.center);
+        root.add(title)
+            .width(stage.getViewport().getWorldWidth() * 0.25f)
+            .height(stage.getViewport().getWorldHeight() * 0.05f)
+            .padLeft(stage.getViewport().getWorldWidth() * 0.12f)
+            .padRight(stage.getViewport().getWorldWidth() * 0.12f)
+            .padBottom(30)
+            .colspan(2);
         for (int i = 0; i < labels.length; i++) {
             if (i % 2 == 0) {
                 root.row();
             }
             labels[i] = new Label((players.size() <= i ? "" : players.get(i)), application.skin);
-            root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1);
+            root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1).padBottom(10);
         }
         root.row();
 
@@ -88,7 +96,7 @@ public class LobbyScreen implements Screen {
                 if (application.server != null) {
                     application.server.stop();
                 }
-                application.setScreen(new SetupScreen(application));
+                application.setScreen(new SetupScreen(application, isHost));
                 dispose();
             }
         });
@@ -127,7 +135,6 @@ public class LobbyScreen implements Screen {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String msg = httpResponse.getResultAsString();
-                System.out.println(msg);
                 try {
                     gameState = gson.fromJson(msg, Game.class);
                 } catch (JsonSyntaxException e) {

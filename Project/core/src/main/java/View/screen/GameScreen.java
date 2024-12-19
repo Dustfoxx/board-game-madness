@@ -2,18 +2,17 @@ package View.screen;
 
 import Controller.GameController;
 
-import Model.Game;
+import Model.*;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.Gdx;
-
-import Model.Csv;
-import Model.User;
 
 import View.buildingBlocks.VisualBoard;
 import View.screen.GameScreenComponents.AskButton;
@@ -29,6 +28,9 @@ import View.screen.GameScreenComponents.FeatureSelection;
 
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import io.github.MindMGMT.MindMGMT;
 
 public class GameScreen implements Screen {
@@ -41,6 +43,10 @@ public class GameScreen implements Screen {
     private SettingWindow settingWindow;
     private VisualBoard visualBoard;
     private FeatureSelection featureSelection;
+
+    private int pollingFrequency;
+    private Net.HttpResponseListener pollListener;
+    private int frameCount;
     private boolean isHost;
 
     /**
@@ -51,6 +57,10 @@ public class GameScreen implements Screen {
     public GameScreen(MindMGMT application, Game gameState) {
         this.gameController = new GameController(gameState);
         this.isHost = false;
+        this.pollingFrequency = 30;
+        this.frameCount = 0;
+        this.pollListener = getPollListener();
+
         setupUI(application);
     }
 
@@ -73,6 +83,36 @@ public class GameScreen implements Screen {
         setupUI(application);
     }
 
+    private Net.HttpResponseListener getPollListener() {
+        return new Net.HttpResponseListener() {
+
+            private final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
+
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String msg = httpResponse.getResultAsString();
+                try {
+                    Game gameState = gson.fromJson(msg, Game.class);
+                    gameController.deeplySetGameState(gameState);
+                } catch (JsonSyntaxException e) {
+                    // Handle game end?
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void cancelled() {}
+        };
+    }
+
     private void setupUI(MindMGMT application) {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
@@ -86,8 +126,8 @@ public class GameScreen implements Screen {
         setupUI();
         EndGameWindow endGameWindow = new EndGameWindow(gameController.getGame(), skin, application);
         endGameWindow.setPosition(
-                Gdx.graphics.getWidth() / 2 - endGameWindow.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2 - endGameWindow.getHeight() / 2);
+                Gdx.graphics.getWidth() / 2f - endGameWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - endGameWindow.getHeight() / 2);
         stage.addActor(endGameWindow);
     }
 
@@ -102,8 +142,8 @@ public class GameScreen implements Screen {
         RecruiterWindow recruiterWindow = new RecruiterWindow(skin, gameController.getGame().getRecruiter(),
                 gameController);
         recruiterWindow.setPosition(
-                Gdx.graphics.getWidth() / 2 - recruiterWindow.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2 - recruiterWindow.getHeight() / 2);
+                Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
         stage.addActor(recruiterWindow);
     }
 
@@ -170,9 +210,24 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (frameCount >= pollingFrequency) {
+            frameCount = 0;
+            if (!isHost) {
+                HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+                Net.HttpRequest httpRequest = requestBuilder
+                    .newRequest()
+                    .method(Net.HttpMethods.GET)
+                    .url("http://localhost:8080/poll")
+                    .build();
+                Gdx.net.sendHttpRequest(httpRequest, pollListener);
+            }
+        }
+
         stage.act(delta);
         stage.draw();
         turnBar.updateTurnbar();
+        frameCount++;
     }
 
     @Override

@@ -105,7 +105,7 @@ public class Game {
 
     /**
      * Gets the winning team
-     * 
+     *
      * @return string name of the winning team
      */
     public String getWinner() {
@@ -410,6 +410,25 @@ public class Game {
         } else {
             return null;
         }
+    }
+
+    public void updateDeeply(Game newGameState) {
+        this.gameState = newGameState.gameState;
+        this.gameOver = newGameState.gameOver;
+        this.currentPlayer = newGameState.currentPlayer;
+        this.currentTime = newGameState.currentTime;
+        this.maxTime = newGameState.maxTime;
+        this.maxRecruits = newGameState.maxRecruits;
+        this.board.updateDeeply(newGameState.board);
+        this.recruitHistory = newGameState.recruitHistory;
+        this.mindSlipHistory = newGameState.mindSlipHistory;
+        this.players = newGameState.players;
+        this.activeBrains = newGameState.activeBrains;
+        this.users = newGameState.users;
+        this.isMovementAvailable = newGameState.isMovementAvailable;
+        this.isActionAvailable = newGameState.isActionAvailable;
+        this.validityMask = newGameState.validityMask;
+        this.checkAction  = newGameState.checkAction;
     }
 
     @Override

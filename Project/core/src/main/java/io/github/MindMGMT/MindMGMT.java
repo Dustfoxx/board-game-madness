@@ -52,6 +52,7 @@ public class MindMGMT extends Game {
         assets.load("comicui/comic-ui.json", Skin.class);
         assets.load("watercolor-sunset.png", Texture.class);
         assets.load("basic-board.png", Texture.class);
+        assets.load("mindmgmt.png", Texture.class);
     }
 
     public boolean joinGame(String name, String code) {

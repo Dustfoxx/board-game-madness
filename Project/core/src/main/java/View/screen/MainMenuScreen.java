@@ -1,6 +1,12 @@
 package View.screen;
 
+import Model.User;
 import View.buildingBlocks.MindMGMTStage;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
+import java.util.ArrayList;
 
 public class MainMenuScreen implements Screen {
     private final MindMGMTStage stage;
@@ -23,16 +31,29 @@ public class MainMenuScreen implements Screen {
         setupUI();
     }
     private void setupUI() {
+        Table root = new Table();
+        root.setFillParent(true);
 
+        TextButton singlePlayerButton = new TextButton("Singleplayer", application.skin);
         TextButton hostButton = new TextButton("Host Game", application.skin);
         TextButton joinButton = new TextButton("Join Game", application.skin);
         TextButton quitButton = new TextButton("Quit", application.skin);
 
+        singlePlayerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // not sure should this in view or controller
+                ArrayList<User> users = new ArrayList<>();
+                users.add(new User(0, ""));
+                application.setScreen(new GameScreen(application, users));
+                dispose();
+            }
+        });
         hostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // not sure should this in view or controller
-                application.setScreen(new SetupScreen(application));
+                application.setScreen(new SetupScreen(application, true));
                 dispose();
             }
         });
@@ -40,7 +61,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // not sure should this in view or controller
-                application.setScreen(new JoinScreen(application));
+                application.setScreen(new SetupScreen(application, false));
                 dispose();
             }
         });
@@ -52,24 +73,17 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        float width = stage.getCamera().viewportWidth;
-        float height = stage.getCamera().viewportHeight;
+        Image titleImg = new Image(application.assets.get("mindmgmt.png", Texture.class));
+        root.add(titleImg).padBottom(100).row();
 
-        quitButton.setSize(hostButton.getWidth(), hostButton.getHeight());
-        joinButton.setSize(hostButton.getWidth(), hostButton.getHeight());
-        hostButton.setPosition(
-            (width - hostButton.getWidth()) / 2,
-            (height - hostButton.getHeight()) / (2 - 0.38f));
-        joinButton.setPosition(
-            (width - hostButton.getWidth()) / 2,
-            (height - hostButton.getHeight()) / (2 - 0.15f));
-        quitButton.setPosition(
-            (width - quitButton.getWidth()) / 2,
-            (height - quitButton.getHeight()) / (2 + 0.15f));
-
-        stage.addActor(hostButton);
-        stage.addActor(joinButton);
-        stage.addActor(quitButton);
+        hostButton.setSize(singlePlayerButton.getWidth(), singlePlayerButton.getHeight());
+        quitButton.setSize(singlePlayerButton.getWidth(), singlePlayerButton.getHeight());
+        joinButton.setSize(singlePlayerButton.getWidth(), singlePlayerButton.getHeight());
+        root.add(singlePlayerButton).padBottom(20).row();
+        root.add(hostButton).padBottom(20).row();
+        root.add(joinButton).padBottom(20).row();
+        root.add(quitButton).padBottom(20).row();
+        stage.addActor(root);
     }
 
     @Override
