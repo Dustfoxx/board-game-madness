@@ -2,7 +2,7 @@
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
-The project can be run using `gradlew lwjgl3:run` from a command line within the `project` folder. A java distribution must exist on path.
+The project can be run using `./gradlew lwjgl3:run` from a command line within the `Project` folder. A java distribution must exist on `PATH`.
 The architecture follows the MVC model and consists of the folders in `core/src/main/java`. This is where you will find the bulk of the work.
 `src`also contains a test folder with a few tests written for the control and model parts of the code.
 
@@ -16,7 +16,7 @@ Currently the game is playable through an entire game but some important feature
 
 - `core`: Main module with the application logic shared by all platforms.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
-- `html`: Web platform using GWT and WebGL. Supports only Java projects.
+- (`html`): Web platform using GWT and WebGL. Supports only Java projects. Currently not working due to additions of external libraries not compatible with the HTML converter
 
 ## Gradle
 
