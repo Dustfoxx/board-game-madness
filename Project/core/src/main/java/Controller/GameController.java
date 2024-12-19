@@ -164,18 +164,18 @@ public class GameController {
             gameState.setGameOver();
         }
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            setVisibility(true);
+            setRecruiterVisibility(true);
         } else {
-            setVisibility(false);
+            setRecruiterVisibility(false);
         }
     }
 
     /**
      * Sets the visibility of all steps for the recruiter
-     * 
+     *
      * @param visibility what to set visibility to
      */
-    private void setVisibility(boolean visibility) {
+    private void setRecruiterVisibility(boolean visibility) {
         int[] dims = gameState.getBoard().getDims();
         for (int row = 0; row < dims[0]; row++) {
             for (int col = 0; col < dims[1]; col++) {
@@ -185,13 +185,13 @@ public class GameController {
 
                 for (Player player : players) {
                     if (player instanceof Recruiter) {
-                        ((Recruiter) player).setVisibility(visibility);
+                        player.setVisibility(visibility);
                     }
                 }
 
                 for (Token token : tokens) {
                     if (token instanceof Step) {
-                        ((Step) token).setVisibility(visibility);
+                        token.setVisibility(visibility);
                     }
                 }
             }
