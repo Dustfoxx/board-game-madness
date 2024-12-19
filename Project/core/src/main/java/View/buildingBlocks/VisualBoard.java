@@ -50,8 +50,6 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         int[] cellCoords = getCellClicked(event);
                         BrainWindow brainNoteWindow = new BrainWindow(
-                                gameInfo.actionHandler(Actions.BRAINNOTE,
-                                        new Object[] { cellCoords[0], cellCoords[1] }),
                                 gameInfo, cellCoords[0], cellCoords[1], skin);
                         brainNoteWindow.setPosition(
                                 Gdx.graphics.getWidth() / 2 - brainNoteWindow.getWidth() / 2,
