@@ -54,7 +54,7 @@ public class AskButton extends TextButton {
             super.draw(batch, parentAlpha); // Important
             // Get the cell of the current player
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
-            if (currentCell != null && currentCell instanceof NormalCell) {
+            if (currentCell != null && currentCell instanceof NormalCell && !currentCell.containsBrainFact() && !currentCell.containsFootstep()) {
                 // Enable the button if current player is placed at a normal cell
                 this.setColor(Color.WHITE);
                 this.setDisabled(false);
