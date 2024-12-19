@@ -72,7 +72,7 @@ public class MindMGMTServer {
                     status = 400;
                 } else {
                     InputStream stream = httpExchange.getRequestBody();
-                    String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
+                    String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)) // TODO: Resource leak: '<unassigned Closeable value>' is never closed
                             .lines()
                             .collect(Collectors.joining("\n"));
                     System.out.println(body);
