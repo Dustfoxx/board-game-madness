@@ -97,8 +97,7 @@ public class VisualCell extends Actor {
         }
         drawPlayers(batch);
         drawTokens(batch);
-        this.step.getData().setScale(getScaleX() * 3);
-        this.step.draw(batch, this.stepText, getX(), getY() + getHeight() / 2);
+        drawNumbers(batch);
     }
 
     /**
@@ -155,6 +154,16 @@ public class VisualCell extends Actor {
                     getWidth() / 4, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
             xVal++;
         }
+    }
+
+    /**
+     * Draws numbers representing the recruiters steps on the current cell
+     * 
+     * @param batch batch being composed
+     */
+    void drawNumbers(Batch batch) {
+        this.step.getData().setScale(getScaleX() * 3);
+        this.step.draw(batch, this.stepText, getX(), getY() + getHeight() / 2);
     }
 
     /**
