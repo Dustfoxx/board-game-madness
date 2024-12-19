@@ -163,7 +163,9 @@ public class VisualCell extends Actor {
     private void updatePlayers() {
         players.clear();
         for (Player player : cellInfo.getPlayers()) {
-            players.add(fetchPlayer(player.getId()));
+            if (player.getVisibility()) {
+                players.add(fetchPlayer(player.getId()));
+            }
         }
     }
 
@@ -173,14 +175,16 @@ public class VisualCell extends Actor {
     private void updateTokens() {
         tokens.clear();
         for (Token token : cellInfo.getTokens()) {
-            if (token instanceof Footstep) {
-                tokens.add(footstep);
-            } else if (token instanceof BrainNote) {
-                tokens.add(brains[0]);
-            } else if (token instanceof BrainFact) {
-                tokens.add(brains[1]);
-            } else {
-                this.stepText = String.valueOf(((Step) token).timestamp);
+            if (token.getVisibility()) {
+                if (token instanceof Footstep) {
+                    tokens.add(footstep);
+                } else if (token instanceof BrainNote) {
+                    tokens.add(brains[0]);
+                } else if (token instanceof BrainFact) {
+                    tokens.add(brains[1]);
+                } else {
+                    this.stepText = String.valueOf(((Step) token).timestamp);
+                }
             }
         }
     }

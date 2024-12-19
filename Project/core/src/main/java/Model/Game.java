@@ -103,7 +103,7 @@ public class Game {
 
     /**
      * Gets the winning team
-     * 
+     *
      * @return string name of the winning team
      */
     public String getWinner() {
@@ -356,7 +356,7 @@ public class Game {
 
     /**
      * Returns the validitymask for the board
-     * 
+     *
      * @return matrix of booleans. True where player can move and false where they
      *         cannc
      */
@@ -380,7 +380,7 @@ public class Game {
 
     /**
      * Gets the cell which the current player is at.
-     * 
+     *
      * @return The cell which the current player is at, otherwise null.
      */
     public AbstractCell getCurrentPlayerCell() {
@@ -390,6 +390,24 @@ public class Game {
         } else {
             return null;
         }
+    }
+
+    public void updateDeeply(Game newGameState) {
+        this.gameState = newGameState.gameState;
+        this.gameOver = newGameState.gameOver;
+        this.currentPlayer = newGameState.currentPlayer;
+        this.currentTime = newGameState.currentTime;
+        this.maxTime = newGameState.maxTime;
+        this.maxRecruits = newGameState.maxRecruits;
+        this.board.updateDeeply(newGameState.board);
+        this.recruitHistory = newGameState.recruitHistory;
+        this.mindSlipHistory = newGameState.mindSlipHistory;
+        this.players = newGameState.players;
+        this.users = newGameState.users;
+        this.isMovementAvailable = newGameState.isMovementAvailable;
+        this.isActionAvailable = newGameState.isActionAvailable;
+        this.validityMask = newGameState.validityMask;
+        this.checkAction  = newGameState.checkAction;
     }
 
     @Override

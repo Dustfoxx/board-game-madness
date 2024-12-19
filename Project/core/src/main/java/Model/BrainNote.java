@@ -17,6 +17,7 @@ public class BrainNote extends Token {
      * @param note The note of the BrainNote token.
      */
     public BrainNote(String note) {
+        super();
         this.note = note;
     }
 

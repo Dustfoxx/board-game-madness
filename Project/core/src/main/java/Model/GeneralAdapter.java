@@ -5,12 +5,6 @@ import java.lang.reflect.Type;
 
 public class GeneralAdapter<T> implements JsonDeserializer<T>, JsonSerializer<T> {
 
-    private final Gson gson;
-
-    public GeneralAdapter(Gson gson) {
-        this.gson = gson;
-    }
-
     @Override
     public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
@@ -25,7 +19,7 @@ public class GeneralAdapter<T> implements JsonDeserializer<T>, JsonSerializer<T>
 
     @Override
     public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject jsonObject = gson.toJsonTree(src).getAsJsonObject();
+        JsonObject jsonObject = context.serialize(src).getAsJsonObject();
         jsonObject.addProperty("type", src.getClass().getName()); // Always add "type"
         return jsonObject;
     }

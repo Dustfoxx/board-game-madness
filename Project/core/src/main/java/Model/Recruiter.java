@@ -27,7 +27,7 @@ public class Recruiter extends Player {
     /**
      * Constructor to initialize a Recruiter with a unique ID, name, and features of
      * interest.
-     * 
+     *
      * @param id                 The unique identifier for the recruiter.
      * @param name               The name of the recruiter.
      * @param featuresOfInterest The array of the 3 features that the recruiter is
@@ -47,7 +47,7 @@ public class Recruiter extends Player {
 
     /**
      * Gets the total amount of unrevealed recruites by the recruiter.
-     * 
+     *
      * @return The number of unrevealed recruits.
      */
     public int getAmountRecruited() {
@@ -56,7 +56,7 @@ public class Recruiter extends Player {
 
     /**
      * Adds a specified number of new recruits to the total.
-     * 
+     *
      * @param newAmountRecruited The number of new recruits to add.
      */
     public void addAmountRecruited(int newAmountRecruited) {
@@ -74,7 +74,7 @@ public class Recruiter extends Player {
      * Gets the list of coordinates representing the cells the recruiter has walked
      * through.
      * The path is ordered from the first step to the last step.
-     * 
+     *
      * @return The list of coordinates (row, col) in the walked path.
      */
     public List<int[]> getWalkedPath() {
@@ -84,7 +84,7 @@ public class Recruiter extends Player {
     /**
      * Adds the coordinates of the new step to the walked path.
      * If the cell has already been visited, an exception is thrown.
-     * 
+     *
      * @param row The row coordinate of the new step.
      * @param col The column coordinate of the new step.
      * @throws IllegalArgumentException If the cell has already been visited.
@@ -103,7 +103,7 @@ public class Recruiter extends Player {
 
     /**
      * Gets the array of features the recruiter is interested in.
-     * 
+     *
      * @return The array of features of interest.
      */
     public Feature[] getFeaturesOfInterest() {
@@ -112,7 +112,7 @@ public class Recruiter extends Player {
 
     /**
      * Sets the chosen recruiter for this game
-     * 
+     *
      * @param newType the new recruitertype. Set used to disable MINDSLIP
      */
     public void setRecruiterType(RecruiterType newType) {
@@ -121,7 +121,7 @@ public class Recruiter extends Player {
 
     /**
      * Gets the recruitertype of this recruiter
-     * 
+     *
      * @return the chosenRecruiter of this instance
      */
     public RecruiterType getRecruiterType() {
@@ -132,7 +132,7 @@ public class Recruiter extends Player {
     public String toString() {
         return "Recruiter{" +
                 "id=" + getId() +
-                ", name='" + getName() + '\'' +
+                ", name=" + getName() +
                 ", amountRecruited=" + amountRecruited +
                 ", walkedPath=" + walkedPath +
                 ", featuresOfInterest=" + Arrays.toString(featuresOfInterest) +

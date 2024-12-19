@@ -127,6 +127,13 @@ public class Board {
         return new int[] { rowsDim, colsDim };
     }
 
+    public void updateDeeply(Board board) {
+
+        this.rowsDim = board.rowsDim;
+        this.colsDim = board.colsDim;
+        this.cells = board.cells;
+    }
+
     @Override
     public String toString() {
         return "Board{" +
@@ -154,5 +161,4 @@ public class Board {
         result = 31 * result + Arrays.deepHashCode(cells);
         return result;
     }
-
 }

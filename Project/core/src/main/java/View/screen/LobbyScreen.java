@@ -1,7 +1,7 @@
 package View.screen;
 
 import Controller.ServerComponents.MindMGMTServer;
-import Model.User;
+import Model.*;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
@@ -14,13 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import io.github.MindMGMT.MindMGMT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class LobbyScreen implements Screen {
     private final MindMGMT application;
@@ -33,20 +36,19 @@ public class LobbyScreen implements Screen {
     private int frameCount;
     private final boolean isHost;
 
-    private boolean gameStarted;
+    private Game gameState;
 
     public LobbyScreen(MindMGMT application, String hostName)  {
         this.application = application;
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.players = new ArrayList<>();
         this.players.add(hostName);
-        this.players.add("Dummy player");
         this.labels = new Label[5];
 
         this.frameCount = 0;
         this.pollingFrequency = 30;
         this.isHost = hostName != null;
-        this.gameStarted = false;
+        this.gameState = null;
 
         if (this.isHost) {
             if (this.application.server != null) {
@@ -67,13 +69,21 @@ public class LobbyScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         root.debug();
-        root.add(new Label("Lobby", application.skin, "narration")).padTop(10).colspan(2);
+        Label title = new Label("Lobby", application.skin, "narration");
+        title.setAlignment(Align.center);
+        root.add(title)
+            .width(stage.getViewport().getWorldWidth() * 0.25f)
+            .height(stage.getViewport().getWorldHeight() * 0.05f)
+            .padLeft(stage.getViewport().getWorldWidth() * 0.12f)
+            .padRight(stage.getViewport().getWorldWidth() * 0.12f)
+            .padBottom(30)
+            .colspan(2);
         for (int i = 0; i < labels.length; i++) {
             if (i % 2 == 0) {
                 root.row();
             }
             labels[i] = new Label((players.size() <= i ? "" : players.get(i)), application.skin);
-            root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1);
+            root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1).padBottom(10);
         }
         root.row();
 
@@ -86,7 +96,7 @@ public class LobbyScreen implements Screen {
                 if (application.server != null) {
                     application.server.stop();
                 }
-                application.setScreen(new SetupScreen(application));
+                application.setScreen(new SetupScreen(application, isHost));
                 dispose();
             }
         });
@@ -116,13 +126,18 @@ public class LobbyScreen implements Screen {
     private Net.HttpResponseListener getPollListener() {
         return new Net.HttpResponseListener() {
 
+            private final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Player .class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token .class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
+
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String msg = httpResponse.getResultAsString();
-
-                if (msg.equals("ingame")) {
-                    gameStarted = true;
-                } else {
+                try {
+                    gameState = gson.fromJson(msg, Game.class);
+                } catch (JsonSyntaxException e) {
                     String[] incomingPlayers = msg.split(",");
 
                     players.clear();
@@ -132,13 +147,11 @@ public class LobbyScreen implements Screen {
 
             @Override
             public void failed(Throwable t) {
-
+                System.out.println(t.getMessage());
             }
 
             @Override
-            public void cancelled() {
-
-            }
+            public void cancelled() {}
         };
     }
 
@@ -149,12 +162,13 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (gameStarted) {
+        if (!isHost && gameState != null) {
+            // Game has started
             ArrayList<User> users = new ArrayList<>();
             for (int i = 0; i < players.size(); i++) {
                 users.add(new User(i, players.get(i)));
             }
-            application.setScreen(new GameScreen(application, users));
+            application.setScreen(new GameScreen(application, gameState));
             dispose();
         } else if (!isHost && frameCount >= pollingFrequency) {
             frameCount = 0;
