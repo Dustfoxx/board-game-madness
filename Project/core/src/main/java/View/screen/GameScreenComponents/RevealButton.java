@@ -46,7 +46,10 @@ public class RevealButton extends TextButton {
         this.player = gameController.getGame().getCurrentPlayer();
         if (player.getClass().equals(RougeAgent.class)) {
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
-            if (currentCell != null && currentCell.containsFootstep() && !currentCell.containsBrainFact()) {
+            if (currentCell != null
+                    && currentCell.containsFootstep()
+                    && !currentCell.containsBrainFact()
+                    && gameController.getGame().isActionAvailable()) {
                 this.setColor(Color.WHITE);
                 this.setDisabled(false);
             } else {

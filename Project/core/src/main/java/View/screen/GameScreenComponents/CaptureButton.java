@@ -59,7 +59,7 @@ public class CaptureButton extends TextButton {
             super.draw(batch, parentAlpha); // Important
             // Get the cell of the current player
             AbstractCell currentCell = gameController.getGame().getCurrentPlayerCell();
-            if (currentCell != null) {
+            if (currentCell != null && gameController.getGame().isActionAvailable()) {
                 // Enable the button if current player is placed at board
                 this.setColor(Color.WHITE);
                 this.setDisabled(false);
