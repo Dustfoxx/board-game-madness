@@ -18,7 +18,7 @@ import Model.Feature;
 import Model.Player;
 import Model.Recruiter;
 
-public class FeatureSelection extends Table{
+public class FeatureSelection extends Table {
 
     private final GameController gameController;
     private final Dictionary<Feature, Integer> featureDict;
@@ -28,7 +28,7 @@ public class FeatureSelection extends Table{
         this.gameController = gameController;
 
         // Initialize feature dictionary and texture
-        this.featureDict=FeatureUtil.initializeFeatureDict();
+        this.featureDict = FeatureUtil.initializeFeatureDict();
         this.featuresImg = new Texture("feature_img.png");
 
         Label featureSelectedLabel = new Label("Features Selected", skin, "half-tone");
@@ -39,11 +39,11 @@ public class FeatureSelection extends Table{
         Table featureTable = new Table();
         this.add(featureTable).expandX().top().padTop(10);
 
-        Feature[] recruiterFeatures =gameController.getGame().getRecruiter().getFeaturesOfInterest();
+        Feature[] recruiterFeatures = gameController.getGame().getRecruiter().getFeaturesOfInterest();
 
         for (Feature feature : recruiterFeatures) {
             if (feature != null) {
-                Label featureLabel = new Label(feature.name(), skin,"half-tone");
+                Label featureLabel = new Label(feature.name(), skin, "half-tone");
                 featureLabel.setAlignment(Align.center);
                 featureTable.add(featureLabel).expandX().center().pad(5);
 
@@ -60,7 +60,8 @@ public class FeatureSelection extends Table{
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Player currentPlayer = gameController.getGame().getCurrentPlayer();
-        if (currentPlayer instanceof Recruiter) {
+        int[] coords = gameController.getGame().getBoard().getPlayerCoord(currentPlayer);
+        if (currentPlayer instanceof Recruiter && coords != null) {
             // Only renders the table when the current player is the Recruiter
             super.draw(batch, parentAlpha); // Important
         }

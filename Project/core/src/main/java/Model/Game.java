@@ -18,6 +18,8 @@ public class Game {
         ENDGAME
     } // Enum defining different gameStates
 
+    private String winner;
+
     private gameStates gameState; // Indicates which state the game is in
     private boolean gameOver; // Indicates if the game is over
     private Player currentPlayer; // The player whose turn it is
@@ -90,10 +92,24 @@ public class Game {
     public void setGameOver() {
         if (!gameOver) {
             this.gameOver = true;
+            if (this.currentTime >= this.maxTime || this.getAmountRecruited() >= this.maxRecruits) {
+                winner = "Recruiter";
+            } else {
+                winner = "Rogue Agents";
+            }
             setGameState(gameStates.ENDGAME);
         } else {
             throw new IllegalStateException("The game is already over.");
         }
+    }
+
+    /**
+     * Gets the winning team
+     * 
+     * @return string name of the winning team
+     */
+    public String getWinner() {
+        return this.winner;
     }
 
     /**
