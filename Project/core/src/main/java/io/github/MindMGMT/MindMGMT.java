@@ -50,13 +50,9 @@ public class MindMGMT extends Game {
         assets.load("basic-ui.atlas", TextureAtlas.class);
         assets.load("metalui/metal-ui.json", Skin.class);
         assets.load("comicui/comic-ui.json", Skin.class);
-        assets.load("watercolor-sunset.png", Texture.class);
+        assets.load("paperbg.jpeg", Texture.class);
         assets.load("basic-board.png", Texture.class);
         assets.load("mindmgmt.png", Texture.class);
-    }
-
-    public boolean joinGame(String name, String code) {
-        return false;
     }
 
     @Override

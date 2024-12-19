@@ -11,7 +11,7 @@ public class MindMGMTStage extends Stage {
 
     public MindMGMTStage(Viewport viewport, AssetManager manager) {
         super(viewport);
-        background = new Image(manager.get("watercolor-sunset.png", Texture.class));
+        background = new Image(manager.get("paperbg.jpeg", Texture.class));
         background.setPosition(0, 0);
         background.setSize(viewport.getCamera().viewportWidth, viewport.getCamera().viewportHeight);
         this.addActor(background);

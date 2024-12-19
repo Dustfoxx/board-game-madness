@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
 
-        TextButton singlePlayerButton = new TextButton("Singleplayer", application.skin);
+        TextButton singlePlayerButton = new TextButton("Local game", application.skin);
         TextButton hostButton = new TextButton("Host Game", application.skin);
         TextButton joinButton = new TextButton("Join Game", application.skin);
         TextButton quitButton = new TextButton("Quit", application.skin);

@@ -403,7 +403,6 @@ public class Game {
         this.recruitHistory = newGameState.recruitHistory;
         this.mindSlipHistory = newGameState.mindSlipHistory;
         this.players = newGameState.players;
-        this.activeBrains = newGameState.activeBrains;
         this.users = newGameState.users;
         this.isMovementAvailable = newGameState.isMovementAvailable;
         this.isActionAvailable = newGameState.isActionAvailable;
