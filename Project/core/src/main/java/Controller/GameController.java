@@ -36,7 +36,8 @@ public class GameController {
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
-     * are next in queue to play. This is the constructor mainly inteded for clients.
+     * are next in queue to play. This is the constructor mainly inteded for
+     * clients.
      */
     public GameController(Game gameState) {
         initController(gameState);
@@ -317,10 +318,6 @@ public class GameController {
                         (Integer) additionalInfo[2],
                         gameState);
                 break;
-        }
-
-        if (action != Actions.MOVE) {
-            gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
         }
 
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
