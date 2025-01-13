@@ -22,6 +22,7 @@ import Model.Feature;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import View.buildingBlocks.VisualCell;
+import io.github.MindMGMT.MindMGMT;
 
 public class AskWindow extends Window {
 
@@ -30,8 +31,8 @@ public class AskWindow extends Window {
     Table buttonTable;
     GameController gameController;
 
-    public AskWindow(Skin skin, GameController gameController) {
-        super("Ask Win", skin);
+    public AskWindow(GameController gameController, MindMGMT application) {
+        super("Ask Win", application.skin);
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
@@ -41,7 +42,7 @@ public class AskWindow extends Window {
         this.gameController = gameController;
 
         // Create a button for closing the window
-        Button closeButton = new Button(skin, "close");
+        Button closeButton = new Button(application.skin, "close");
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -53,7 +54,7 @@ public class AskWindow extends Window {
         this.getTitleTable().add(closeButton).padLeft(10).padTop(2).right();
 
         // Add the message to the window
-        Label messageLabel = new Label("Which feature do you want to ask about?", skin);
+        Label messageLabel = new Label("Choose a feature", application.skin);
         this.add(messageLabel).pad(20).row();
 
         // Get the cell of the current player
@@ -64,7 +65,7 @@ public class AskWindow extends Window {
 
         for (Feature feature : features) {
             // Get the feature image
-            VisualCell visualCell = new VisualCell(cell, new MutableBoolean());
+            VisualCell visualCell = new VisualCell(cell, new MutableBoolean(), application);
             TextureRegion featureTexture = visualCell.fetchFeature(feature);
             // Create an ImageButton based on the feature image
             TextureRegionDrawable drawable = new TextureRegionDrawable(featureTexture);
@@ -86,7 +87,7 @@ public class AskWindow extends Window {
             buttonTable.add(featureButton).padRight(20).padBottom(5);
         }
 
-        TextButton confirmButton = new TextButton("Confirm", skin);
+        TextButton confirmButton = new TextButton("Confirm", application.skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

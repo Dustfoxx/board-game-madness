@@ -31,7 +31,6 @@ public class EndGameWindow extends Window {
         // Add string to label
         String message = gameState.getWinner() + " Wins!";
         this.messageLabel = new Label(message, skin);
-        messageLabel.setFontScale(2f);
         this.add(messageLabel).pad(20).row();
 
         // Create a close button

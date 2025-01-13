@@ -68,7 +68,6 @@ public class LobbyScreen implements Screen {
     private void setupUI() {
         Table root = new Table();
         root.setFillParent(true);
-        root.debug();
         Label title = new Label("Lobby", application.skin, "narration");
         title.setAlignment(Align.center);
         root.add(title)
@@ -76,7 +75,7 @@ public class LobbyScreen implements Screen {
             .height(stage.getViewport().getWorldHeight() * 0.05f)
             .padLeft(stage.getViewport().getWorldWidth() * 0.12f)
             .padRight(stage.getViewport().getWorldWidth() * 0.12f)
-            .padBottom(30)
+            .padBottom(80)
             .colspan(2);
         for (int i = 0; i < labels.length; i++) {
             if (i % 2 == 0) {
@@ -115,10 +114,10 @@ public class LobbyScreen implements Screen {
                 }
             });
 
-            root.add(backButton);
-            root.add(startButton);
+            root.add(backButton).padTop(80);
+            root.add(startButton).padTop(80);
         } else {
-            root.add(backButton).colspan(2);
+            root.add(backButton).padTop(80).colspan(2);
         }
         stage.addActor(root);
     }

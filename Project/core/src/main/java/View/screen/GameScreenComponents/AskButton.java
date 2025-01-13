@@ -13,21 +13,22 @@ import Model.AbstractCell;
 import Model.NormalCell;
 import Model.Player;
 import Model.RougeAgent;
+import io.github.MindMGMT.MindMGMT;
 
 public class AskButton extends TextButton {
 
     private final GameController gameController;
 
-    public AskButton(GameController gameController, Skin skin) {
+    public AskButton(GameController gameController, MindMGMT application) {
 
-        super("Ask", skin);
+        super("Ask", application.skin);
 
         this.gameController = gameController;
 
         this.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                AskWindow askActionWindow = new AskWindow(skin, gameController);
+                AskWindow askActionWindow = new AskWindow(gameController, application);
                 askActionWindow.setPosition(
                         Gdx.graphics.getWidth() / 2 - askActionWindow.getWidth() / 2,
                         Gdx.graphics.getHeight() / 2 - askActionWindow.getHeight() / 2);

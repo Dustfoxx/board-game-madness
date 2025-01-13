@@ -32,6 +32,10 @@ public class SetupScreen implements Screen {
             this.responseListener = getResponseListener();
         }
         this.errorWindow = new ErrorWindow("Error", application.skin);
+        this.errorWindow.setPosition(
+            Gdx.graphics.getWidth() / 2f - this.errorWindow.getWidth() / 2,
+            Gdx.graphics.getHeight() / 2f - this.errorWindow.getHeight() / 2
+        );
 
         setupUI();
         Gdx.input.setInputProcessor(stage);
@@ -45,6 +49,10 @@ public class SetupScreen implements Screen {
                     joined = true;
                 } else if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
                     errorWindow.setMessage(httpResponse.getResultAsString());
+                    errorWindow.setPosition(
+                        Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
+                        Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2
+                    );
                     stage.addActor(errorWindow);
                 }
             }
@@ -52,6 +60,10 @@ public class SetupScreen implements Screen {
             @Override
             public void failed(Throwable t) {
                 errorWindow.setMessage(t.getMessage());
+                errorWindow.setPosition(
+                    Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
+                    Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2
+                );
                 stage.addActor(errorWindow);
             }
 
@@ -63,7 +75,7 @@ public class SetupScreen implements Screen {
     }
 
     private void setupUI() {
-        this.errorWindow.setSize(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getHeight() / 4f);
+        this.errorWindow.setSize(Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() / 5f);
 
         Table root = new Table();
         root.setFillParent(true);

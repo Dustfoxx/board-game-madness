@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import Model.Recruiter;
 import Model.Recruiter.RecruiterType;
+import io.github.MindMGMT.MindMGMT;
 
 public class RecruiterWindow extends Window {
 
@@ -29,10 +30,12 @@ public class RecruiterWindow extends Window {
     ImageButton selectedrecruiterButton;
     Table buttonTable;
     Recruiter recruiter;
+    private MindMGMT application;
 
-    public RecruiterWindow(Skin skin, Recruiter recruiter, GameController gameController) {
-        super("Ask Recruiter", skin);
+    public RecruiterWindow(Recruiter recruiter, GameController gameController, MindMGMT application) {
+        super("Ask Recruiter", application.skin);
         // Create the window
+        this.application = application;
         this.setMovable(false);
         this.setResizable(false);
         this.setModal(true);
@@ -42,7 +45,7 @@ public class RecruiterWindow extends Window {
         this.selectedRecruiter = RecruiterType.HORIZONTAL;
 
         // Add the message to the window
-        Label messageLabel = new Label("Which recruiter do you want to play?", skin);
+        Label messageLabel = new Label("Choose a recruiter", application.skin);
         this.add(messageLabel).pad(20).row();
 
         for (RecruiterType type : types) {
@@ -62,7 +65,7 @@ public class RecruiterWindow extends Window {
             buttonTable.add(recruiterButton).padRight(20).padBottom(5).width(240).height(400);
         }
 
-        TextButton confirmButton = new TextButton("Confirm", skin);
+        TextButton confirmButton = new TextButton("Confirm", application.skin);
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -92,7 +95,7 @@ public class RecruiterWindow extends Window {
 
     /**
      * Fetches recruiter card image
-     * 
+     *
      * @param recruiter which recruiter it is
      * @return a textureregion containing the proper recruiter
      */
@@ -101,12 +104,12 @@ public class RecruiterWindow extends Window {
         int ySize = 481;
         switch (recruiter) {
             case HORIZONTAL:
-                return new TextureRegion(new Texture("recruiters.png"),
+                return new TextureRegion(application.assets.get("recruiters.png", Texture.class),
                         0,
                         0,
                         xSize, ySize);
             default:
-                return new TextureRegion(new Texture("recruiters.png"),
+                return new TextureRegion(application.assets.get("recruiters.png", Texture.class),
                         xSize,
                         0,
                         xSize, ySize);
