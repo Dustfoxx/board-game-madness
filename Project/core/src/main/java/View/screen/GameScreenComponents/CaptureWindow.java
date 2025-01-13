@@ -26,7 +26,6 @@ public class CaptureWindow extends Window {
             message = "The recruiter was not captured!";
         }
         Label messageLabel = new Label(message, skin);
-        messageLabel.setFontScale(2f);
         this.add(messageLabel).pad(20).row();
 
         // Create a close button

@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -25,6 +26,7 @@ public class MindMGMT extends Game {
     private boolean hasLoaded = false;
 
     public Skin skin;
+    public BitmapFont font;
     public int nrOfUsers;
     public AssetManager assets;
     public MindMGMTServer server;
@@ -53,6 +55,14 @@ public class MindMGMT extends Game {
         assets.load("paperbg.jpeg", Texture.class);
         assets.load("basic-board.png", Texture.class);
         assets.load("mindmgmt.png", Texture.class);
+        assets.load("customfont.fnt", BitmapFont.class);
+
+        assets.load("highlight.png", Texture.class);
+        assets.load("players_tmp.png", Texture.class);
+        assets.load("feature_img.png", Texture.class);
+        assets.load("tokens_3d.png", Texture.class);
+        assets.load("tokens_temple.png", Texture.class);;
+        assets.load("recruiters.png", Texture.class);
     }
 
     @Override
@@ -70,16 +80,13 @@ public class MindMGMT extends Game {
 
         if (assets.update()) {
             // We are done loading
-
             this.hasLoaded = true;
+            this.font = assets.get("customfont.fnt", BitmapFont.class);
             this.skin = assets.get("comicui/comic-ui.json", Skin.class);
             this.skin.getFont("button")
                     .getData()
-                    .setScale(0.8f);
+                    .setScale(0.7f);
 
-            this.skin.getFont("font")
-                    .getData()
-                    .setScale(2f);
             this.setScreen(new MainMenuScreen(this));
 
         } else {

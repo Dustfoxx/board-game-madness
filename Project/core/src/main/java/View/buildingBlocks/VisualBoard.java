@@ -2,6 +2,7 @@ package View.buildingBlocks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,17 +17,20 @@ import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.Board;
 import View.screen.GameScreenComponents.BrainWindow;
+import io.github.MindMGMT.MindMGMT;
 
 public class VisualBoard {
-    private Table board = new Table();
-    private Texture bg = new Texture("basic-board.png");
+    private Table board;
+    private Texture bg;
 
     /**
      * Constructing the board using VisualCells
-     * 
+     *
      * @param gameInfo the gamecontroller controlling the game
      */
-    public VisualBoard(GameController gameInfo, Skin skin) {
+    public VisualBoard(GameController gameInfo, MindMGMT application) {
+        this.board = new Table();
+        this.bg = application.assets.get("basic-board.png", Texture.class);
         Board boardInfo = gameInfo.getGame().getBoard();
         int[] dimensions = boardInfo.getDims();
         // board.setDebug(true);
@@ -34,7 +38,7 @@ public class VisualBoard {
 
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
-                VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j]);
+                VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j], application);
                 cell.setName(i + "" + j);
 
                 // This is for movement actions
@@ -50,7 +54,7 @@ public class VisualBoard {
                     public void clicked(InputEvent event, float x, float y) {
                         int[] cellCoords = getCellClicked(event);
                         BrainWindow brainNoteWindow = new BrainWindow(
-                                gameInfo, cellCoords[0], cellCoords[1], skin);
+                                gameInfo, cellCoords[0], cellCoords[1], application.skin);
                         brainNoteWindow.setPosition(
                                 Gdx.graphics.getWidth() / 2 - brainNoteWindow.getWidth() / 2,
                                 Gdx.graphics.getHeight() / 2 - brainNoteWindow.getHeight() / 2);

@@ -68,7 +68,6 @@ public class PlayerBar extends Table {
         Table userSlot = new Table();
         if (!user.getUserName().isEmpty()) {
             Label userLabel = new Label(user.getUserName(), skin, "narration");
-            userLabel.setFontScale(2f);
             userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount());
             userSlot.row();
         }
@@ -76,7 +75,6 @@ public class PlayerBar extends Table {
         for (Player player : gameController.getGame().getPlayers()) {
             if (user.ownsPlayerPiece(player)) {
                 Label playerLabel = new Label(player.getName(), skin, "narration");
-                playerLabel.setFontScale(2f);
                 userSlot.add(playerLabel).expandX();
             }
         }

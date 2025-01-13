@@ -24,7 +24,7 @@ public class SettingWindow extends Window {
         this.setModal(true);
         this.setMovable(false);
 
-        Label pauseLabel = new Label("Game Paused", skin);
+        Label pauseLabel = new Label("Game Paused", skin, "title", "white");
         pauseLabel.setFontScale(1.5f);
         this.add(pauseLabel).pad(10).row();
 
