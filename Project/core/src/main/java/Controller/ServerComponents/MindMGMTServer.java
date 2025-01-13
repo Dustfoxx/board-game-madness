@@ -1,6 +1,7 @@
 package Controller.ServerComponents;
 
 import Model.*;
+import com.badlogic.gdx.net.HttpStatus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpHandler;
@@ -10,7 +11,6 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,7 @@ public class MindMGMTServer {
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/poll", createPollHandler());
             server.createContext("/register", createRegisterPlayerHandler());
+            // TODO: add "/post" handeling for clients to update the host's game state
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,7 +51,7 @@ public class MindMGMTServer {
                 response = gson.toJson(gameState);
             }
 
-            httpExchange.sendResponseHeaders(200, response.length());
+            httpExchange.sendResponseHeaders(HttpStatus.SC_OK, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
             os.close();
@@ -61,15 +62,15 @@ public class MindMGMTServer {
         return httpExchange -> {
             System.out.println(httpExchange.getRequestURI());
             String response;
-            int status = 200;
+            int status = HttpStatus.SC_OK;
             String method = httpExchange.getRequestMethod();
             if (!method.equals("POST")) {
                 response = "Error: Method not supported!";
-                status = 400;
+                status = HttpStatus.SC_BAD_REQUEST;
             } else {
                 if (users.size() >= 5) {
                     response = "Error: Lobby is full!";
-                    status = 400;
+                    status = HttpStatus.SC_BAD_REQUEST;
                 } else {
                     InputStream stream = httpExchange.getRequestBody();
                     String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)) // TODO: Resource leak: '<unassigned Closeable value>' is never closed
@@ -89,6 +90,7 @@ public class MindMGMTServer {
     }
 
     public void setGameState(Game gameState) {
+        // This works due to pass by reference!!!
         this.gameState = gameState;
     }
 
