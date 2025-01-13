@@ -131,7 +131,12 @@ public class Board {
 
         this.rowsDim = board.rowsDim;
         this.colsDim = board.colsDim;
-        this.cells = board.cells;
+
+        for (int row = 0; row < this.rowsDim; row++) {
+            for (int col = 0; col < this.colsDim; col++)
+                this.cells[row][col].updateDeeply(board.cells[row][col]);
+        }
+
     }
 
     @Override

@@ -406,8 +406,12 @@ public class Game {
         this.users = newGameState.users;
         this.isMovementAvailable = newGameState.isMovementAvailable;
         this.isActionAvailable = newGameState.isActionAvailable;
-        this.validityMask = newGameState.validityMask;
-        this.checkAction  = newGameState.checkAction;
+        for (int row = 0; row < this.validityMask.length; row++) {
+            for (int col = 0; col < this.validityMask[0].length; col++) {
+                this.validityMask[row][col].updateDeeply(newGameState.validityMask[row][col]);
+            }
+        }
+        this.checkAction = newGameState.checkAction;
     }
 
     @Override

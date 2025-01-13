@@ -35,6 +35,11 @@ public abstract class AbstractCell {
         return players;
     }
 
+    public void updateDeeply(AbstractCell newCell) {
+        this.players = newCell.players;
+        this.tokens = newCell.tokens;
+    }
+
     /**
      * Adds a player to the cell.
      *
