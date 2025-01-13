@@ -88,9 +88,9 @@ class GameTests {
 
     @Test
     void testSetCurrentPlayer() {
-        game.setCurrentPlayer(player2);
+        game.setCurrentPlayer(1);
         assertEquals(player2, game.getCurrentPlayer(), "Current player should be Player 2.");
-        game.setCurrentPlayer(player1);
+        game.setCurrentPlayer(0);
         assertEquals(player1, game.getCurrentPlayer(), "Current player should be Player 1.");
         assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(new RougeAgent(2, null)),
                 "Setting the next player to one not in the game should throw IllegalArgumentException.");

@@ -97,6 +97,11 @@ public class GameScreen implements Screen {
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if (gameController.pendingClientUpdate) {
+                    // Do not overwrite existing game state if client has made an update
+                    return;
+                }
+
                 String msg = httpResponse.getResultAsString();
                 try {
                     Game gameState = gson.fromJson(msg, Game.class);
@@ -214,7 +219,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (frameCount >= pollingFrequency) {
+        if (frameCount >= pollingFrequency && !gameController.pendingClientUpdate) {
             frameCount = 0;
             if (!isHost) {
                 HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
