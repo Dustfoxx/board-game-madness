@@ -24,8 +24,8 @@ public class GameController {
 
     private Game gameState;
     private int activePlayer = 0;
-    private final int[] playerTurnOrder = new int[6];
-    private Recruiter recruiter = null;
+    private int[] playerTurnOrder;
+    private int recruiterIndex;
     private ActionController actionController;
     private CheckAction checkAction;
     private boolean isHost;
@@ -66,7 +66,7 @@ public class GameController {
 
             @Override
             public void failed(Throwable t) {
-                System.out.println(t.getMessage());
+                System.err.println(t.getMessage());
             }
 
             @Override
@@ -89,13 +89,15 @@ public class GameController {
     private void initController(Game gameState) {
         // Create turn order
         // This controller will use this to know which player controls what unit
-        int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
+        int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
         // controlled
         // Used by clients to detect whenever polling the host should wait
         this.pendingClientUpdate = false;
         this.gameState = gameState;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
+        this.playerTurnOrder = new int[6];
+        this.recruiterIndex = this.gameState.getPlayers().indexOf(gameState.getRecruiter());
 
         this.actionController = new ActionController();
         this.checkAction = new CheckAction();
@@ -103,7 +105,6 @@ public class GameController {
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
             if (currPlayer instanceof Recruiter) {
-                recruiter = (Recruiter) currPlayer;
                 if (!oneRecruiter) {
                     throw new IllegalStateException("More than one recruiter");
                 }
@@ -113,9 +114,6 @@ public class GameController {
             }
         }
 
-        if (recruiter == null) {
-            throw new IllegalStateException("Recruiter player not found");
-        }
         if (agents.isEmpty()) {
             throw new IllegalStateException("No agents found");
         }
@@ -129,8 +127,8 @@ public class GameController {
                 default:
                     playerTurnOrder[i] = agentIterator;
                     agentIterator++;
-                    if (agentIterator >= agents.size()) {
-                        agentIterator = 0;
+                    if (agentIterator > agents.size()) {
+                        agentIterator = 1;
                     }
             }
         }
@@ -253,6 +251,7 @@ public class GameController {
     private void preGameLogic() {
         gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            Recruiter recruiter = (Recruiter) gameState.getCurrentPlayer();
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
                 gameState.addAmountRecruited(recruiter.getAmountRecruited());
@@ -284,6 +283,7 @@ public class GameController {
             gameState.incrementTime();
         }
         if (gameState.getCurrentTime() % 2 == 1) {
+            Recruiter recruiter = (Recruiter) gameState.getPlayers().get(recruiterIndex);
             gameState.addAmountRecruited(recruiter.getAmountRecruited());
             recruiter.resetAmountRecruited();
             if (gameState.getAmountRecruited() >= gameState.getMaxRecruits()) {

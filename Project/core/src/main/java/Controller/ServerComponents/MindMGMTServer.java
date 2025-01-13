@@ -42,14 +42,12 @@ public class MindMGMTServer {
     private HttpHandler createPollHandler() {
         return httpExchange -> {
             String response = "";
-            System.out.println(httpExchange.getRequestURI());
             if (gameState == null) {
                 // We are in lobby
                 response = users.stream().filter(Objects::nonNull).collect(Collectors.joining(","));
             } else {
                 // We have an ongoing game
                 response = gson.toJson(gameState);
-                System.out.println(((Recruiter)gameState.getCurrentPlayer()).getWalkedPath());
             }
 
             httpExchange.sendResponseHeaders(HttpStatus.SC_OK, response.length());
@@ -78,7 +76,6 @@ public class MindMGMTServer {
                             .lines()
                             .collect(Collectors.joining("\n"));
                     stream.close();
-                    System.out.println(body);
                     users.add(body);
                     response = "ok";
                 }

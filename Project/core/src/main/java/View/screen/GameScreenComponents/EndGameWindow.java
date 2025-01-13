@@ -1,5 +1,6 @@
 package View.screen.GameScreenComponents;
 
+import Controller.GameController;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,21 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class EndGameWindow extends Window {
 
-    Game gameState;
-    Label messageLabel;
+    private GameController controller;
+    private final Label messageLabel;
 
-    public EndGameWindow(Game gameState, Skin skin, MindMGMT application) {
+    public EndGameWindow(GameController controller, Skin skin, MindMGMT application) {
         super("EndGame Window", skin);
+        this.controller = controller;
 
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
         this.setModal(true);
-        this.gameState = gameState;
 
         // Add string to label
-        String message = gameState.getWinner() + " Wins!";
-        this.messageLabel = new Label(message, skin);
+        this.messageLabel = new Label("", skin);
         this.add(messageLabel).pad(20).row();
 
         // Create a close button
@@ -51,9 +51,9 @@ public class EndGameWindow extends Window {
     public void draw(Batch batch, float parentAlpha) {
         // Send window to back of drawing if its not ENDGAME
         this.toBack();
-        if (gameState.getGameState() == gameStates.ENDGAME) {
+        if (controller.getGame().getGameState() == gameStates.ENDGAME) {
             // Set the message to the current winner
-            this.messageLabel.setText(gameState.getWinner() + " Wins!");
+            this.messageLabel.setText(controller.getGame().getWinner() + " Wins!");
             // Sends window to front so that it is the only interactable part
             this.toFront();
             super.draw(batch, parentAlpha); // Important

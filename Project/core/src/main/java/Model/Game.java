@@ -403,6 +403,7 @@ public class Game {
         this.users = newGameState.users;
         this.isMovementAvailable = newGameState.isMovementAvailable;
         this.isActionAvailable = newGameState.isActionAvailable;
+        this.winner = newGameState.winner;
         for (int row = 0; row < this.validityMask.length; row++) {
             for (int col = 0; col < this.validityMask[0].length; col++) {
                 this.validityMask[row][col].updateDeeply(newGameState.validityMask[row][col]);
@@ -427,6 +428,7 @@ public class Game {
                 ", users=" + users +
                 ", isMovementAvailable=" + isMovementAvailable +
                 ", isActionAvailable=" + isActionAvailable +
+                ", winner=" + winner +
                 '}';
     }
 
