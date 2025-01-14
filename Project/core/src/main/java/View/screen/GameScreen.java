@@ -34,6 +34,7 @@ import com.google.gson.JsonSyntaxException;
 import io.github.MindMGMT.MindMGMT;
 
 public class GameScreen implements Screen {
+    private final MindMGMT application;
     private final GameController gameController;
     private MindMGMTStage stage;
     private Skin skin;
@@ -55,6 +56,7 @@ public class GameScreen implements Screen {
      * @param gameState An initial cop of the hosts game state
      */
     public GameScreen(MindMGMT application, Game gameState) {
+        this.application = application;
         this.gameController = new GameController(gameState);
         this.isHost = false;
         this.pollingFrequency = 30;
@@ -71,6 +73,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
+        this.application = application;
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users, this);
         this.isHost = true;
@@ -94,18 +97,24 @@ public class GameScreen implements Screen {
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if (gameController.pendingClientUpdate) {
+                    // Do not overwrite existing game state if client has made an update
+                    return;
+                }
+
                 String msg = httpResponse.getResultAsString();
                 try {
                     Game gameState = gson.fromJson(msg, Game.class);
                     gameController.deeplySetGameState(gameState);
                 } catch (JsonSyntaxException e) {
                     // Handle game end?
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void failed(Throwable t) {
-                System.out.println(t.getMessage());
+                System.err.println(t.getMessage());
             }
 
             @Override
@@ -121,10 +130,10 @@ public class GameScreen implements Screen {
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
-        this.featureSelection = new FeatureSelection(gameController, skin);
+        this.featureSelection = new FeatureSelection(gameController, application);
         Gdx.input.setInputProcessor(stage);
         setupUI();
-        EndGameWindow endGameWindow = new EndGameWindow(gameController.getGame(), skin, application);
+        EndGameWindow endGameWindow = new EndGameWindow(gameController, skin, application);
         endGameWindow.setPosition(
                 Gdx.graphics.getWidth() / 2f - endGameWindow.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - endGameWindow.getHeight() / 2);
@@ -139,8 +148,8 @@ public class GameScreen implements Screen {
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
-        RecruiterWindow recruiterWindow = new RecruiterWindow(skin, gameController.getGame().getRecruiter(),
-                gameController);
+        RecruiterWindow recruiterWindow = new RecruiterWindow(gameController.getGame().getRecruiter(),
+                gameController, application);
         recruiterWindow.setPosition(
                 Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
@@ -172,7 +181,7 @@ public class GameScreen implements Screen {
         mainSection.add(mindslipBar).expandY().fillY().width(Value.percentWidth(0.25f, mainSection));
         mindslipBar.add(featureSelection).expand().fill();
 
-        this.visualBoard = new VisualBoard(gameController, skin);
+        this.visualBoard = new VisualBoard(gameController, this.application);
         Table boardSection = this.visualBoard.getVisualBoard();
         mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
@@ -189,7 +198,7 @@ public class GameScreen implements Screen {
                 .height(stage.getViewport().getWorldHeight() * 0.1f);
 
         // Create an ask button
-        AskButton askButton = new AskButton(gameController, skin);
+        AskButton askButton = new AskButton(gameController, application);
         actionBar.add(askButton).expand();
 
         // Create a reveal button
@@ -223,7 +232,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (frameCount >= pollingFrequency) {
+        if (frameCount >= pollingFrequency && !gameController.pendingClientUpdate) {
             frameCount = 0;
             if (!isHost) {
                 HttpRequestBuilder requestBuilder = new HttpRequestBuilder();

@@ -17,35 +17,32 @@ import Model.BrainFact;
 import Model.BrainNote;
 import Model.Feature;
 import Model.Footstep;
-import Model.MindSlip;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
 import Model.Step;
 import Model.Token;
+import io.github.MindMGMT.MindMGMT;
 
 public class VisualCell extends Actor {
-    private TextureRegion feature1 = fetchFeature(null);
-    private TextureRegion feature2 = fetchFeature(null);
-    private TextureRegion temple;
-    private TextureRegion footstep;
-    private TextureRegion[] brains;
+    private TextureRegion feature1;
+    private TextureRegion feature2;
+    private final TextureRegion temple;
+    private final TextureRegion footstep;
+    private final TextureRegion[] brains;
     private TextureRegion mindslip;
-    private BitmapFont step;
-    private List<TextureRegion> players;
-    private List<TextureRegion> tokens;
-    private Texture highlight = new Texture("highlight.png");
-    private TextureRegionDrawable highlightdrb = new TextureRegionDrawable(new TextureRegion(highlight));
-    private AbstractCell cellInfo;
+    private final BitmapFont step;
+    private final List<TextureRegion> players;
+    private final List<TextureRegion> tokens;
+    private final TextureRegionDrawable highlightdrb;
+    private final AbstractCell cellInfo;
     private Dictionary<Feature, Integer> features;
     private String stepText;
 
-    private Texture featuresImg = new Texture("feature_img.png");
-    private Texture tokensImg = new Texture("tokens_temple.png");
-    private Texture playersImg = new Texture("players_tmp.png");
-    private Texture stepImg = new Texture("tokens_3d.png");
+    private final Texture featuresImg;
+    private final Texture playersImg;
     private Texture mindslipImg=new Texture("tokens_3d.png");
-    private MutableBoolean highlighted;
+    private final MutableBoolean highlighted;
 
     /**
      * Creates a single cell on the board. Initializes textures based on the
@@ -53,8 +50,19 @@ public class VisualCell extends Actor {
      *
      * @param cellInfo a single cell on the board. contains players and more
      */
-    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean) {
+    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean, MindMGMT application) {
         initDict();
+
+        Texture highlight = application.assets.get("highlight.png", Texture.class);
+        this.highlightdrb = new TextureRegionDrawable(highlight);
+        this.featuresImg = application.assets.get("feature_img.png", Texture.class);
+        Texture tokensImg = application.assets.get("tokens_temple.png", Texture.class);
+        this.playersImg = application.assets.get("players_tmp.png", Texture.class);
+        Texture stepImg = application.assets.get("tokens_3d.png", Texture.class);
+
+        this.feature1 = fetchFeature(null);
+        this.feature2 = fetchFeature(null);
+
         this.cellInfo = cellInfo;
         this.highlighted = mutableBoolean;
         if (cellInfo instanceof NormalCell) {
@@ -73,8 +81,8 @@ public class VisualCell extends Actor {
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
         this.mindslip=new TextureRegion(mindslipImg, 303, 365, 60, 60);
         this.step = new BitmapFont();
-        this.players = new ArrayList<TextureRegion>();
-        this.tokens = new ArrayList<TextureRegion>();
+        this.players = new ArrayList<>();
+        this.tokens = new ArrayList<>();
         this.stepText = "";
         updatePlayers();
         // Bounds needed to render at all. These should be updated based on parent if
@@ -162,7 +170,7 @@ public class VisualCell extends Actor {
 
     /**
      * Draws numbers representing the recruiters steps on the current cell
-     * 
+     *
      * @param batch batch being composed
      */
     void drawNumbers(Batch batch) {
@@ -225,7 +233,6 @@ public class VisualCell extends Actor {
      *                                  feature is invalid.
      */
     public TextureRegion fetchFeature(Feature feature) {
-        this.featuresImg = new Texture("feature_img.png");
         return FeatureUtil.fetchFeature(featuresImg, features, feature);
     }
 

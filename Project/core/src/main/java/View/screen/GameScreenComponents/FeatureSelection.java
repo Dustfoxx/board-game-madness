@@ -17,6 +17,7 @@ import Controller.GameController;
 import Model.Feature;
 import Model.Player;
 import Model.Recruiter;
+import io.github.MindMGMT.MindMGMT;
 
 public class FeatureSelection extends Table {
 
@@ -24,14 +25,14 @@ public class FeatureSelection extends Table {
     private final Dictionary<Feature, Integer> featureDict;
     private final Texture featuresImg;
 
-    public FeatureSelection(GameController gameController, Skin skin) {
+    public FeatureSelection(GameController gameController, MindMGMT application) {
         this.gameController = gameController;
 
         // Initialize feature dictionary and texture
         this.featureDict = FeatureUtil.initializeFeatureDict();
-        this.featuresImg = new Texture("feature_img.png");
+        this.featuresImg = application.assets.get("feature_img.png", Texture.class);
 
-        Label featureSelectedLabel = new Label("Features Selected", skin, "half-tone");
+        Label featureSelectedLabel = new Label("Features Selected", application.skin, "half-tone");
         featureSelectedLabel.setAlignment(Align.center);
         this.add(featureSelectedLabel).expandX().fillX().pad(10);
         this.row();
@@ -43,7 +44,7 @@ public class FeatureSelection extends Table {
 
         for (Feature feature : recruiterFeatures) {
             if (feature != null) {
-                Label featureLabel = new Label(feature.name(), skin, "half-tone");
+                Label featureLabel = new Label(feature.name(), application.skin, "half-tone");
                 featureLabel.setAlignment(Align.center);
                 featureTable.add(featureLabel).expandX().center().pad(5);
 

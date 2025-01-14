@@ -3,6 +3,11 @@ package Controller;
 import Model.*;
 import Model.Game.gameStates;
 import Model.Recruiter.RecruiterType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import View.screen.GameScreen;
 
@@ -21,10 +26,14 @@ public class GameController {
 
     private Game gameState;
     private int activePlayer = 0;
-    private final Model.Player[] playerTurnOrder = new Player[6];
-    private Recruiter recruiter = null;
+    private int[] playerTurnOrder;
+    private int recruiterIndex;
     private ActionController actionController;
     private CheckAction checkAction;
+    private boolean isHost;
+    private Net.HttpResponseListener updateHostListener;
+
+    public boolean pendingClientUpdate;
 
     public enum Actions {
         MOVE,
@@ -38,9 +47,33 @@ public class GameController {
 
     /**
      * The main gameController. Keeps an eye on victory conditions and which players
-     * are next in queue to play. This is the constructor mainly inteded for clients.
+     * are next in queue to play. This is the constructor intended for
+     * clients.
      */
     public GameController(Game gameState) {
+        this.isHost = false;
+        this.updateHostListener = new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                int status = httpResponse.getStatus().getStatusCode();
+                if (status != 200) {
+                    // Something went bad
+                    System.err.println(httpResponse.getStatus());
+                    System.err.println(httpResponse.getResultAsString());
+                } else {
+                    // Else all good
+                    pendingClientUpdate = false;
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                System.err.println(t.getMessage());
+            }
+
+            @Override
+            public void cancelled() {}
+        };
         initController(gameState);
     }
 
@@ -49,8 +82,9 @@ public class GameController {
      * are next in queue to play. This is the constructor intended for the host.
      */
     public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
-        Game game = initializeGame(boardCsv, users);
-        initController(game);
+        Game gameState = initializeGame(boardCsv, users);
+        this.isHost = true;
+        initController(gameState);
         // TODO: Move
         gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
@@ -60,14 +94,18 @@ public class GameController {
         });
     }
 
-    private void initController(Game game) {
+    private void initController(Game gameState) {
         // Create turn order
         // This controller will use this to know which player controls what unit
-        int agentIterator = 0; // This is in case there are less than four agents. Every unit will still be
+        int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
         // controlled
-        this.gameState = game;
+        // Used by clients to detect whenever polling the host should wait
+        this.pendingClientUpdate = false;
+        this.gameState = gameState;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
+        this.playerTurnOrder = new int[6];
+        this.recruiterIndex = this.gameState.getPlayers().indexOf(gameState.getRecruiter());
 
         this.actionController = new ActionController();
         this.checkAction = new CheckAction();
@@ -75,8 +113,6 @@ public class GameController {
         boolean oneRecruiter = true;
         for (Player currPlayer : gamePlayers) {
             if (currPlayer instanceof Recruiter) {
-                recruiter = (Recruiter) currPlayer;
-                gameState.setCurrentPlayer(recruiter);
                 if (!oneRecruiter) {
                     throw new IllegalStateException("More than one recruiter");
                 }
@@ -86,9 +122,6 @@ public class GameController {
             }
         }
 
-        if (recruiter == null) {
-            throw new IllegalStateException("Recruiter player not found");
-        }
         if (agents.isEmpty()) {
             throw new IllegalStateException("No agents found");
         }
@@ -97,13 +130,13 @@ public class GameController {
             switch (i) {
                 case 0:
                 case 3:
-                    playerTurnOrder[i] = recruiter;
+                    playerTurnOrder[i] = 0;
                     break;
                 default:
-                    playerTurnOrder[i] = agents.get(agentIterator);
+                    playerTurnOrder[i] = agentIterator;
                     agentIterator++;
-                    if (agentIterator >= agents.size()) {
-                        agentIterator = 0;
+                    if (agentIterator > agents.size()) {
+                        agentIterator = 1;
                     }
             }
         }
@@ -116,8 +149,6 @@ public class GameController {
             throw new IllegalArgumentException("No users registered!");
         }
 
-        List<Player> players = new ArrayList<>();
-
         // Randomly select three unique features
         List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));
         Collections.shuffle(allFeaturesList);
@@ -128,6 +159,7 @@ public class GameController {
 
         Recruiter recruiter = new Recruiter(0, "Recruiter", recruiterFeatures);
 
+        List<Player> players = new ArrayList<>();
         players.add(recruiter);
         int playerPieceAmount = 5;
         for (int i = 1; i < playerPieceAmount; i++) {
@@ -146,7 +178,7 @@ public class GameController {
         }
 
         Board board = new Board(boardCsv);
-        return new Game(players, users, board, recruiter);
+        return new Game(players, users, board, 0);
     }
 
     private void distributePlayers(List<Player> players, List<User> users, int startUserIndex) {
@@ -169,6 +201,7 @@ public class GameController {
      * Decides new player and increments timer accordingly.
      */
     public void newTurn() {
+        System.out.println(gameState.getGameState());
         switch (gameState.getGameState()) {
             case PREGAME:
                 preGameLogic();
@@ -226,13 +259,14 @@ public class GameController {
     private void preGameLogic() {
         gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            Recruiter recruiter = (Recruiter) gameState.getCurrentPlayer();
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
                 gameState.addAmountRecruited(recruiter.getAmountRecruited());
                 recruiter.resetAmountRecruited();
                 int[] firstStepCoord = recruiter.getWalkedPath().get(0);
                 gameState.getBoard().getCell(firstStepCoord[0], firstStepCoord[1]).addToken(new BrainFact(1));
-                gameState.setCurrentPlayer(gameState.getPlayers().get(1)); // Gets first rogue agent and sets them as
+                gameState.setCurrentPlayer(1); // Gets first rogue agent and sets them as
                                                                            // next player
             }
         } else {
@@ -240,11 +274,12 @@ public class GameController {
             int currentIndex = players.indexOf(gameState.getCurrentPlayer());
             // If we are at the end of players, set game to started
             if (currentIndex == players.size() - 1) {
-                gameState.setCurrentPlayer(recruiter);
+                int recruiterIndex = 0;
+                gameState.setCurrentPlayer(recruiterIndex);
                 gameState.setGameState(gameStates.ONGOING);
             } else {
                 // Set player to next rogue agent so they can place
-                gameState.setCurrentPlayer(players.get(currentIndex + 1));
+                gameState.setCurrentPlayer(currentIndex + 1);
             }
         }
 
@@ -256,6 +291,7 @@ public class GameController {
             gameState.incrementTime();
         }
         if (gameState.getCurrentTime() % 2 == 1) {
+            Recruiter recruiter = (Recruiter) gameState.getPlayers().get(recruiterIndex);
             gameState.addAmountRecruited(recruiter.getAmountRecruited());
             recruiter.resetAmountRecruited();
             if (gameState.getAmountRecruited() >= gameState.getMaxRecruits()) {
@@ -279,6 +315,9 @@ public class GameController {
     }
 
     public boolean actionHandler(Actions action, Object[] additionalInfo) {
+        if (!isHost) {
+            this.pendingClientUpdate = true;
+        }
         boolean returnValue = true;
         switch (action) {
             case ASK:
@@ -327,14 +366,32 @@ public class GameController {
                 break;
         }
 
-        if (action != Actions.MOVE) {
-            gameState.setActionAvailability(false); // TODO: add so that this makes sure action was valid
-        }
-
         if (!gameState.isActionAvailable() && !gameState.isMovementAvailable()) {
             newTurn();
         }
+
+        if(!isHost) {
+            updateHost();
+        }
+
         return returnValue;
+    }
+
+    private void updateHost() {
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+            .create();
+
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        Net.HttpRequest httpRequest = requestBuilder
+            .newRequest()
+            .method(Net.HttpMethods.POST)
+            .url("http://localhost:8080/update")
+            .content(gson.toJson(gameState))
+            .build();
+        Gdx.net.sendHttpRequest(httpRequest, this.updateHostListener);
     }
 
     public void deeplySetGameState(Game newGameState) {

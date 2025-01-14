@@ -14,7 +14,7 @@ jobs:
           curl \
             -X POST \
             -H 'Content-Type: application/json' \
-            --url https://discord.com/api/webhooks/1308778856726925442/75nciTMCwmxokgdiFdDUu_rtNvUHH6CSBLgnRuochsK9m9-Cosmp_ALoqvySF8EhHkE_ \
+            --url ${{ secrets.PR_URL }} \
             -d '{
               "embeds": [{
                 "title": "New pull request published! :fire:",
