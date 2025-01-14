@@ -11,7 +11,7 @@ import java.util.Objects;
 public abstract class Player {
     private int id; // The unique identifier for the player
     private String name; // The name of the player
-    private transient boolean isVisible;
+    private boolean isVisible;
 
     /**
      * Constructor to initialize a player with a unique ID.
