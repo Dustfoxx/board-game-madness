@@ -61,9 +61,11 @@ public class ActionController {
                 Feature[] features = normalCell.getFeatures(); // Get the features of the cell
                 List<Feature> featuresList = Arrays.asList(features);
                 if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
-                    Footstep footstep = new Footstep();
-                    cell.addToken(footstep); // Add a footstep to the cell
-                    return; // Stop further searching once a cell is found
+                    if (!cell.containsFootstep() && !cell.containsBrainFact()) { // Check that the cell doesn't already contain a footstep or a brain fact
+                        Footstep footstep = new Footstep();
+                        cell.addToken(footstep); // Add a footstep to the cell
+                        return; // Stop further searching once a cell is found
+                    }
                 }
             }
         }
