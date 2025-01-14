@@ -85,7 +85,7 @@ public class GameController {
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
         initController(gameState);
-        // TODO: Move
+        // TODO: Move this somewhere else since it's related to View and not Controller
         gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
             public void onMindSlip(String message) {
