@@ -80,8 +80,13 @@ public class AskWindow extends Window {
             featureButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    selectedFeatureButton = featureButton;
-                    selectedFeature = feature;
+                    if (featureButton.isChecked()){
+                        selectedFeatureButton = featureButton;
+                        selectedFeature = feature;
+                    }else{
+                        selectedFeatureButton = null;
+                    }
+
                 }
             });
             buttonTable.add(featureButton).padRight(20).padBottom(5);
