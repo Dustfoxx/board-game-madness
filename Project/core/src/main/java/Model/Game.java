@@ -51,7 +51,7 @@ public class Game {
         if (board == null) {
             throw new IllegalArgumentException("Board cannot be null.");
         }
-        if (Math.abs(startingPlayer) >= players.size()) {
+        if (startingPlayer < 0 || startingPlayer >= players.size()) {
             throw new IllegalArgumentException("Invalid starting player number.");
         }
         this.gameOver = false;
@@ -122,7 +122,7 @@ public class Game {
      * @param nextPlayer The player to become the current player.
      */
     public void setCurrentPlayer(int nextPlayer) {
-        if (players.size() <= Math.abs(nextPlayer)) {
+        if (players.size() <= nextPlayer || 0 > nextPlayer) {
             throw new IllegalArgumentException("Player is not part of the game.");
         }
         this.currentPlayerIndex = nextPlayer;

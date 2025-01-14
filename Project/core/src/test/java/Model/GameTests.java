@@ -44,26 +44,25 @@ class GameTests {
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
-        game = new Game(players, new ArrayList<User>(), board, player1);
+        game = new Game(players, new ArrayList<User>(), board, 0);
         game.setGameState(gameStates.ONGOING);
     }
 
     @Test
     void testGameConstructorValidation() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(null, new ArrayList<User>(), board, player1),
+        assertThrows(IllegalArgumentException.class, () -> new Game(null, new ArrayList<User>(), board, 0),
                 "Constructor should throw an exception if players list is null.");
         assertThrows(IllegalArgumentException.class,
-                () -> new Game(Collections.emptyList(), new ArrayList<User>(), board, player1),
+                () -> new Game(Collections.emptyList(), new ArrayList<User>(), board, 0),
                 "Constructor should throw an exception if players list is empty.");
         assertThrows(IllegalArgumentException.class,
-                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), null, player1),
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), null, 0),
                 "Constructor should throw an exception if board is null.");
         assertThrows(IllegalArgumentException.class,
-                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), board, null),
-                "Constructor should throw an exception if startingPlayer is null.");
-        Player player3 = new RougeAgent(2, "Player 3");
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), board, -1),
+                "Constructor should throw an exception if startingPlayer is incorrect.");
         assertThrows(IllegalArgumentException.class,
-                () -> new Game(Arrays.asList(player1, player2), new ArrayList<User>(), board, player3),
+                () -> new Game(Arrays.asList(player1, player2), new ArrayList<>(), board, 2),
                 "Constructor should throw an exception if startingPlayer is not in the players list.");
     }
 
@@ -92,9 +91,9 @@ class GameTests {
         assertEquals(player2, game.getCurrentPlayer(), "Current player should be Player 2.");
         game.setCurrentPlayer(0);
         assertEquals(player1, game.getCurrentPlayer(), "Current player should be Player 1.");
-        assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(new RougeAgent(2, null)),
+        assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(2),
                 "Setting the next player to one not in the game should throw IllegalArgumentException.");
-        assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(null),
+        assertThrows(IllegalArgumentException.class, () -> game.setCurrentPlayer(-1),
                 "Setting the next player to null should throw an IllegalArgumentException.");
     }
 

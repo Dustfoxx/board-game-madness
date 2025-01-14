@@ -55,7 +55,7 @@ class SerializationTests {
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
-        game = new Game(players, new ArrayList<User>(), board, player1);
+        game = new Game(players, new ArrayList<User>(), board, 0);
         game.setGameState(gameStates.ONGOING);
     }
 
