@@ -46,7 +46,7 @@ public class AskWindow extends Window {
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                actor.getParent().remove(); // Closes the window
+                AskWindow.this.remove(); // Closes the window
             }
         });
 
