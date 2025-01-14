@@ -238,7 +238,9 @@ public class GameScreen implements Screen {
             }
         }
 
-        boardSection.setTouchable(gameController.getGame().getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        // Weird bad way of doing this. Doesn't follow mvc but works for now
+        gameController.setBoardActive();
+        boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
 
         stage.act(delta);
         stage.draw();

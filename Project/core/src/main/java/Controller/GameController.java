@@ -31,6 +31,7 @@ public class GameController {
     private boolean isHost;
     private Net.HttpResponseListener updateHostListener;
     private String localName;
+    private boolean boardIsActive;
 
     public boolean pendingClientUpdate;
 
@@ -90,6 +91,24 @@ public class GameController {
         initController(gameState);
     }
 
+    /**
+     * Returns wether the board should be active or not
+     * 
+     * @return boolean, true if active and false if not
+     */
+    public boolean getBoardIsActive() {
+        return this.boardIsActive;
+    }
+
+    /**
+     * Setter for boardIsActive
+     * 
+     * @param active new value
+     */
+    public void setBoardActive() {
+        this.boardIsActive = activateBoardForUser();
+    }
+
     private void initController(Game gameState) {
         // Create turn order
         // This controller will use this to know which player controls what unit
@@ -137,7 +156,6 @@ public class GameController {
                     }
             }
         }
-        gameState.setBoardActive(activateBoardForUser());
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
@@ -196,10 +214,9 @@ public class GameController {
 
     private boolean activateBoardForUser() {
         boolean[] returnVal = { false }; // Some weird workaround for using this inside forEach
-        System.out.println(localName);
         gameState.getUsers().forEach((user) -> {
             if (user.ownsPlayerPiece(gameState.getCurrentPlayer())) {
-                if (user.getUserName() == localName) {
+                if (user.getUserName().equals(this.localName)) {
                     returnVal[0] = true; // If a player owns the active piece we activate the board
                 }
             }
@@ -238,7 +255,6 @@ public class GameController {
         } else {
             setRecruiterVisibility(false);
         }
-        gameState.setBoardActive(activateBoardForUser());
     }
 
     /**
