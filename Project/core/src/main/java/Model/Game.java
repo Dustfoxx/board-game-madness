@@ -35,6 +35,7 @@ public class Game {
     private boolean isActionAvailable;
     private MutableBoolean[][] validityMask;
     private CheckAction checkAction;
+    private boolean boardIsActive;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -69,6 +70,7 @@ public class Game {
         this.isMovementAvailable = true;
         this.checkAction = new CheckAction();
         this.validityMask = checkAction.createUniformMask(board, true);
+        this.boardIsActive = false;
     }
 
     /**
@@ -260,6 +262,24 @@ public class Game {
      */
     public List<User> getUsers() {
         return this.users;
+    }
+
+    /**
+     * Returns wether the board should be active or not
+     * 
+     * @return boolean, true if active and false if not
+     */
+    public boolean getBoardIsActive() {
+        return this.boardIsActive;
+    }
+
+    /**
+     * Setter for boardIsActive
+     * 
+     * @param active new value
+     */
+    public void setBoardActive(boolean active) {
+        this.boardIsActive = active;
     }
 
     /**

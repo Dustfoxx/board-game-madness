@@ -35,10 +35,11 @@ public class LobbyScreen implements Screen {
     private Net.HttpResponseListener pollListener;
     private int frameCount;
     private final boolean isHost;
+    private String localName;
 
     private Game gameState;
 
-    public LobbyScreen(MindMGMT application, String hostName)  {
+    public LobbyScreen(MindMGMT application, String hostName, String localName) {
         this.application = application;
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.players = new ArrayList<>();
@@ -48,6 +49,7 @@ public class LobbyScreen implements Screen {
         this.frameCount = 0;
         this.pollingFrequency = 30;
         this.isHost = hostName != null;
+        this.localName = localName;
         this.gameState = null;
 
         if (this.isHost) {
@@ -71,12 +73,12 @@ public class LobbyScreen implements Screen {
         Label title = new Label("Lobby", application.skin, "narration");
         title.setAlignment(Align.center);
         root.add(title)
-            .width(stage.getViewport().getWorldWidth() * 0.25f)
-            .height(stage.getViewport().getWorldHeight() * 0.05f)
-            .padLeft(stage.getViewport().getWorldWidth() * 0.12f)
-            .padRight(stage.getViewport().getWorldWidth() * 0.12f)
-            .padBottom(80)
-            .colspan(2);
+                .width(stage.getViewport().getWorldWidth() * 0.25f)
+                .height(stage.getViewport().getWorldHeight() * 0.05f)
+                .padLeft(stage.getViewport().getWorldWidth() * 0.12f)
+                .padRight(stage.getViewport().getWorldWidth() * 0.12f)
+                .padBottom(80)
+                .colspan(2);
         for (int i = 0; i < labels.length; i++) {
             if (i % 2 == 0) {
                 root.row();
@@ -85,8 +87,6 @@ public class LobbyScreen implements Screen {
             root.add(labels[i]).colspan(i == labels.length - 1 ? 2 : 1).padBottom(10);
         }
         root.row();
-
-
 
         TextButton backButton = new TextButton("Back", application.skin);
         backButton.addListener(new ChangeListener() {
@@ -126,10 +126,10 @@ public class LobbyScreen implements Screen {
         return new Net.HttpResponseListener() {
 
             private final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Player .class, new GeneralAdapter<>())
-                .registerTypeAdapter(Token .class, new GeneralAdapter<>())
-                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-                .create();
+                    .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                    .create();
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -150,7 +150,8 @@ public class LobbyScreen implements Screen {
             }
 
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+            }
         };
     }
 
@@ -167,16 +168,16 @@ public class LobbyScreen implements Screen {
             for (int i = 0; i < players.size(); i++) {
                 users.add(new User(i, players.get(i)));
             }
-            application.setScreen(new GameScreen(application, gameState));
+            application.setScreen(new GameScreen(application, gameState, this.localName));
             dispose();
         } else if (!isHost && frameCount >= pollingFrequency) {
             frameCount = 0;
             HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
             Net.HttpRequest httpRequest = requestBuilder
-                .newRequest()
-                .method(Net.HttpMethods.GET)
-                .url("http://localhost:8080/poll")
-                .build();
+                    .newRequest()
+                    .method(Net.HttpMethods.GET)
+                    .url("http://localhost:8080/poll")
+                    .build();
             Gdx.net.sendHttpRequest(httpRequest, pollListener);
         }
         ScreenUtils.clear(Color.BLACK);

@@ -30,6 +30,7 @@ public class GameController {
     private CheckAction checkAction;
     private boolean isHost;
     private Net.HttpResponseListener updateHostListener;
+    private String localName;
 
     public boolean pendingClientUpdate;
 
@@ -48,8 +49,9 @@ public class GameController {
      * are next in queue to play. This is the constructor intended for
      * clients.
      */
-    public GameController(Game gameState) {
+    public GameController(Game gameState, String localName) {
         this.isHost = false;
+        this.localName = localName;
         this.updateHostListener = new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -70,7 +72,8 @@ public class GameController {
             }
 
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+            }
         };
         initController(gameState);
     }
@@ -81,6 +84,7 @@ public class GameController {
      */
 
     public GameController(Csv boardCsv, ArrayList<User> users) {
+        this.localName = users.get(0).getUserName();
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
         initController(gameState);
@@ -90,6 +94,7 @@ public class GameController {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
+        System.out.println(localName);
         // controlled
         // Used by clients to detect whenever polling the host should wait
         this.pendingClientUpdate = false;
@@ -132,6 +137,7 @@ public class GameController {
                     }
             }
         }
+        gameState.setBoardActive(activateBoardForUser());
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
@@ -188,6 +194,20 @@ public class GameController {
         return this.gameState;
     }
 
+    private boolean activateBoardForUser() {
+        boolean[] returnVal = { false }; // Some weird workaround for using this inside forEach
+        System.out.println(localName);
+        gameState.getUsers().forEach((user) -> {
+            if (user.ownsPlayerPiece(gameState.getCurrentPlayer())) {
+                if (user.getUserName() == localName) {
+                    returnVal[0] = true; // If a player owns the active piece we activate the board
+                }
+            }
+            ;
+        });
+        return returnVal[0];
+    }
+
     /**
      * Gets called when a player has completed their actions.
      * Decides new player and increments timer accordingly.
@@ -218,6 +238,7 @@ public class GameController {
         } else {
             setRecruiterVisibility(false);
         }
+        gameState.setBoardActive(activateBoardForUser());
     }
 
     /**
@@ -259,7 +280,7 @@ public class GameController {
                 int[] firstStepCoord = recruiter.getWalkedPath().get(0);
                 gameState.getBoard().getCell(firstStepCoord[0], firstStepCoord[1]).addToken(new BrainFact(1));
                 gameState.setCurrentPlayer(1); // Gets first rogue agent and sets them as
-                                                                           // next player
+                                               // next player
             }
         } else {
             List<Player> players = gameState.getPlayers();
@@ -362,7 +383,7 @@ public class GameController {
             newTurn();
         }
 
-        if(!isHost) {
+        if (!isHost) {
             updateHost();
         }
 
@@ -371,18 +392,18 @@ public class GameController {
 
     private void updateHost() {
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-            .create();
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
 
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
         Net.HttpRequest httpRequest = requestBuilder
-            .newRequest()
-            .method(Net.HttpMethods.POST)
-            .url("http://localhost:8080/update")
-            .content(gson.toJson(gameState))
-            .build();
+                .newRequest()
+                .method(Net.HttpMethods.POST)
+                .url("http://localhost:8080/update")
+                .content(gson.toJson(gameState))
+                .build();
         Gdx.net.sendHttpRequest(httpRequest, this.updateHostListener);
     }
 

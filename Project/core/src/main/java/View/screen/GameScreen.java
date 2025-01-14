@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.Gdx;
 
 import View.buildingBlocks.VisualBoard;
@@ -43,6 +44,7 @@ public class GameScreen implements Screen {
     private TurnBar turnBar;
     private SettingWindow settingWindow;
     private VisualBoard visualBoard;
+    private Table boardSection;
     private FeatureSelection featureSelection;
 
     private int pollingFrequency;
@@ -52,12 +54,13 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for client use.
+     * 
      * @param application Reference to the application
-     * @param gameState An initial cop of the hosts game state
+     * @param gameState   An initial cop of the hosts game state
      */
-    public GameScreen(MindMGMT application, Game gameState) {
+    public GameScreen(MindMGMT application, Game gameState, String localName) {
         this.application = application;
-        this.gameController = new GameController(gameState);
+        this.gameController = new GameController(gameState, localName);
         this.isHost = false;
         this.pollingFrequency = 30;
         this.frameCount = 0;
@@ -68,8 +71,9 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for host use.
+     * 
      * @param application Reference to the application
-     * @param users A list of users each representing a client
+     * @param users       A list of users each representing a client
      */
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
@@ -90,10 +94,10 @@ public class GameScreen implements Screen {
         return new Net.HttpResponseListener() {
 
             private final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-                .create();
+                    .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                    .create();
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -118,7 +122,8 @@ public class GameScreen implements Screen {
             }
 
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+            }
         };
     }
 
@@ -182,8 +187,8 @@ public class GameScreen implements Screen {
         mindslipBar.add(featureSelection).expand().fill();
 
         this.visualBoard = new VisualBoard(gameController, this.application);
-        Table boardSection = this.visualBoard.getVisualBoard();
-        mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
+        this.boardSection = this.visualBoard.getVisualBoard();
+        mainSection.add(this.boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
         // boardSection.add(boardImage).expand().fill();
 
@@ -225,13 +230,15 @@ public class GameScreen implements Screen {
             if (!isHost) {
                 HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
                 Net.HttpRequest httpRequest = requestBuilder
-                    .newRequest()
-                    .method(Net.HttpMethods.GET)
-                    .url("http://localhost:8080/poll")
-                    .build();
+                        .newRequest()
+                        .method(Net.HttpMethods.GET)
+                        .url("http://localhost:8080/poll")
+                        .build();
                 Gdx.net.sendHttpRequest(httpRequest, pollListener);
             }
         }
+
+        boardSection.setTouchable(gameController.getGame().getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
 
         stage.act(delta);
         stage.draw();
