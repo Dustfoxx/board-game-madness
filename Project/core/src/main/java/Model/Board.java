@@ -127,14 +127,14 @@ public class Board {
         return new int[] { rowsDim, colsDim };
     }
 
-    public void updateDeeply(Board board) {
+    public void updateDeeply(Board newBoard) {
 
-        this.rowsDim = board.rowsDim;
-        this.colsDim = board.colsDim;
+        this.rowsDim = newBoard.rowsDim;
+        this.colsDim = newBoard.colsDim;
 
         for (int row = 0; row < this.rowsDim; row++) {
             for (int col = 0; col < this.colsDim; col++)
-                this.cells[row][col].updateDeeply(board.cells[row][col]);
+                this.cells[row][col].updateDeeply(newBoard.cells[row][col]);
         }
 
     }

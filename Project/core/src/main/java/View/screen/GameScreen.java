@@ -97,18 +97,24 @@ public class GameScreen implements Screen {
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if (gameController.pendingClientUpdate) {
+                    // Do not overwrite existing game state if client has made an update
+                    return;
+                }
+
                 String msg = httpResponse.getResultAsString();
                 try {
                     Game gameState = gson.fromJson(msg, Game.class);
                     gameController.deeplySetGameState(gameState);
                 } catch (JsonSyntaxException e) {
                     // Handle game end?
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void failed(Throwable t) {
-                System.out.println(t.getMessage());
+                System.err.println(t.getMessage());
             }
 
             @Override
@@ -127,7 +133,7 @@ public class GameScreen implements Screen {
         this.featureSelection = new FeatureSelection(gameController, application);
         Gdx.input.setInputProcessor(stage);
         setupUI();
-        EndGameWindow endGameWindow = new EndGameWindow(gameController.getGame(), skin, application);
+        EndGameWindow endGameWindow = new EndGameWindow(gameController, skin, application);
         endGameWindow.setPosition(
                 Gdx.graphics.getWidth() / 2f - endGameWindow.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - endGameWindow.getHeight() / 2);
@@ -214,7 +220,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (frameCount >= pollingFrequency) {
+        if (frameCount >= pollingFrequency && !gameController.pendingClientUpdate) {
             frameCount = 0;
             if (!isHost) {
                 HttpRequestBuilder requestBuilder = new HttpRequestBuilder();

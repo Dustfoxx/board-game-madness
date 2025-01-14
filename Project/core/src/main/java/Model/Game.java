@@ -22,7 +22,7 @@ public class Game {
 
     private gameStates gameState; // Indicates which state the game is in
     private boolean gameOver; // Indicates if the game is over
-    private Player currentPlayer; // The player whose turn it is
+    private int currentPlayerIndex; // The player whose turn it is
     private int currentTime; // The current time in the game
     private int maxTime; // The time at which the game ends
     private int maxRecruits; // The amount recruits needed for recruiter to win
@@ -44,21 +44,18 @@ public class Game {
      * @param board          The game board.
      * @param startingPlayer The player who will start the game.
      */
-    public Game(List<Player> players, List<User> users, Board board, Player startingPlayer) {
+    public Game(List<Player> players, List<User> users, Board board, int startingPlayer) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("Players list cannot be null or empty.");
         }
         if (board == null) {
             throw new IllegalArgumentException("Board cannot be null.");
         }
-        if (startingPlayer == null) {
-            throw new IllegalArgumentException("Starting player cannot be null.");
-        }
-        if (!players.contains(startingPlayer)) {
-            throw new IllegalArgumentException("Starting player must be in the players list.");
+        if (startingPlayer < 0 || startingPlayer >= players.size()) {
+            throw new IllegalArgumentException("Invalid starting player number.");
         }
         this.gameOver = false;
-        this.currentPlayer = startingPlayer;
+        this.currentPlayerIndex = startingPlayer;
         this.currentTime = 0; // Starts at zero so it can increment as recruiter chooses start
         this.maxTime = 14;
         this.maxRecruits = 9;
@@ -116,7 +113,7 @@ public class Game {
      * @return The current player.
      */
     public Player getCurrentPlayer() {
-        return this.currentPlayer;
+        return this.players.get(this.currentPlayerIndex);
     }
 
     /**
@@ -124,11 +121,11 @@ public class Game {
      *
      * @param nextPlayer The player to become the current player.
      */
-    public void setCurrentPlayer(Player nextPlayer) {
-        if (!players.contains(nextPlayer)) {
+    public void setCurrentPlayer(int nextPlayer) {
+        if (players.size() <= nextPlayer || 0 > nextPlayer) {
             throw new IllegalArgumentException("Player is not part of the game.");
         }
-        this.currentPlayer = nextPlayer;
+        this.currentPlayerIndex = nextPlayer;
     }
 
     /**
@@ -384,7 +381,7 @@ public class Game {
      * @return The cell which the current player is at, otherwise null.
      */
     public AbstractCell getCurrentPlayerCell() {
-        int[] position = board.getPlayerCoord(currentPlayer);
+        int[] position = board.getPlayerCoord(players.get(currentPlayerIndex));
         if (position != null) {
             return board.getCell(position[0], position[1]);
         } else {
@@ -395,7 +392,7 @@ public class Game {
     public void updateDeeply(Game newGameState) {
         this.gameState = newGameState.gameState;
         this.gameOver = newGameState.gameOver;
-        this.currentPlayer = newGameState.currentPlayer;
+        this.currentPlayerIndex = newGameState.currentPlayerIndex;
         this.currentTime = newGameState.currentTime;
         this.maxTime = newGameState.maxTime;
         this.maxRecruits = newGameState.maxRecruits;
@@ -406,6 +403,7 @@ public class Game {
         this.users = newGameState.users;
         this.isMovementAvailable = newGameState.isMovementAvailable;
         this.isActionAvailable = newGameState.isActionAvailable;
+        this.winner = newGameState.winner;
         for (int row = 0; row < this.validityMask.length; row++) {
             for (int col = 0; col < this.validityMask[0].length; col++) {
                 this.validityMask[row][col].updateDeeply(newGameState.validityMask[row][col]);
@@ -419,7 +417,7 @@ public class Game {
         return "Game{" +
                 "gameState=" + gameState +
                 ", gameOver=" + gameOver +
-                ", currentPlayer=" + currentPlayer +
+                ", currentPlayer=" + currentPlayerIndex +
                 ", currentTime=" + currentTime +
                 ", maxTime=" + maxTime +
                 ", maxRecruits=" + maxRecruits +
@@ -430,6 +428,7 @@ public class Game {
                 ", users=" + users +
                 ", isMovementAvailable=" + isMovementAvailable +
                 ", isActionAvailable=" + isActionAvailable +
+                ", winner=" + winner +
                 '}';
     }
 
@@ -447,7 +446,7 @@ public class Game {
                 isMovementAvailable == game.isMovementAvailable &&
                 isActionAvailable == game.isActionAvailable &&
                 gameState == game.gameState &&
-                Objects.equals(currentPlayer, game.currentPlayer) &&
+                Objects.equals(currentPlayerIndex, game.currentPlayerIndex) &&
                 Objects.equals(board, game.board) &&
                 Objects.equals(recruitHistory, game.recruitHistory) &&
                 Objects.equals(mindSlipHistory, game.mindSlipHistory) &&
@@ -457,7 +456,7 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameState, gameOver, currentPlayer, currentTime, maxTime, maxRecruits,
+        return Objects.hash(gameState, gameOver, currentPlayerIndex, currentTime, maxTime, maxRecruits,
                 board, recruitHistory, mindSlipHistory, players,
                 users, isMovementAvailable, isActionAvailable);
     }

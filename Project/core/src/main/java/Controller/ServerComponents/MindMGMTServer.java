@@ -33,7 +33,7 @@ public class MindMGMTServer {
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/poll", createPollHandler());
             server.createContext("/register", createRegisterPlayerHandler());
-            // TODO: add "/post" handeling for clients to update the host's game state
+            server.createContext("/update", createUpdateHandler());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,7 +42,6 @@ public class MindMGMTServer {
     private HttpHandler createPollHandler() {
         return httpExchange -> {
             String response = "";
-            System.out.println(httpExchange.getRequestURI());
             if (gameState == null) {
                 // We are in lobby
                 response = users.stream().filter(Objects::nonNull).collect(Collectors.joining(","));
@@ -76,10 +75,41 @@ public class MindMGMTServer {
                     String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)) // TODO: Resource leak: '<unassigned Closeable value>' is never closed
                             .lines()
                             .collect(Collectors.joining("\n"));
-                    System.out.println(body);
+                    stream.close();
                     users.add(body);
                     response = "ok";
                 }
+            }
+
+            httpExchange.sendResponseHeaders(status, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        };
+    }
+
+    private HttpHandler createUpdateHandler() {
+        return httpExchange -> {
+            System.out.println(httpExchange.getRequestURI());
+            int status = HttpStatus.SC_OK;
+            String response = "";
+            if (gameState == null) {
+                // We are in lobby
+                status = HttpStatus.SC_BAD_REQUEST;
+                response = "Cannot update host when in lobby!";
+            } else if (!httpExchange.getRequestMethod().equals("POST")) {
+                status = HttpStatus.SC_BAD_REQUEST;
+                response = "Only POST requests are supported!";
+            } else {
+                InputStream stream = httpExchange.getRequestBody();
+                String body = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+                stream.close();
+                System.out.println(body);
+                response = "ok";
+                Game newGameState = gson.fromJson(body, Game.class);
+                gameState.updateDeeply(newGameState);
             }
 
             httpExchange.sendResponseHeaders(status, response.length());
