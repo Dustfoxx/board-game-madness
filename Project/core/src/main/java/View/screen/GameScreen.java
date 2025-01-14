@@ -153,12 +153,15 @@ public class GameScreen implements Screen {
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
-        RecruiterWindow recruiterWindow = new RecruiterWindow(gameController.getGame().getRecruiter(),
-                gameController, application);
-        recruiterWindow.setPosition(
-                Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
-        stage.addActor(recruiterWindow);
+        if (this.isHost) { // Temp solution as if youre host you are recruiter TODO: check recruiter
+                           // properly
+            RecruiterWindow recruiterWindow = new RecruiterWindow(gameController.getGame().getRecruiter(),
+                    gameController, application);
+            recruiterWindow.setPosition(
+                    Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
+                    Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
+            stage.addActor(recruiterWindow);
+        }
     }
 
     private void setupSettings(Table root) {
@@ -241,6 +244,7 @@ public class GameScreen implements Screen {
         // Weird bad way of doing this. Doesn't follow mvc but works for now
         gameController.setBoardActive();
         boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        gameController.setRecruiterVisibility();
 
         stage.act(delta);
         stage.draw();

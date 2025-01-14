@@ -32,6 +32,7 @@ public class GameController {
     private Net.HttpResponseListener updateHostListener;
     private String localName;
     private boolean boardIsActive;
+    private boolean userIsRecruiter;
 
     public boolean pendingClientUpdate;
 
@@ -156,6 +157,13 @@ public class GameController {
                     }
             }
         }
+
+        this.userIsRecruiter = false;
+        gameState.getUsers().forEach((user) -> {
+            if (user.isRecruiter() && user.getUserName().equals(this.localName)) {
+                this.userIsRecruiter = true;
+            }
+        });
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
@@ -250,11 +258,11 @@ public class GameController {
         if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
             gameState.setGameOver();
         }
-        if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            setRecruiterVisibility(true);
-        } else {
-            setRecruiterVisibility(false);
-        }
+        // if (gameState.getCurrentPlayer() instanceof Recruiter) {
+        // setRecruiterVisibility(true);
+        // } else {
+        // setRecruiterVisibility(false);
+        // }
     }
 
     /**
@@ -262,7 +270,7 @@ public class GameController {
      *
      * @param visibility what to set visibility to
      */
-    private void setRecruiterVisibility(boolean visibility) {
+    public void setRecruiterVisibility() {
         int[] dims = gameState.getBoard().getDims();
         for (int row = 0; row < dims[0]; row++) {
             for (int col = 0; col < dims[1]; col++) {
@@ -272,13 +280,13 @@ public class GameController {
 
                 for (Player player : players) {
                     if (player instanceof Recruiter) {
-                        player.setVisibility(visibility);
+                        player.setVisibility(this.userIsRecruiter);
                     }
                 }
 
                 for (Token token : tokens) {
                     if (token instanceof Step) {
-                        token.setVisibility(visibility);
+                        token.setVisibility(this.userIsRecruiter);
                     }
                 }
             }
