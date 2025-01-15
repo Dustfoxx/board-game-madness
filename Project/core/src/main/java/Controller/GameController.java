@@ -332,23 +332,34 @@ public class GameController {
             int currentIndex = players.indexOf(gameState.getCurrentPlayer());
             // If we are at the end of players, set game to started
             if (currentIndex == players.size() - 1) {
-                // Open blocker before going to the recruiter
-                gameState.setGameState(gameStates.PAUSE);
-                gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+                if (gameScreen.isCouchPlay) {
+                    // Open blocker if in couch play mode
+                    gameState.setGameState(gameStates.PAUSE);
+                    gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+                } else {
+                    // Skip blocker if not in couch play mode
+                    continueGame();
+                }
             } else {
                 // Set player to next rogue agent so they can place
                 gameState.setMovementAvailability(true);
                 gameState.setCurrentPlayer(currentIndex + 1);
             }
         }
-
     }
 
     private void ongoingLogic() {
 
+        // Check if the next turn will be the recruiter's
         if (playerTurnOrder[(gameState.getPlayerTurnCounter()) % playerTurnOrder.length] == 0) {
-            gameState.setGameState(gameStates.PAUSE);
-            gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+            if (gameScreen.isCouchPlay) {
+                // Open blocker if in couch play mode
+                gameState.setGameState(gameStates.PAUSE);
+                gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+            } else {
+                // Skip blocker if not in couch play mode
+                continueGame();
+            }
             return;
         }
 
