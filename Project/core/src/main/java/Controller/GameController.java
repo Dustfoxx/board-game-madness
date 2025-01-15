@@ -254,9 +254,6 @@ public class GameController {
      * Decides new player and increments timer accordingly.
      */
     public void newTurn() {
-
-        System.out.println("State: " + gameState.getGameState() + "Turn Count: " + gameState.getPlayerTurnCounter());
-
         switch (gameState.getGameState()) {
             case PREGAME:
                 preGameLogic();
