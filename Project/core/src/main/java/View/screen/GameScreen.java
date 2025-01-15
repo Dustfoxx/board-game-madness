@@ -45,6 +45,7 @@ public class GameScreen implements Screen {
     private SettingWindow settingWindow;
     private VisualBoard visualBoard;
     private Table boardSection;
+    private Table actionBar;
     private FeatureSelection featureSelection;
 
     private int pollingFrequency;
@@ -200,7 +201,7 @@ public class GameScreen implements Screen {
 
     private void setupActionBar(Table root) {
         // Create a table for the action buttons
-        Table actionBar = new Table();
+        this.actionBar = new Table();
         root.row();
         root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom()
                 .height(stage.getViewport().getWorldHeight() * 0.1f);
@@ -244,7 +245,10 @@ public class GameScreen implements Screen {
         // Weird bad way of doing this. Doesn't follow mvc but works for now
         gameController.setBoardActive();
         boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
-        gameController.setRecruiterVisibility();
+        actionBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        if (!gameController.getLocalPlay()) {
+            gameController.setRecruiterVisibility(gameController.getUserIsRecruiter());
+        }
 
         stage.act(delta);
         stage.draw();

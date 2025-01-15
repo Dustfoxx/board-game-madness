@@ -33,6 +33,7 @@ public class GameController {
     private String localName;
     private boolean boardIsActive;
     private boolean userIsRecruiter;
+    private boolean localPlay;
 
     public boolean pendingClientUpdate;
 
@@ -110,6 +111,14 @@ public class GameController {
         this.boardIsActive = activateBoardForUser();
     }
 
+    public boolean getUserIsRecruiter() {
+        return this.userIsRecruiter;
+    }
+
+    public boolean getLocalPlay() {
+        return this.localPlay;
+    }
+
     private void initController(Game gameState) {
         // Create turn order
         // This controller will use this to know which player controls what unit
@@ -164,6 +173,8 @@ public class GameController {
                 this.userIsRecruiter = true;
             }
         });
+
+        this.localPlay = gameState.getUsers().size() == 1;
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
@@ -258,11 +269,13 @@ public class GameController {
         if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
             gameState.setGameOver();
         }
-        // if (gameState.getCurrentPlayer() instanceof Recruiter) {
-        // setRecruiterVisibility(true);
-        // } else {
-        // setRecruiterVisibility(false);
-        // }
+        if (this.localPlay) {
+            if (gameState.getCurrentPlayer() instanceof Recruiter) {
+                setRecruiterVisibility(true);
+            } else {
+                setRecruiterVisibility(false);
+            }
+        }
     }
 
     /**
@@ -270,7 +283,7 @@ public class GameController {
      *
      * @param visibility what to set visibility to
      */
-    public void setRecruiterVisibility() {
+    public void setRecruiterVisibility(boolean visibility) {
         int[] dims = gameState.getBoard().getDims();
         for (int row = 0; row < dims[0]; row++) {
             for (int col = 0; col < dims[1]; col++) {
@@ -280,13 +293,13 @@ public class GameController {
 
                 for (Player player : players) {
                     if (player instanceof Recruiter) {
-                        player.setVisibility(this.userIsRecruiter);
+                        player.setVisibility(visibility);
                     }
                 }
 
                 for (Token token : tokens) {
                     if (token instanceof Step) {
-                        token.setVisibility(this.userIsRecruiter);
+                        token.setVisibility(visibility);
                     }
                 }
             }

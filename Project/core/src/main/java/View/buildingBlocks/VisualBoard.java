@@ -39,7 +39,7 @@ public class VisualBoard {
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
                 VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j],
-                        application);
+                        application, gameInfo);
                 cell.setName(i + "" + j);
 
                 // This is for movement actions
