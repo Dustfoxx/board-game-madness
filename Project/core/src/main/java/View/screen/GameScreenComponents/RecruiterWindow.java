@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import Controller.GameController;
 import Controller.GameController.Actions;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import Model.Recruiter;
 import Model.Recruiter.RecruiterType;
 import io.github.MindMGMT.MindMGMT;
@@ -33,7 +31,7 @@ public class RecruiterWindow extends Window {
     private MindMGMT application;
 
     public RecruiterWindow(Recruiter recruiter, GameController gameController, MindMGMT application) {
-        super("Ask Recruiter", application.skin);
+        super(" ", application.skin);
         // Create the window
         this.application = application;
         this.setMovable(false);

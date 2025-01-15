@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import Model.Game;
 import Model.Game.gameStates;
 import View.screen.MainMenuScreen;
 import io.github.MindMGMT.MindMGMT;
@@ -21,7 +20,7 @@ public class EndGameWindow extends Window {
     private final Label messageLabel;
 
     public EndGameWindow(GameController controller, Skin skin, MindMGMT application) {
-        super("EndGame Window", skin);
+        super("", skin);
         this.controller = controller;
 
         // Create the window

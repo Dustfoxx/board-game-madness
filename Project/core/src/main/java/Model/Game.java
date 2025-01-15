@@ -24,6 +24,7 @@ public class Game {
     private gameStates gameState; // Indicates which state the game is in
     private boolean gameOver; // Indicates if the game is over
     private int currentPlayerIndex; // The player whose turn it is
+    private int playerTurnCounter;
     private int currentTime; // The current time in the game
     private int maxTime; // The time at which the game ends
     private int maxRecruits; // The amount recruits needed for recruiter to win
@@ -58,6 +59,7 @@ public class Game {
         }
         this.gameOver = false;
         this.currentPlayerIndex = startingPlayer;
+        this.playerTurnCounter = startingPlayer;
         this.currentTime = 0; // Starts at zero so it can increment as recruiter chooses start
         this.maxTime = 14;
         this.maxRecruits = 9;
@@ -368,6 +370,24 @@ public class Game {
     }
 
     /**
+     * Returns the playerTurnCounter for the board
+     *
+     * @return the number of times the game has switched active player
+     */
+    public int getPlayerTurnCounter() {
+        return this.playerTurnCounter;
+    }
+
+    /**
+     * Returns the playerTurnCounter for the board
+     *
+     * @return the number of times the game has switched active player
+     */
+    public void incrementPlayerTurnCounter() {
+        this.playerTurnCounter++;
+    }
+
+    /**
      * Gets the recruiter in the game.
      *
      * @return The recruiter
@@ -399,6 +419,7 @@ public class Game {
         this.gameState = newGameState.gameState;
         this.gameOver = newGameState.gameOver;
         this.currentPlayerIndex = newGameState.currentPlayerIndex;
+        this.playerTurnCounter = newGameState.playerTurnCounter;
         this.currentTime = newGameState.currentTime;
         this.maxTime = newGameState.maxTime;
         this.maxRecruits = newGameState.maxRecruits;
@@ -423,7 +444,8 @@ public class Game {
         return "Game{" +
                 "gameState=" + gameState +
                 ", gameOver=" + gameOver +
-                ", currentPlayer=" + currentPlayerIndex +
+                ", currentPlayerIndex=" + currentPlayerIndex +
+                ", playerTurnCounter=" + playerTurnCounter +
                 ", currentTime=" + currentTime +
                 ", maxTime=" + maxTime +
                 ", maxRecruits=" + maxRecruits +

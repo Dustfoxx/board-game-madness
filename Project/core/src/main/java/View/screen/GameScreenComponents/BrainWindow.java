@@ -5,7 +5,6 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -17,7 +16,6 @@ import Controller.GameController;
 import Controller.GameController.Actions;
 import Model.BrainFact;
 import Model.BrainNote;
-import Model.Game;
 import Model.Recruiter;
 import Model.Token;
 
@@ -30,7 +28,7 @@ public class BrainWindow extends Window {
     private TextField brainField;
 
     public BrainWindow(GameController gameController, int row, int col, Skin skin) {
-        super("Brain Window", skin);
+        super("", skin);
 
         // Create the window
         this.setMovable(false);
