@@ -124,7 +124,6 @@ public class GameController {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
-        System.out.println(localName);
         // controlled
         // Used by clients to detect whenever polling the host should wait
         this.pendingClientUpdate = false;
