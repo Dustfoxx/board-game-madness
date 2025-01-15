@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import Controller.GameController;
 import Controller.GameController.Actions;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import Model.Recruiter;
 import Model.Recruiter.RecruiterType;
 import io.github.MindMGMT.MindMGMT;

@@ -34,7 +34,7 @@ public class PlayerBar extends Table {
     public PlayerBar(GameController gameController, Skin skin) {
 
         this.gameController = gameController;
-        this.debug();
+        // this.debug();
 
         // Create a label for each user and add it to the table
         for (User user : gameController.getGame().getUsers()) {

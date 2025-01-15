@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.Gdx;
 
 import View.buildingBlocks.VisualBoard;
@@ -43,6 +44,8 @@ public class GameScreen implements Screen {
     private TurnBar turnBar;
     private SettingWindow settingWindow;
     private VisualBoard visualBoard;
+    private Table boardSection;
+    private Table actionBar;
     private FeatureSelection featureSelection;
 
     private int pollingFrequency;
@@ -52,12 +55,13 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for client use.
+     * 
      * @param application Reference to the application
-     * @param gameState An initial cop of the hosts game state
+     * @param gameState   An initial cop of the hosts game state
      */
-    public GameScreen(MindMGMT application, Game gameState) {
+    public GameScreen(MindMGMT application, Game gameState, String localName) {
         this.application = application;
-        this.gameController = new GameController(gameState);
+        this.gameController = new GameController(gameState, localName, this);
         this.isHost = false;
         this.pollingFrequency = 30;
         this.frameCount = 0;
@@ -68,14 +72,15 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for host use.
+     * 
      * @param application Reference to the application
-     * @param users A list of users each representing a client
+     * @param users       A list of users each representing a client
      */
     public GameScreen(MindMGMT application, ArrayList<User> users) {
 
         this.application = application;
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
-        this.gameController = new GameController(boardCsv, users);
+        this.gameController = new GameController(boardCsv, users, this);
         this.isHost = true;
 
         if (application.server != null) {
@@ -90,10 +95,10 @@ public class GameScreen implements Screen {
         return new Net.HttpResponseListener() {
 
             private final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-                .create();
+                    .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                    .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                    .create();
 
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -118,7 +123,8 @@ public class GameScreen implements Screen {
             }
 
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+            }
         };
     }
 
@@ -148,12 +154,15 @@ public class GameScreen implements Screen {
         setupPlayerBar(root);
         setupMainSection(root);
         setupActionBar(root);
-        RecruiterWindow recruiterWindow = new RecruiterWindow(gameController.getGame().getRecruiter(),
-                gameController, application);
-        recruiterWindow.setPosition(
-                Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
-        stage.addActor(recruiterWindow);
+        if (this.isHost) { // Temp solution as if youre host you are recruiter TODO: check recruiter
+                           // properly
+            RecruiterWindow recruiterWindow = new RecruiterWindow(gameController.getGame().getRecruiter(),
+                    gameController, application);
+            recruiterWindow.setPosition(
+                    Gdx.graphics.getWidth() / 2f - recruiterWindow.getWidth() / 2,
+                    Gdx.graphics.getHeight() / 2f - recruiterWindow.getHeight() / 2);
+            stage.addActor(recruiterWindow);
+        }
     }
 
     private void setupSettings(Table root) {
@@ -182,8 +191,8 @@ public class GameScreen implements Screen {
         mindslipBar.add(featureSelection).expand().fill();
 
         this.visualBoard = new VisualBoard(gameController, this.application);
-        Table boardSection = this.visualBoard.getVisualBoard();
-        mainSection.add(boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
+        this.boardSection = this.visualBoard.getVisualBoard();
+        mainSection.add(this.boardSection).expandY().fillY().width(Value.percentWidth(0.5f, mainSection));
 
         // boardSection.add(boardImage).expand().fill();
 
@@ -192,7 +201,7 @@ public class GameScreen implements Screen {
 
     private void setupActionBar(Table root) {
         // Create a table for the action buttons
-        Table actionBar = new Table();
+        this.actionBar = new Table();
         root.row();
         root.add(actionBar).width(Value.percentWidth(0.5f, root)).fillX().bottom()
                 .height(stage.getViewport().getWorldHeight() * 0.1f);
@@ -210,6 +219,18 @@ public class GameScreen implements Screen {
         actionBar.add(captureButton).expand();
     }
 
+    public void showDialogue(String message) {
+        Dialog dialog = new Dialog("Notice", skin) {
+            @Override
+            protected void result(Object object) {
+            }
+        };
+        dialog.pad(20);
+        dialog.text(message);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
     @Override
     public void show() {
     }
@@ -225,16 +246,26 @@ public class GameScreen implements Screen {
             if (!isHost) {
                 HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
                 Net.HttpRequest httpRequest = requestBuilder
-                    .newRequest()
-                    .method(Net.HttpMethods.GET)
-                    .url("http://localhost:8080/poll")
-                    .build();
+                        .newRequest()
+                        .method(Net.HttpMethods.GET)
+                        .url("http://localhost:8080/poll")
+                        .build();
                 Gdx.net.sendHttpRequest(httpRequest, pollListener);
             }
         }
 
+        // Weird bad way of doing this. Doesn't follow mvc but works for now
+        gameController.setBoardActive();
+        boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        actionBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        playerBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        if (!gameController.getLocalPlay()) {
+            gameController.setRecruiterVisibility(gameController.getUserIsRecruiter());
+        }
+
         stage.act(delta);
         stage.draw();
+        // TODO: Should be draw
         turnBar.updateTurnbar();
         frameCount++;
     }

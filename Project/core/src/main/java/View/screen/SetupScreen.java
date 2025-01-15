@@ -23,6 +23,7 @@ public class SetupScreen implements Screen {
     private final ErrorWindow errorWindow;
     private boolean joined = false;
     private final boolean isHost;
+    private TextField nameField;
 
     public SetupScreen(MindMGMT application, boolean isHost) {
         this.application = application;
@@ -33,9 +34,8 @@ public class SetupScreen implements Screen {
         }
         this.errorWindow = new ErrorWindow("Error", application.skin);
         this.errorWindow.setPosition(
-            Gdx.graphics.getWidth() / 2f - this.errorWindow.getWidth() / 2,
-            Gdx.graphics.getHeight() / 2f - this.errorWindow.getHeight() / 2
-        );
+                Gdx.graphics.getWidth() / 2f - this.errorWindow.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - this.errorWindow.getHeight() / 2);
 
         setupUI();
         Gdx.input.setInputProcessor(stage);
@@ -50,9 +50,8 @@ public class SetupScreen implements Screen {
                 } else if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
                     errorWindow.setMessage(httpResponse.getResultAsString());
                     errorWindow.setPosition(
-                        Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
-                        Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2
-                    );
+                            Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
+                            Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2);
                     stage.addActor(errorWindow);
                 }
             }
@@ -61,9 +60,8 @@ public class SetupScreen implements Screen {
             public void failed(Throwable t) {
                 errorWindow.setMessage(t.getMessage());
                 errorWindow.setPosition(
-                    Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
-                    Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2
-                );
+                        Gdx.graphics.getWidth() / 2f - errorWindow.getWidth() / 2,
+                        Gdx.graphics.getHeight() / 2f - errorWindow.getHeight() / 2);
                 stage.addActor(errorWindow);
             }
 
@@ -81,7 +79,7 @@ public class SetupScreen implements Screen {
         root.setFillParent(true);
 
         Label nameLabel = new Label("Enter your name here:", application.skin);
-        TextField nameField = new TextField("", application.skin);
+        nameField = new TextField("", application.skin);
 
         TextButton backButton = new TextButton("Back", application.skin);
         backButton.addListener(new ChangeListener() {
@@ -94,17 +92,21 @@ public class SetupScreen implements Screen {
 
         root.add(nameLabel).colspan(2);
         root.row();
-        root.add(nameField).width(stage.getWidth() * 0.25f).colspan(2).padBottom(30);
+        root.add(this.nameField).width(stage.getWidth() * 0.25f).colspan(2).padBottom(30);
         root.row();
         root.add(backButton);
+
+        TextField localNameRef = this.nameField; // No idea how availability for variables work with these internal
+                                                 // structures so this is bad code but functioning code
 
         if (isHost) {
             TextButton startButton = new TextButton("Create Lobby", application.skin);
             startButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    String name = nameField.getText();
-                    application.setScreen(new LobbyScreen(application, name.isEmpty() ? "Host" : name));
+                    String name = localNameRef.getText().isEmpty() ? "Host" : localNameRef.getText();
+                    application.setScreen(new LobbyScreen(application, name, name)); // Kinda awkward. Might look into
+                                                                                     // checking for host in another way
                     dispose();
                 }
             });
@@ -116,11 +118,11 @@ public class SetupScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
                     Net.HttpRequest httpRequest = requestBuilder
-                        .newRequest()
-                        .method(Net.HttpMethods.POST)
-                        .url("http://localhost:8080/register")
-                        .content(nameField.getText())
-                        .build();
+                            .newRequest()
+                            .method(Net.HttpMethods.POST)
+                            .url("http://localhost:8080/register")
+                            .content(localNameRef.getText())
+                            .build();
                     Gdx.net.sendHttpRequest(httpRequest, responseListener);
                 }
             });
@@ -145,7 +147,7 @@ public class SetupScreen implements Screen {
 
         if (joined) {
             String hostName = null; // to indicate that we are not the host
-            application.setScreen(new LobbyScreen(application, hostName));
+            application.setScreen(new LobbyScreen(application, hostName, this.nameField.getText()));
         }
     }
 

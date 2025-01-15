@@ -1,6 +1,5 @@
 package View.screen.GameScreenComponents;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +16,7 @@ import Controller.GameController;
 import Model.Feature;
 import Model.Player;
 import Model.Recruiter;
+import Model.RougeAgent;
 import io.github.MindMGMT.MindMGMT;
 
 public class FeatureSelection extends Table {
@@ -62,7 +62,12 @@ public class FeatureSelection extends Table {
     public void draw(Batch batch, float parentAlpha) {
         Player currentPlayer = gameController.getGame().getCurrentPlayer();
         int[] coords = gameController.getGame().getBoard().getPlayerCoord(currentPlayer);
-        if (currentPlayer instanceof Recruiter && coords != null) {
+        if ((gameController.getLocalPlay() && currentPlayer instanceof Recruiter && coords != null)) {
+            // Only renders the table when the current player is the Recruiter
+            super.draw(batch, parentAlpha); // Important
+        }
+        if ((!gameController.getLocalPlay() && gameController.getUserIsRecruiter()
+                && (coords != null || currentPlayer instanceof RougeAgent))) {
             // Only renders the table when the current player is the Recruiter
             super.draw(batch, parentAlpha); // Important
         }

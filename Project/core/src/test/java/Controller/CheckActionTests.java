@@ -8,18 +8,12 @@ import Model.Board;
 import Model.NormalCell;
 import Model.Feature;
 import Model.Footstep;
-import Model.MutableBoolean;
-import Model.Recruiter;
 import Model.RougeAgent;
 import Model.TempleCell;
-import Model.Recruiter.RecruiterType;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
 
 public class CheckActionTests {
     private final CheckAction checkAction = new CheckAction();

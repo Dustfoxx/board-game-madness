@@ -36,6 +36,10 @@ public class User {
         return playerPieces.contains(player.getId());
     }
 
+    public boolean isRecruiter() {
+        return this.playerPieces.get(0) == 0;
+    }
+
     @Override
     public String toString() {
         return "User{userId=" + userId + ", userName='" + userName + "', playerPieces=" + playerPieces + "}";

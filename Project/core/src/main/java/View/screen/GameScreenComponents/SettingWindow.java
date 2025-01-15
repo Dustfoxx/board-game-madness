@@ -1,6 +1,5 @@
 package View.screen.GameScreenComponents;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import View.screen.MainMenuScreen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
 
 import io.github.MindMGMT.MindMGMT;
 
@@ -32,11 +30,11 @@ public class SettingWindow extends Window {
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //TODO: add game resume logic in game controller
+                // TODO: add game resume logic in game controller
                 remove();
             }
         });
-        //the size can be responsive
+        // the size can be responsive
         this.add(resumeButton).pad(10).row();
 
         TextButton mainMenuButton = new TextButton("Back to Main Menu", skin);
@@ -50,11 +48,11 @@ public class SettingWindow extends Window {
                 remove();
             }
         });
-        //the size can be responsive
+        // the size can be responsive
         this.add(mainMenuButton).pad(10).row();
     }
 
-    public void updateSize(){
+    public void updateSize() {
         this.setSize(stage.getWidth(), stage.getHeight());
     }
 }

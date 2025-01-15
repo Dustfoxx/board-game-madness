@@ -2,12 +2,10 @@ package View.buildingBlocks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -38,7 +36,8 @@ public class VisualBoard {
 
         for (int i = 0; i < dimensions[0]; i++) {
             for (int j = 0; j < dimensions[1]; j++) {
-                VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j], application);
+                VisualCell cell = new VisualCell(boardInfo.getCell(i, j), gameInfo.getGame().getValidityMask()[i][j],
+                        application, gameInfo);
                 cell.setName(i + "" + j);
 
                 // This is for movement actions
