@@ -62,6 +62,7 @@ public class MindMGMT extends Game {
         assets.load("feature_img.png", Texture.class);
         assets.load("tokens_3d.png", Texture.class);
         assets.load("tokens_temple.png", Texture.class);;
+        assets.load("temple-3.png", Texture.class);;
         assets.load("recruiters.png", Texture.class);
     }
 

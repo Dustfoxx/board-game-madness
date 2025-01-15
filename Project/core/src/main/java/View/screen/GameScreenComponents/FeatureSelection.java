@@ -44,7 +44,7 @@ public class FeatureSelection extends Table {
 
         for (Feature feature : recruiterFeatures) {
             if (feature != null) {
-                Label featureLabel = new Label(feature.name(), application.skin, "half-tone");
+                Label featureLabel = new Label(feature.name(), application.skin, "text");
                 featureLabel.setAlignment(Align.center);
                 featureTable.add(featureLabel).expandX().center().pad(5);
 

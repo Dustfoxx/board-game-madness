@@ -45,7 +45,8 @@ public class PlayerBar extends Table {
         // Create a button to simulate advancing to the next player's turn - TODO:
         // Remove when not useful anymore
         TextButton nextTurnButton = new TextButton("End Turn", skin);
-        nextTurnButton.setColor(Color.MAGENTA);
+        nextTurnButton.setColor(new Color(168 / 255f, 193 / 255f, 187 / 255f, 1f));
+
         this.add(nextTurnButton);
 
         // Add an event listener to handle button clicks
@@ -67,15 +68,15 @@ public class PlayerBar extends Table {
     Table createUserSlot(User user, Skin skin) {
         Table userSlot = new Table();
         if (!user.getUserName().isEmpty()) {
-            Label userLabel = new Label(user.getUserName(), skin, "narration");
-            userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount());
+            Label userLabel = new Label(user.getUserName(), skin, "big");
+            userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount()).pad(10);
             userSlot.row();
         }
 
         for (Player player : gameController.getGame().getPlayers()) {
             if (user.ownsPlayerPiece(player)) {
-                Label playerLabel = new Label(player.getName(), skin, "narration");
-                userSlot.add(playerLabel).expandX();
+                Label playerLabel = new Label(player.getName(), skin, "big");
+                userSlot.add(playerLabel).expandX().pad(10);
             }
         }
         return userSlot;
@@ -101,11 +102,17 @@ public class PlayerBar extends Table {
                     if (user.ownsPlayerPiece(currentPlayer)) {
                         if (playerLabel.textEquals(user.getUserName())
                                 || playerLabel.textEquals(currentPlayer.getName())) {
-                            playerLabel.setColor(Color.GREEN);
+                            
+                            playerLabel.setColor(203 / 255f, 122 / 255f, 137 / 255f, 1); // Ligth blue
+                            
+                            playerLabel.setColor(75 / 255f, 104 / 255f, 112 / 255f, 1); // Dark blue        
+                            playerLabel.setColor(173 / 255f, 82 / 255f, 97 / 255f, 1); // Dark pink
+
                             playerLabel.getColor().a = 1f;
                         } else {
                             playerLabel.setColor(Color.WHITE);
-                            playerLabel.getColor().a = 0.3f;
+                            playerLabel.setColor(223 / 255f, 152 / 255f, 165 / 255f, 1); // Light pink
+                            playerLabel.getColor().a = 1;
                         }
                     } else {
                         playerLabel.setColor(Color.WHITE);

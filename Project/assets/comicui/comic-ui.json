@@ -83,8 +83,9 @@
 			"background": "narration-box"
 		},
 		"big": {
-			"font": "button",
-			"fontColor": "black"
+			"font": "font",
+			"fontColor": "black",
+			"background": "window"
 		},
 		"title": {
 			"font": "title",
@@ -99,6 +100,10 @@
 			"font": "button",
 			"fontColor": "black",
 			"background": "half-tone-box"
+		},
+		"text": {
+			"font": "font",
+			"fontColor": "black"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
