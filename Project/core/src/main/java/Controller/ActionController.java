@@ -1,6 +1,5 @@
 package Controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ActionController {
 
     /**
      * Performs the capture action
-     * 
+     *
      * @param player    The player that performed the action
      * @param recruiter A reference to the recruiter
      * @param board     A reference to the board state
@@ -47,7 +46,7 @@ public class ActionController {
      * Instead it searches the recruiter's walked path for the first cell (earliest
      * step) containing the specified feature and adds a Footstep token to that cell
      * (if its found).
-     * 
+     *
      * @param feature   the feature being searched for
      * @param recruiter the recruiter of the game
      * @param board     the board of the game
@@ -61,9 +60,11 @@ public class ActionController {
                 Feature[] features = normalCell.getFeatures(); // Get the features of the cell
                 List<Feature> featuresList = Arrays.asList(features);
                 if (featuresList.contains(feature)) { // Check if the cell contains the specified feature
-                    Footstep footstep = new Footstep();
-                    cell.addToken(footstep); // Add a footstep to the cell
-                    return; // Stop further searching once a cell is found
+                    if (!cell.containsFootstep() && !cell.containsBrainFact()) { // Check that the cell doesn't already contain a footstep or a brain fact
+                        Footstep footstep = new Footstep();
+                        cell.addToken(footstep); // Add a footstep to the cell
+                        return; // Stop further searching once a cell is found
+                    }
                 }
             }
         }
@@ -106,7 +107,7 @@ public class ActionController {
     /**
      * Places a player on the board. Mask
      * decides valid spots
-     * 
+     *
      * @param player       the player that is being placed
      * @param board        the board it is being placed on
      * @param validityMask the mask defining valid positions. Null if all options
@@ -192,7 +193,7 @@ public class ActionController {
 
     /**
      * Adds a brainnote to a cell, replaces it if one exists already
-     * 
+     *
      * @param text  Text it should contain
      * @param row   row of the brainnote
      * @param col   column of the brainnote

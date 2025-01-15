@@ -32,6 +32,7 @@ public class VisualCell extends Actor {
     private final TextureRegion temple;
     private final TextureRegion footstep;
     private final TextureRegion[] brains;
+    private TextureRegion mindslip;
     private final BitmapFont step;
     private final List<TextureRegion> players;
     private final List<TextureRegion> tokens;
@@ -43,6 +44,7 @@ public class VisualCell extends Actor {
 
     private final Texture featuresImg;
     private final Texture playersImg;
+    private Texture mindslipImg=new Texture("tokens_3d.png");
     private final MutableBoolean highlighted;
 
     /**
@@ -82,6 +84,7 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
+        this.mindslip=new TextureRegion(mindslipImg, 303, 365, 60, 60);
         this.step = new BitmapFont();
         this.players = new ArrayList<>();
         this.tokens = new ArrayList<>();

@@ -44,7 +44,6 @@ public class BrainWindow extends Window {
             if (brain instanceof BrainFact) {
                 Label brainFactLabel = new Label("Recruiter was here turn " + ((BrainFact) brain).getTimestamp(),
                         skin);
-                brainFactLabel.setFontScale(2f);
                 this.add(brainFactLabel).pad(20).row();
             } else {
                 brainNoteString = ((BrainNote) brain).getNote();
@@ -54,7 +53,6 @@ public class BrainWindow extends Window {
         Label brainNoteLabel = new Label("Brain Note:", skin);
         this.brainField = new TextField(brainNoteString, skin);
         brainField.setMaxLength(30);
-        brainNoteLabel.setFontScale(2f);
         this.add(brainNoteLabel).pad(20).row();
         this.add(brainField).expandX().fillX().row();
 
