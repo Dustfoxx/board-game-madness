@@ -25,7 +25,6 @@ public class GameController {
     // Check win
 
     private Game gameState;
-    private int activePlayer = 0;
     private int[] playerTurnOrder;
     private int recruiterIndex;
     private ActionController actionController;
@@ -258,7 +257,6 @@ public class GameController {
      * Decides new player and increments timer accordingly.
      */
     public void newTurn() {
-        System.out.println(gameState.getGameState());
         switch (gameState.getGameState()) {
             case PREGAME:
                 preGameLogic();
@@ -359,8 +357,8 @@ public class GameController {
             }
         }
 
-        activePlayer++;
-        gameState.setCurrentPlayer(playerTurnOrder[activePlayer % playerTurnOrder.length]);
+        gameState.incrementPlayerTurnCounter();
+        gameState.setCurrentPlayer(playerTurnOrder[gameState.getPlayerTurnCounter() % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
