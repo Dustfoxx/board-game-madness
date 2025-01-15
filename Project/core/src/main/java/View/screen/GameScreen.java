@@ -132,7 +132,7 @@ public class GameScreen implements Screen {
 
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
-        this.boardTexture = application.assets.get("basic-board.png", Texture.class);
+        this.boardTexture = application.assets.get("board-high-res.png", Texture.class);
         this.playerBar = new PlayerBar(gameController, skin);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);

@@ -55,7 +55,7 @@ public class VisualCell extends Actor {
             GameController gameController) {
         initDict();
 
-        Texture highlight = application.assets.get("highlight.png", Texture.class);
+        Texture highlight = application.assets.get("highlight-high-res.png", Texture.class);
         this.highlightdrb = new TextureRegionDrawable(highlight);
         this.featuresImg = application.assets.get("feature_img.png", Texture.class);
         Texture tokensImg = application.assets.get("tokens_temple.png", Texture.class);
@@ -89,7 +89,7 @@ public class VisualCell extends Actor {
         updatePlayers();
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
-        setBounds(0, 0, 100, 100);
+        setBounds(0, 0, 126, 100);
     }
 
     /**

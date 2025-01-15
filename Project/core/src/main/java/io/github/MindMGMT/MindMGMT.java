@@ -53,11 +53,11 @@ public class MindMGMT extends Game {
         assets.load("metalui/metal-ui.json", Skin.class);
         assets.load("comicui/comic-ui.json", Skin.class);
         assets.load("paperbg.jpeg", Texture.class);
-        assets.load("basic-board.png", Texture.class);
+        assets.load("board-high-res.png", Texture.class);
         assets.load("mindmgmt.png", Texture.class);
         assets.load("customfont.fnt", BitmapFont.class);
 
-        assets.load("highlight.png", Texture.class);
+        assets.load("highlight-high-res.png", Texture.class);
         assets.load("players_tmp.png", Texture.class);
         assets.load("feature_img.png", Texture.class);
         assets.load("tokens_3d.png", Texture.class);
