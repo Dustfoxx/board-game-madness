@@ -3,9 +3,7 @@ package View.screen;
 import Model.User;
 import View.buildingBlocks.MindMGMTStage;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +28,7 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         setupUI();
     }
+
     private void setupUI() {
         Table root = new Table();
         root.setFillParent(true);

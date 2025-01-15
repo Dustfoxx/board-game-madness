@@ -1,7 +1,5 @@
 package Model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -51,7 +49,7 @@ class SerializationTests {
         }
 
         board = new Board(cells);
-        board.getCell(0,0).addPlayer(new Recruiter(10, null, featuresOfInterest));
+        board.getCell(0, 0).addPlayer(new Recruiter(10, null, featuresOfInterest));
         List<Player> players = Arrays.asList(player1, player2);
 
         // Initializing the Game object
@@ -63,11 +61,10 @@ class SerializationTests {
     void testGameConstructorValidation() {
 
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-            .create();
-
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .create();
 
         // Serialize Java object to JSON
         String jsonGame = gson.toJson(game);
@@ -81,14 +78,14 @@ class SerializationTests {
     @Test
     void testGameSerialization() {
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-            .create();
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
 
         StringBuilder json = new StringBuilder();
         try {
-            Path resourceDirectory = Paths.get("src","test","resources");
+            Path resourceDirectory = Paths.get("src", "test", "resources");
             File file = Paths.get(resourceDirectory.toString(), "gameState.json").toFile();
             Scanner myReader = new Scanner(file);
             while (myReader.hasNextLine()) {

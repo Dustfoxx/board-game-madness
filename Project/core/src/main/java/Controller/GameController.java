@@ -54,7 +54,7 @@ public class GameController {
      * are next in queue to play. This is the constructor intended for
      * clients.
      */
-    public GameController(Game gameState, String localName) {
+    public GameController(Game gameState, String localName, GameScreen gameScreen) {
         this.isHost = false;
         this.localName = localName;
         this.updateHostListener = new Net.HttpResponseListener() {
@@ -80,7 +80,8 @@ public class GameController {
             public void cancelled() {
             }
         };
-        initController(gameState);
+        initController(gameState, gameScreen);
+
     }
 
     /**
@@ -90,14 +91,7 @@ public class GameController {
     public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
-        initController(gameState);
-        // TODO: Move this somewhere else since it's related to View and not Controller
-        gameState.setMindSlipListener(new Game.MindSlipListener() {
-            @Override
-            public void onMindSlip(String message) {
-                gameScreen.showDialogue(message);
-            }
-        });
+        initController(gameState, gameScreen);
     }
 
     /**
@@ -126,7 +120,7 @@ public class GameController {
         return this.localPlay;
     }
 
-    private void initController(Game gameState) {
+    private void initController(Game gameState, GameScreen gameScreen) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
@@ -182,6 +176,14 @@ public class GameController {
         });
 
         this.localPlay = gameState.getUsers().size() == 1;
+
+        // TODO: Move this somewhere else since it's related to View and not Controller
+        gameState.setMindSlipListener(new Game.MindSlipListener() {
+            @Override
+            public void onMindSlip(String message) {
+                gameScreen.showDialogue(message);
+            }
+        });
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {

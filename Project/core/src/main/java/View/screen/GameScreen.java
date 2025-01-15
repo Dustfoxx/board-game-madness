@@ -61,7 +61,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MindMGMT application, Game gameState, String localName) {
         this.application = application;
-        this.gameController = new GameController(gameState, localName);
+        this.gameController = new GameController(gameState, localName, this);
         this.isHost = false;
         this.pollingFrequency = 30;
         this.frameCount = 0;

@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.HashSet;
 import Controller.GameController;
-import Model.Recruiter;
 
 /**
  * The TurnBar class represents a UI component that displays the current turn
@@ -51,10 +50,10 @@ public class TurnBar extends Table {
         timeTracker.setAlignment(Align.center);
         turnClock.add(timeTracker).expandX().fillX().padLeft(10).padRight(10);
 
-        //Mindslip Information
+        // Mindslip Information
         String msMsg = "Recruiter has one turn where they can move two steps horizontal or diagonal.\n You will be notified when this happens";
         Label msInfo = new Label(msMsg, skin, "half-tone");
-        //msInfo.setAlignment(Align.center);
+        // msInfo.setAlignment(Align.center);
         msInfo.setWrap(true);
         this.add(msInfo).expandX().fillX().pad(10).row();
 
@@ -138,7 +137,7 @@ public class TurnBar extends Table {
 
         // Add mindslip information
         String msinformation = "Not used";
-        if (turn >4 && !gameController.getGame().getMindSlipHistory().isEmpty()) {
+        if (turn > 4 && !gameController.getGame().getMindSlipHistory().isEmpty()) {
             msinformation = String.valueOf(gameController.getGame().getMindSlipHistory().get(0));
         }
         Label msLabel = new Label(msinformation, skin, "half-tone");

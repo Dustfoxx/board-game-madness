@@ -16,8 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import Controller.GameController;
 import Controller.GameController.Actions;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import Model.Feature;
 import Model.MutableBoolean;
 import Model.NormalCell;
