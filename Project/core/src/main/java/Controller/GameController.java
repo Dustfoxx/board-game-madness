@@ -31,6 +31,10 @@ public class GameController {
     private CheckAction checkAction;
     private boolean isHost;
     private Net.HttpResponseListener updateHostListener;
+    private String localName;
+    private boolean boardIsActive;
+    private boolean userIsRecruiter;
+    private boolean localPlay;
 
     public boolean pendingClientUpdate;
 
@@ -49,8 +53,9 @@ public class GameController {
      * are next in queue to play. This is the constructor intended for
      * clients.
      */
-    public GameController(Game gameState) {
+    public GameController(Game gameState, String localName, GameScreen gameScreen) {
         this.isHost = false;
+        this.localName = localName;
         this.updateHostListener = new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -71,9 +76,11 @@ public class GameController {
             }
 
             @Override
-            public void cancelled() {}
+            public void cancelled() {
+            }
         };
-        initController(gameState);
+        initController(gameState, gameScreen);
+
     }
 
     /**
@@ -83,17 +90,36 @@ public class GameController {
     public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
-        initController(gameState);
-        // TODO: Move this somewhere else since it's related to View and not Controller
-        gameState.setMindSlipListener(new Game.MindSlipListener() {
-            @Override
-            public void onMindSlip(String message) {
-                gameScreen.showDialogue(message);
-            }
-        });
+        initController(gameState, gameScreen);
     }
 
-    private void initController(Game gameState) {
+    /**
+     * Returns wether the board should be active or not
+     * 
+     * @return boolean, true if active and false if not
+     */
+    public boolean getBoardIsActive() {
+        return this.boardIsActive;
+    }
+
+    /**
+     * Setter for boardIsActive
+     * 
+     * @param active new value
+     */
+    public void setBoardActive() {
+        this.boardIsActive = activateBoardForUser();
+    }
+
+    public boolean getUserIsRecruiter() {
+        return this.userIsRecruiter;
+    }
+
+    public boolean getLocalPlay() {
+        return this.localPlay;
+    }
+
+    private void initController(Game gameState, GameScreen gameScreen) {
         // Create turn order
         // This controller will use this to know which player controls what unit
         int agentIterator = 1; // This is in case there are less than four agents. Every unit will still be
@@ -139,6 +165,18 @@ public class GameController {
                     }
             }
         }
+
+        this.userIsRecruiter = this.isHost;
+
+        this.localPlay = gameState.getUsers().size() == 1;
+
+        // TODO: Move this somewhere else since it's related to View and not Controller
+        gameState.setMindSlipListener(new Game.MindSlipListener() {
+            @Override
+            public void onMindSlip(String message) {
+                gameScreen.showDialogue(message);
+            }
+        });
     }
 
     private Game initializeGame(Csv boardCsv, ArrayList<User> users) {
@@ -147,6 +185,7 @@ public class GameController {
         if (userAmount < 1) {
             throw new IllegalArgumentException("No users registered!");
         }
+        this.localName = users.get(0).getUserName();
 
         // Randomly select three unique features
         List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));
@@ -195,6 +234,19 @@ public class GameController {
         return this.gameState;
     }
 
+    private boolean activateBoardForUser() {
+        boolean[] returnVal = { false }; // Some weird workaround for using this inside forEach
+        gameState.getUsers().forEach((user) -> {
+            if (user.ownsPlayerPiece(gameState.getCurrentPlayer())) {
+                if (user.getUserName().equals(this.localName)) {
+                    returnVal[0] = true; // If a player owns the active piece we activate the board
+                }
+            }
+            ;
+        });
+        return returnVal[0];
+    }
+
     /**
      * Gets called when a player has completed their actions.
      * Decides new player and increments timer accordingly.
@@ -219,10 +271,12 @@ public class GameController {
         if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
             gameState.setGameOver();
         }
-        if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            setRecruiterVisibility(true);
-        } else {
-            setRecruiterVisibility(false);
+        if (this.localPlay) {
+            if (gameState.getCurrentPlayer() instanceof Recruiter) {
+                setRecruiterVisibility(true);
+            } else {
+                setRecruiterVisibility(false);
+            }
         }
     }
 
@@ -231,7 +285,7 @@ public class GameController {
      *
      * @param visibility what to set visibility to
      */
-    private void setRecruiterVisibility(boolean visibility) {
+    public void setRecruiterVisibility(boolean visibility) {
         int[] dims = gameState.getBoard().getDims();
         for (int row = 0; row < dims[0]; row++) {
             for (int col = 0; col < dims[1]; col++) {
@@ -265,7 +319,7 @@ public class GameController {
                 int[] firstStepCoord = recruiter.getWalkedPath().get(0);
                 gameState.getBoard().getCell(firstStepCoord[0], firstStepCoord[1]).addToken(new BrainFact(1));
                 gameState.setCurrentPlayer(1); // Gets first rogue agent and sets them as
-                                                                           // next player
+                                               // next player
             }
         } else {
             List<Player> players = gameState.getPlayers();
@@ -368,7 +422,7 @@ public class GameController {
             newTurn();
         }
 
-        if(!isHost) {
+        if (!isHost) {
             updateHost();
         }
 
@@ -377,18 +431,18 @@ public class GameController {
 
     private void updateHost() {
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Player.class, new GeneralAdapter<>())
-            .registerTypeAdapter(Token.class, new GeneralAdapter<>())
-            .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
-            .create();
+                .registerTypeAdapter(Player.class, new GeneralAdapter<>())
+                .registerTypeAdapter(Token.class, new GeneralAdapter<>())
+                .registerTypeAdapter(AbstractCell.class, new GeneralAdapter<>())
+                .create();
 
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
         Net.HttpRequest httpRequest = requestBuilder
-            .newRequest()
-            .method(Net.HttpMethods.POST)
-            .url("http://localhost:8080/update")
-            .content(gson.toJson(gameState))
-            .build();
+                .newRequest()
+                .method(Net.HttpMethods.POST)
+                .url("http://localhost:8080/update")
+                .content(gson.toJson(gameState))
+                .build();
         Gdx.net.sendHttpRequest(httpRequest, this.updateHostListener);
     }
 

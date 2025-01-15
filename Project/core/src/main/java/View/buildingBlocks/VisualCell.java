@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import Controller.GameController;
 import Model.AbstractCell;
 import Model.BrainFact;
 import Model.BrainNote;
@@ -20,6 +21,7 @@ import Model.Footstep;
 import Model.MutableBoolean;
 import Model.NormalCell;
 import Model.Player;
+import Model.RougeAgent;
 import Model.Step;
 import Model.Token;
 import io.github.MindMGMT.MindMGMT;
@@ -30,7 +32,6 @@ public class VisualCell extends Actor {
     private final TextureRegion temple;
     private final TextureRegion footstep;
     private final TextureRegion[] brains;
-    private TextureRegion mindslip;
     private final BitmapFont step;
     private final List<TextureRegion> players;
     private final List<TextureRegion> tokens;
@@ -38,10 +39,10 @@ public class VisualCell extends Actor {
     private final AbstractCell cellInfo;
     private Dictionary<Feature, Integer> features;
     private String stepText;
+    private GameController gameC;
 
     private final Texture featuresImg;
     private final Texture playersImg;
-    private Texture mindslipImg=new Texture("tokens_3d.png");
     private final MutableBoolean highlighted;
 
     /**
@@ -50,7 +51,8 @@ public class VisualCell extends Actor {
      *
      * @param cellInfo a single cell on the board. contains players and more
      */
-    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean, MindMGMT application) {
+    public VisualCell(AbstractCell cellInfo, MutableBoolean mutableBoolean, MindMGMT application,
+            GameController gameController) {
         initDict();
 
         Texture highlight = application.assets.get("highlight.png", Texture.class);
@@ -59,6 +61,7 @@ public class VisualCell extends Actor {
         Texture tokensImg = application.assets.get("tokens_temple.png", Texture.class);
         this.playersImg = application.assets.get("players_tmp.png", Texture.class);
         Texture stepImg = application.assets.get("tokens_3d.png", Texture.class);
+        this.gameC = gameController;
 
         this.feature1 = fetchFeature(null);
         this.feature2 = fetchFeature(null);
@@ -79,7 +82,6 @@ public class VisualCell extends Actor {
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
-        this.mindslip=new TextureRegion(mindslipImg, 303, 365, 60, 60);
         this.step = new BitmapFont();
         this.players = new ArrayList<>();
         this.tokens = new ArrayList<>();
@@ -96,7 +98,8 @@ public class VisualCell extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
-        if (highlighted.getBoolean()) {
+        if (highlighted.getBoolean()
+                && (gameC.getGame().getCurrentPlayer() instanceof RougeAgent || gameC.getUserIsRecruiter())) {
             highlightdrb.draw(batch, getX(), getY(), getWidth(), getHeight()); // Draw the background
         }
 

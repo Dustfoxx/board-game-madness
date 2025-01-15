@@ -8,7 +8,6 @@ import Model.Board;
 import Model.BrainFact;
 import Model.Feature;
 import Model.Footstep;
-import Model.Game;
 import Model.NormalCell;
 import Model.Player;
 import Model.Token;
