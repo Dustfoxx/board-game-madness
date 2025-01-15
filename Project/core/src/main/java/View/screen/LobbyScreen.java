@@ -109,7 +109,7 @@ public class LobbyScreen implements Screen {
                     for (int i = 0; i < players.size(); i++) {
                         users.add(new User(i, players.get(i)));
                     }
-                    application.setScreen(new GameScreen(application, users));
+                    application.setScreen(new GameScreen(application, users, false));
                     dispose();
                 }
             });

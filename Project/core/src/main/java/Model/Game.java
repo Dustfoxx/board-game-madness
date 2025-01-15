@@ -15,7 +15,8 @@ public class Game {
     public enum gameStates {
         PREGAME,
         ONGOING,
-        ENDGAME
+        ENDGAME,
+        PAUSE
     } // Enum defining different gameStates
 
     private String winner;
@@ -298,6 +299,11 @@ public class Game {
             case ENDGAME:
                 if (this.gameState == gameStates.PREGAME) {
                     throw new IllegalStateException("Cannot go from PREGAME to ENDGAME states of game");
+                }
+                break;
+            case PAUSE:
+                if (this.gameState == gameStates.ENDGAME) {
+                    throw new IllegalStateException("Cannot go from ENDGAME to PAUSE states of game");
                 }
                 break;
         }

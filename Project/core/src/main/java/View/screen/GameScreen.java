@@ -52,6 +52,7 @@ public class GameScreen implements Screen {
     private Net.HttpResponseListener pollListener;
     private int frameCount;
     private boolean isHost;
+    public boolean isCouchPlay;
 
     /**
      * Main game screen. This constructor is intended for client use.
@@ -63,6 +64,7 @@ public class GameScreen implements Screen {
         this.application = application;
         this.gameController = new GameController(gameState, localName, this);
         this.isHost = false;
+        this.isCouchPlay = false;
         this.pollingFrequency = 30;
         this.frameCount = 0;
         this.pollListener = getPollListener();
@@ -76,12 +78,13 @@ public class GameScreen implements Screen {
      * @param application Reference to the application
      * @param users       A list of users each representing a client
      */
-    public GameScreen(MindMGMT application, ArrayList<User> users) {
+    public GameScreen(MindMGMT application, ArrayList<User> users, boolean isCouchPlay) {
 
         this.application = application;
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users, this);
         this.isHost = true;
+        this.isCouchPlay = isCouchPlay;
 
         if (application.server != null) {
             // We are host
@@ -219,10 +222,23 @@ public class GameScreen implements Screen {
         actionBar.add(captureButton).expand();
     }
 
-    public void showDialogue(String message) {
+    public void showMindSlipDialog(String message) {
         Dialog dialog = new Dialog("Notice", skin) {
             @Override
             protected void result(Object object) {
+            }
+        };
+        dialog.pad(20);
+        dialog.text(message);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
+    public void showBlockerDialog(String message) {
+        Dialog dialog = new Dialog("Notice", skin) {
+            @Override
+            protected void result(Object object) {
+                gameController.newTurn();
             }
         };
         dialog.pad(20);
