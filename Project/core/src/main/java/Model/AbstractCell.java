@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * The AbstractCell class is an abstract class represents a single cell on the
@@ -55,7 +56,7 @@ public abstract class AbstractCell {
      * @param player The player to remove from the cell.
      */
     public void removePlayer(Player player) {
-        players.remove(player);
+        players = players.stream().filter(plr -> plr.getId() != player.getId()).collect(Collectors.toList());
     }
 
     /**
@@ -69,7 +70,7 @@ public abstract class AbstractCell {
 
     /**
      * Gets all brain tokens
-     * 
+     *
      * @return new list of token references
      */
     public List<Token> getBrains() {

@@ -164,9 +164,9 @@ public class VisualCell extends Actor {
         int xVal = 0;
 
         for (TextureRegion player : players) {
-            float xPos = getX() + getWidth() / 4 * xVal;
+            float xPos = getX() + (getWidth() - (player.getRegionWidth() / 2f)) / 4 * xVal;
             batch.draw(player, xPos, getY(), getOriginX(), getOriginY(),
-                    getWidth() / 4, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+                    getWidth() / 2, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
             xVal++;
         }
     }
