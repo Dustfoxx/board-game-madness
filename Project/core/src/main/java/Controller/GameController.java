@@ -337,7 +337,6 @@ public class GameController {
             if (currentIndex == players.size() - 1) {
                 // Open blocker before going to the recruiter
                 gameState.setGameState(gameStates.PAUSE);
-                // activePlayer--; //Very strange but causes bug if it's not there
                 gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
             } else {
                 // Set player to next rogue agent so they can place
