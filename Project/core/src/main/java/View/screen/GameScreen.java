@@ -210,10 +210,23 @@ public class GameScreen implements Screen {
         actionBar.add(captureButton).expand();
     }
 
-    public void showDialogue(String message) {
+    public void showMindSlipDialog(String message) {
         Dialog dialog = new Dialog("Notice", skin) {
             @Override
             protected void result(Object object) {
+            }
+        };
+        dialog.pad(20);
+        dialog.text(message);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
+    public void showBlockerDialog(String message) {
+        Dialog dialog = new Dialog("Notice", skin) {
+            @Override
+            protected void result(Object object) {
+                gameController.newTurn();
             }
         };
         dialog.pad(20);

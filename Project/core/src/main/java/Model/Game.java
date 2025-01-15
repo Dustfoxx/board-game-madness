@@ -15,7 +15,8 @@ public class Game {
     public enum gameStates {
         PREGAME,
         ONGOING,
-        ENDGAME
+        ENDGAME,
+        PAUSE
     } // Enum defining different gameStates
 
     private String winner;

@@ -32,6 +32,7 @@ public class GameController {
     private CheckAction checkAction;
     private boolean isHost;
     private Net.HttpResponseListener updateHostListener;
+    private GameScreen gameScreen;
 
     public boolean pendingClientUpdate;
 
@@ -84,12 +85,13 @@ public class GameController {
     public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
+        this.gameScreen = gameScreen;
         initController(gameState);
         // TODO: Move this somewhere else since it's related to View and not Controller
         gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
             public void onMindSlip(String message) {
-                gameScreen.showDialogue(message);
+                gameScreen.showMindSlipDialog(message);
             }
         });
     }
@@ -209,22 +211,25 @@ public class GameController {
             case ONGOING:
                 ongoingLogic();
                 break;
-            case ENDGAME:
-
+            case PAUSE:
+                continueGame();
                 break;
-
+            case ENDGAME:
+                break;
             default:
                 break;
         }
 
-        gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
-        if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
-            gameState.setGameOver();
-        }
-        if (gameState.getCurrentPlayer() instanceof Recruiter) {
-            setRecruiterVisibility(true);
-        } else {
-            setRecruiterVisibility(false);
+        if (gameState.getGameState() != gameStates.PAUSE) {
+            gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
+            if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
+                gameState.setGameOver();
+            }
+            if (gameState.getCurrentPlayer() instanceof Recruiter) {
+                setRecruiterVisibility(true);
+            } else {
+                setRecruiterVisibility(false);
+            }
         }
     }
 
@@ -257,8 +262,8 @@ public class GameController {
     }
 
     private void preGameLogic() {
-        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            gameState.setMovementAvailability(true);
             Recruiter recruiter = (Recruiter) gameState.getCurrentPlayer();
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
@@ -274,11 +279,13 @@ public class GameController {
             int currentIndex = players.indexOf(gameState.getCurrentPlayer());
             // If we are at the end of players, set game to started
             if (currentIndex == players.size() - 1) {
-                int recruiterIndex = 0;
-                gameState.setCurrentPlayer(recruiterIndex);
-                gameState.setGameState(gameStates.ONGOING);
+                // Open blocker before going to the recruiter
+                gameState.setGameState(gameStates.PAUSE);
+                activePlayer--; //Very strange but causes bug if it's not there
+                gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
             } else {
                 // Set player to next rogue agent so they can place
+                gameState.setMovementAvailability(true);
                 gameState.setCurrentPlayer(currentIndex + 1);
             }
         }
@@ -286,6 +293,13 @@ public class GameController {
     }
 
     private void ongoingLogic() {
+
+        if (playerTurnOrder[(activePlayer + 1) % playerTurnOrder.length] == 0) {
+            gameState.setGameState(gameStates.PAUSE);
+            gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+            return;
+        }
+
         gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
@@ -305,6 +319,17 @@ public class GameController {
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
+            // RECRUITER WIN
+            gameState.setGameOver();
+        }
+    }
+
+    private void continueGame() {
+        gameState.setMovementAvailability(true);
+        activePlayer++;
+        gameState.setCurrentPlayer(0);
+        gameState.setGameState(gameStates.ONGOING);
+        if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
         }
