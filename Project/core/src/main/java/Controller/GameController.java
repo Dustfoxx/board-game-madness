@@ -87,7 +87,6 @@ public class GameController {
      */
 
     public GameController(Csv boardCsv, ArrayList<User> users) {
-        this.localName = users.get(0).getUserName();
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
         initController(gameState);
@@ -183,6 +182,7 @@ public class GameController {
         if (userAmount < 1) {
             throw new IllegalArgumentException("No users registered!");
         }
+        this.localName = users.get(0).getUserName();
 
         // Randomly select three unique features
         List<Feature> allFeaturesList = new ArrayList<>(Arrays.asList(Feature.values()));
