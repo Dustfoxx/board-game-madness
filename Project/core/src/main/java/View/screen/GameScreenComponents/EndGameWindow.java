@@ -20,7 +20,7 @@ public class EndGameWindow extends Window {
     private final Label messageLabel;
 
     public EndGameWindow(GameController controller, Skin skin, MindMGMT application) {
-        super("EndGame Window", skin);
+        super("", skin);
         this.controller = controller;
 
         // Create the window

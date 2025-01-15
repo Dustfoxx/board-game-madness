@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class CaptureWindow extends Window {
 
     public CaptureWindow(boolean wasCaptureSuccessful, Skin skin) {
-        super("Capture Window", skin);
+        super("", skin);
 
         // Create the window
         this.setMovable(false);

@@ -30,7 +30,7 @@ public class AskWindow extends Window {
     GameController gameController;
 
     public AskWindow(GameController gameController, MindMGMT application) {
-        super("Ask Win", application.skin);
+        super("", application.skin);
         // Create the window
         this.setMovable(false);
         this.setResizable(false);
@@ -79,12 +79,17 @@ public class AskWindow extends Window {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     if (featureButton.isChecked()) {
+                        if (selectedFeatureButton != null && selectedFeatureButton != featureButton) {
+                            selectedFeatureButton.setChecked(false);
+                        }
                         selectedFeatureButton = featureButton;
                         selectedFeature = feature;
                     } else {
-                        selectedFeatureButton = null;
+                        if (selectedFeatureButton == featureButton) {
+                            selectedFeatureButton = null;
+                            selectedFeature = null;
+                        }
                     }
-
                 }
             });
             buttonTable.add(featureButton).padRight(20).padBottom(5);
