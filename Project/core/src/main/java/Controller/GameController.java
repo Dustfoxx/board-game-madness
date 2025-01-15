@@ -51,12 +51,18 @@ public class GameController {
                                // controlled
         gameState = initializeGame(boardCsv, users);
 
-        gameState.setMindSlipListener(new Game.MindSlipListener() {
+        gameState.addMindSliplistener2(evt -> {
+
+            // new value and old value can be cheked here
+            System.out.println("mindslip");
+        });
+
+       /* gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
             public void onMindSlip(String message) {
                 gameScreen.showDialogue(message);
             }
-        });
+        }); */
 
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();

@@ -1,5 +1,7 @@
 package Model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +36,7 @@ public class Game {
     private boolean isActionAvailable;
     private MutableBoolean[][] validityMask;
     private CheckAction checkAction;
-    private MindSlipListener mindSlipListener;
+    private PropertyChangeSupport mindSlipListener;
 
     /**
      * Constructor to initialize a new game with a list of players, a game board,
@@ -233,9 +235,13 @@ public class Game {
         }
         this.mindSlipHistory.add(currentTime);
 
-        if (mindSlipListener != null) {
+       /*  if (mindSlipListener != null) {
             mindSlipListener.onMindSlip("The recruiter made a MindSlip!");
-        }
+        } */
+
+
+        // This essentially notifies the listeners
+        mindSlipListener.firePropertyChange("mindslip", board, activeBrains);
     }
 
     /**
@@ -450,12 +456,18 @@ public class Game {
                 board, recruitHistory, mindSlipHistory, players, activeBrains,
                 users, isMovementAvailable, isActionAvailable);
     }
-    public interface MindSlipListener  {
-        void onMindSlip(String message);
-    }
 
-    public void setMindSlipListener(MindSlipListener  listener) {
-        this.mindSlipListener  = listener;
+    public void addMindSliplistener2(PropertyChangeListener listener) {
+        mindSlipListener.addPropertyChangeListener(listener);
     }
-
+        
+    /* gameState.addMindSlipListener(new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("mindSlipHistory".equals(evt.getPropertyName())) {
+                List<Integer> updatedMindSlipHistory = (List<Integer>) evt.getNewValue();
+                gameScreen.showDialogue("The recruiter made a MindSlip!");
+            }
+        }
+    }); */
 }
