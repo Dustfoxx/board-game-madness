@@ -301,6 +301,11 @@ public class Game {
                     throw new IllegalStateException("Cannot go from PREGAME to ENDGAME states of game");
                 }
                 break;
+            case PAUSE:
+                if (this.gameState == gameStates.ENDGAME) {
+                    throw new IllegalStateException("Cannot go from ENDGAME to PAUSE states of game");
+                }
+                break;
         }
         this.gameState = newState;
     }
