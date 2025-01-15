@@ -129,8 +129,10 @@ public class VisualCell extends Actor {
         float feature2XPos = getX() + getWidth() - featureSize;
         float feature2YPos = getY();
 
+        batch.setColor(1, 1, 1, 0.75f); // RGBA (alpha = 75% transparency)
         batch.draw(feature1, feature1XPos, feature1YPos, featureSize, featureSize);
         batch.draw(feature2, feature2XPos, feature2YPos, featureSize, featureSize);
+        batch.setColor(1, 1, 1, 1); // RGBA (alpha = 100% transparency) RESET
     }
 
     /**
