@@ -32,7 +32,7 @@ public class AskWindow extends Window {
     GameController gameController;
 
     public AskWindow(GameController gameController, MindMGMT application) {
-        super("Ask Win", application.skin);
+        super("", application.skin);
         // Create the window
         this.setMovable(false);
         this.setResizable(false);

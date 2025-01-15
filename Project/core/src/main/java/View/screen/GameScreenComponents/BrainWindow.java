@@ -30,7 +30,7 @@ public class BrainWindow extends Window {
     private TextField brainField;
 
     public BrainWindow(GameController gameController, int row, int col, Skin skin) {
-        super("Brain Window", skin);
+        super("", skin);
 
         // Create the window
         this.setMovable(false);
