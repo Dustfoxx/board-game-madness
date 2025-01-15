@@ -258,6 +258,7 @@ public class GameScreen implements Screen {
         gameController.setBoardActive();
         boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
         actionBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
+        playerBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
         if (!gameController.getLocalPlay()) {
             gameController.setRecruiterVisibility(gameController.getUserIsRecruiter());
         }

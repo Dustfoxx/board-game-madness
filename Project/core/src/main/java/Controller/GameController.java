@@ -166,12 +166,7 @@ public class GameController {
             }
         }
 
-        this.userIsRecruiter = false;
-        gameState.getUsers().forEach((user) -> {
-            if (user.isRecruiter() && user.getUserName().equals(this.localName)) {
-                this.userIsRecruiter = true;
-            }
-        });
+        this.userIsRecruiter = this.isHost;
 
         this.localPlay = gameState.getUsers().size() == 1;
 
