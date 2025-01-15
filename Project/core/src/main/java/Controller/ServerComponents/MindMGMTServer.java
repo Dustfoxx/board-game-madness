@@ -106,7 +106,6 @@ public class MindMGMTServer {
                     .lines()
                     .collect(Collectors.joining("\n"));
                 stream.close();
-                System.out.println(body);
                 response = "ok";
                 Game newGameState = gson.fromJson(body, Game.class);
                 gameState.updateDeeply(newGameState);
