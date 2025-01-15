@@ -75,7 +75,9 @@ public class BrainWindow extends Window {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if (gameController.getGame().getCurrentPlayer() instanceof Recruiter) {
+        if ((gameController.getUserIsRecruiter() && !gameController.getLocalPlay())
+                || (gameController.getLocalPlay()
+                        && gameController.getGame().getCurrentPlayer() instanceof Recruiter)) {
             brainField.setTouchable(Touchable.disabled);
         } else {
             brainField.setTouchable(Touchable.enabled);

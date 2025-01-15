@@ -44,8 +44,10 @@ public class VisualBoard {
                 cell.addListener(new ClickListener(Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        int[] cellCoords = getCellClicked(event);
-                        gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
+                        if (gameInfo.getBoardIsActive()) {
+                            int[] cellCoords = getCellClicked(event);
+                            gameInfo.actionHandler(Actions.MOVE, new Object[] { cellCoords[0], cellCoords[1] });
+                        }
                     }
                 });
                 cell.addListener(new ClickListener(Buttons.RIGHT) {
