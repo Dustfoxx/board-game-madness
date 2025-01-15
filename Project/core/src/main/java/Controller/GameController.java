@@ -9,6 +9,8 @@ import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import View.screen.GameScreen;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,11 +81,17 @@ public class GameController {
      * The main gameController. Keeps an eye on victory conditions and which players
      * are next in queue to play. This is the constructor intended for the host.
      */
-
-    public GameController(Csv boardCsv, ArrayList<User> users) {
+    public GameController(Csv boardCsv, ArrayList<User> users, GameScreen gameScreen) {
         Game gameState = initializeGame(boardCsv, users);
         this.isHost = true;
         initController(gameState);
+        // TODO: Move this somewhere else since it's related to View and not Controller
+        gameState.setMindSlipListener(new Game.MindSlipListener() {
+            @Override
+            public void onMindSlip(String message) {
+                gameScreen.showDialogue(message);
+            }
+        });
     }
 
     private void initController(Game gameState) {
