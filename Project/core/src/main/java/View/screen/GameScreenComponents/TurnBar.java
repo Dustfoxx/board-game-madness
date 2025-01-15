@@ -101,7 +101,7 @@ public class TurnBar extends Table {
 
         // Table for the turn row
         Table turnRow = new Table();
-        turnRow.setDebug(true); // Enables debug mode for layout visualization
+        // turnRow.setDebug(true); // Enables debug mode for layout visualization
         turnRow.align(Align.center);
 
         if (!titlesAdded) {
