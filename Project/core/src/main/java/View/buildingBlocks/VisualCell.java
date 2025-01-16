@@ -80,7 +80,7 @@ public class VisualCell extends Actor {
         // These are currently magic numbers and pretty ugly. Find better way of doing
         // this
         // this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
-        this.footstep = new TextureRegion(stepImg, 170, 360, 70, 70);
+        this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
@@ -149,12 +149,11 @@ public class VisualCell extends Actor {
         updateTokens();
 
         int xVal = 0;
-        int size = tokens.size();
 
         for (TextureRegion token : tokens) {
-            float xPos = getX() + getWidth() / size * xVal;
-            batch.draw(token, xPos, getY() + getHeight() / 2, getOriginX(), getOriginY(),
-                    getWidth() / size, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+            float xPos = getX() + (getWidth() - (token.getRegionWidth() / 3f)) + token.getRegionWidth() / 8 * xVal;
+            batch.draw(token, xPos, getY() + getHeight() / 3, getOriginX(), getOriginY(),
+                    token.getRegionWidth() / 3, token.getRegionWidth() / 3, getScaleX(), getScaleY(), getRotation());
             xVal++;
         }
     }
