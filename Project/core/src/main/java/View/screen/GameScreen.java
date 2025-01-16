@@ -111,6 +111,7 @@ public class GameScreen implements Screen {
                 try {
                     Game gameState = gson.fromJson(msg, Game.class);
                     gameController.deeplySetGameState(gameState);
+                    gameController.setRecruiterVisibility(gameController.getUserIsRecruiter());
                 } catch (JsonSyntaxException e) {
                     // Handle game end?
                     e.printStackTrace();
@@ -256,7 +257,6 @@ public class GameScreen implements Screen {
 
         // Weird bad way of doing this. Doesn't follow mvc but works for now
         gameController.setBoardActive();
-        boardSection.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
         actionBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
         playerBar.setTouchable(gameController.getBoardIsActive() ? Touchable.enabled : Touchable.disabled);
         if (!gameController.getLocalPlay()) {
