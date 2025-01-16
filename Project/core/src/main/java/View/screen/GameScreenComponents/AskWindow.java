@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -99,8 +100,22 @@ public class AskWindow extends Window {
         confirmButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameController.actionHandler(Actions.ASK, new Object[] { selectedFeature });
-                actor.getParent().remove(); // Closes the window
+                if (selectedFeature!=null){
+                    gameController.actionHandler(Actions.ASK, new Object[] { selectedFeature });
+                    actor.getParent().remove(); // Closes the window
+                }
+                else{
+                    Dialog dialog = new Dialog("Notice", application.skin) {
+                        @Override
+                        protected void result(Object object) {
+                        }
+                    };
+                    dialog.pad(20);
+                    dialog.text("Please select a feature");
+                    dialog.button("OK");
+                    dialog.show(AskWindow.this.getStage());
+                }
+                
             }
         });
         this.add(confirmButton).colspan(2).padTop(10).center().row();
