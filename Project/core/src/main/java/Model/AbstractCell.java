@@ -56,7 +56,15 @@ public abstract class AbstractCell {
      * @param player The player to remove from the cell.
      */
     public void removePlayer(Player player) {
-        players = players.stream().filter(plr -> plr.getId() != player.getId()).collect(Collectors.toList());
+
+        // A way of removing a player without relying on references.
+        List<Player> newPlayers = new ArrayList<>();
+        for (Player p : players) {
+            if (p.getId() != player.getId()) {
+                newPlayers.add(p);
+            }
+        }
+        this.players = newPlayers;
     }
 
     /**

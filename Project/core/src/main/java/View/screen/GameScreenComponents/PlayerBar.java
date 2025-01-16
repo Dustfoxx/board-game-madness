@@ -3,12 +3,11 @@ package View.screen.GameScreenComponents;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.SnapshotArray;
 
@@ -16,6 +15,7 @@ import Controller.GameController;
 import Model.Game;
 import Model.Player;
 import Model.User;
+import io.github.MindMGMT.MindMGMT;
 
 /**
  * Represents a UI component that displays the players and whos turn it is.
@@ -25,26 +25,29 @@ import Model.User;
 public class PlayerBar extends Table {
 
     private final GameController gameController;
+    private final Texture playersImg;
 
     /**
      * Constructs a PlayerBar.
      *
      * @param gameController the {@link GameController} that manages game logic
      */
-    public PlayerBar(GameController gameController, Skin skin) {
+    public PlayerBar(GameController gameController, MindMGMT application) {
 
         this.gameController = gameController;
         // this.debug();
 
+        this.playersImg = application.assets.get("players_tmp.png", Texture.class);
+
         // Create a label for each user and add it to the table
         for (User user : gameController.getGame().getUsers()) {
-            Table userSlot = createUserSlot(user, skin);
+            Table userSlot = createUserSlot(user, application.skin);
             this.add(userSlot).expandX(); // Expand each label equally along the X-axis
         }
 
         // Create a button to simulate advancing to the next player's turn - TODO:
         // Remove when not useful anymore
-        TextButton nextTurnButton = new TextButton("End Turn", skin);
+        TextButton nextTurnButton = new TextButton("End Turn", application.skin);
         nextTurnButton.setColor(Color.MAGENTA);
         this.add(nextTurnButton);
 
@@ -75,7 +78,12 @@ public class PlayerBar extends Table {
         for (Player player : gameController.getGame().getPlayers()) {
             if (user.ownsPlayerPiece(player)) {
                 Label playerLabel = new Label(player.getName(), skin, "narration");
-                userSlot.add(playerLabel).expandX();
+                userSlot.add(playerLabel);
+
+                TextureRegion playerImgRegion = new TextureRegion(playersImg, 100 * (player.getId() - 1), 0, 100, 100);
+                Image playerImage = new Image(playerImgRegion);
+                userSlot.add(playerImage).padRight(20).size(60);
+
             }
         }
         return userSlot;
@@ -97,19 +105,27 @@ public class PlayerBar extends Table {
                 Table userSlot = (Table) this.getChildren().get(userIndex);
                 SnapshotArray<Actor> labels = userSlot.getChildren();
                 for (int i = 0; i < labels.size; i++) {
+                    if (!(labels.get(i) instanceof Label)) {
+                        continue;
+                    }
                     Label playerLabel = (Label) labels.get(i);
-                    if (user.ownsPlayerPiece(currentPlayer)) {
-                        if (playerLabel.textEquals(user.getUserName())
-                                || playerLabel.textEquals(currentPlayer.getName())) {
-                            playerLabel.setColor(Color.GREEN);
-                            playerLabel.getColor().a = 1f;
-                        } else {
-                            playerLabel.setColor(Color.WHITE);
-                            playerLabel.getColor().a = 0.3f;
+
+                    // Big if, but found it necessary to not duplicate too much code
+                    if (user.ownsPlayerPiece(currentPlayer) &&
+                        (playerLabel.textEquals(user.getUserName()) ||
+                         playerLabel.textEquals(currentPlayer.getName()))
+                    ) {
+                        playerLabel.setColor(Color.GREEN);
+                        playerLabel.getColor().a = 1f;
+                        if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
+                            labels.get(i + 1).getColor().a = 1f;
+                            continue;
                         }
-                    } else {
-                        playerLabel.setColor(Color.WHITE);
-                        playerLabel.getColor().a = 0.3f;
+                    }
+                    playerLabel.setColor(Color.WHITE);
+                    playerLabel.getColor().a = 0.3f;
+                    if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
+                        labels.get(i + 1).getColor().a = 0.3f;
                     }
                 }
 
