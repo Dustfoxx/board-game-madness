@@ -44,7 +44,7 @@ public class MainMenuScreen implements Screen {
                 // not sure should this in view or controller
                 ArrayList<User> users = new ArrayList<>();
                 users.add(new User(0, ""));
-                application.setScreen(new GameScreen(application, users, true));
+                application.setScreen(new GameScreen(application, users));
                 dispose();
             }
         });

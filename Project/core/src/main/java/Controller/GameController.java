@@ -332,7 +332,7 @@ public class GameController {
             int currentIndex = players.indexOf(gameState.getCurrentPlayer());
             // If we are at the end of players, set game to started
             if (currentIndex == players.size() - 1) {
-                if (gameScreen.isCouchPlay) {
+                if (localPlay) {
                     // Open blocker if in couch play mode
                     gameState.setGameState(gameStates.PAUSE);
                     gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
@@ -352,7 +352,7 @@ public class GameController {
 
         // Check if the next turn will be the recruiter's
         if (playerTurnOrder[(gameState.getPlayerTurnCounter() + 1) % playerTurnOrder.length] == 0) {
-            if (gameScreen.isCouchPlay) {
+            if (localPlay) {
                 // Open blocker if in couch play mode
                 gameState.setGameState(gameStates.PAUSE);
                 gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");

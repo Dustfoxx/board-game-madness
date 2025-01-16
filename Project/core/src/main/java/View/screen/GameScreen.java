@@ -52,7 +52,6 @@ public class GameScreen implements Screen {
     private Net.HttpResponseListener pollListener;
     private int frameCount;
     private boolean isHost;
-    public boolean isCouchPlay;
 
     /**
      * Main game screen. This constructor is intended for client use.
@@ -64,7 +63,6 @@ public class GameScreen implements Screen {
         this.application = application;
         this.gameController = new GameController(gameState, localName, this);
         this.isHost = false;
-        this.isCouchPlay = false;
         this.pollingFrequency = 30;
         this.frameCount = 0;
         this.pollListener = getPollListener();
@@ -78,13 +76,12 @@ public class GameScreen implements Screen {
      * @param application Reference to the application
      * @param users       A list of users each representing a client
      */
-    public GameScreen(MindMGMT application, ArrayList<User> users, boolean isCouchPlay) {
+    public GameScreen(MindMGMT application, ArrayList<User> users) {
 
         this.application = application;
         Csv boardCsv = application.assets.get("board-data.csv", Csv.class);
         this.gameController = new GameController(boardCsv, users, this);
         this.isHost = true;
-        this.isCouchPlay = isCouchPlay;
 
         if (application.server != null) {
             // We are host
