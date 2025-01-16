@@ -351,7 +351,7 @@ public class GameController {
     private void ongoingLogic() {
 
         // Check if the next turn will be the recruiter's
-        if (playerTurnOrder[(gameState.getPlayerTurnCounter()) % playerTurnOrder.length] == 0) {
+        if (playerTurnOrder[(gameState.getPlayerTurnCounter() + 1) % playerTurnOrder.length] == 0) {
             if (gameScreen.isCouchPlay) {
                 // Open blocker if in couch play mode
                 gameState.setGameState(gameStates.PAUSE);
@@ -376,8 +376,8 @@ public class GameController {
                 gameState.setGameOver();
             }
         }
-        gameState.setCurrentPlayer(playerTurnOrder[gameState.getPlayerTurnCounter() % playerTurnOrder.length]);
         gameState.incrementPlayerTurnCounter();
+        gameState.setCurrentPlayer(playerTurnOrder[gameState.getPlayerTurnCounter() % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
@@ -388,7 +388,9 @@ public class GameController {
 
     private void continueGame() {
         gameState.setMovementAvailability(true);
-        gameState.incrementPlayerTurnCounter();
+        if (gameState.getPlayerTurnCounter() != 0) {
+            gameState.incrementPlayerTurnCounter();
+        }
         gameState.setCurrentPlayer(0);
         gameState.setGameState(gameStates.ONGOING);
         if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
