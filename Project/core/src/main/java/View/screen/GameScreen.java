@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for client use.
-     * 
+     *
      * @param application Reference to the application
      * @param gameState   An initial cop of the hosts game state
      */
@@ -72,7 +72,7 @@ public class GameScreen implements Screen {
 
     /**
      * Main game screen. This constructor is intended for host use.
-     * 
+     *
      * @param application Reference to the application
      * @param users       A list of users each representing a client
      */
@@ -134,7 +134,7 @@ public class GameScreen implements Screen {
         this.stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         this.skin = application.skin;
         this.boardTexture = application.assets.get("basic-board.png", Texture.class);
-        this.playerBar = new PlayerBar(gameController, skin);
+        this.playerBar = new PlayerBar(gameController, application);
         this.turnBar = new TurnBar(gameController, skin);
         this.settingWindow = new SettingWindow(skin, stage, application);
         this.featureSelection = new FeatureSelection(gameController, application);
