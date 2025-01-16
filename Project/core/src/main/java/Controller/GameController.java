@@ -25,6 +25,7 @@ public class GameController {
     // Check win
 
     private Game gameState;
+    private GameScreen gameScreen;
     private int[] playerTurnOrder;
     private int recruiterIndex;
     private ActionController actionController;
@@ -127,6 +128,7 @@ public class GameController {
         // Used by clients to detect whenever polling the host should wait
         this.pendingClientUpdate = false;
         this.gameState = gameState;
+        this.gameScreen = gameScreen;
         List<Player> gamePlayers = gameState.getPlayers();
         List<RougeAgent> agents = new ArrayList<>();
         this.playerTurnOrder = new int[6];
@@ -174,7 +176,7 @@ public class GameController {
         gameState.setMindSlipListener(new Game.MindSlipListener() {
             @Override
             public void onMindSlip(String message) {
-                gameScreen.showDialogue(message);
+                gameScreen.showMindSlipDialog(message);
             }
         });
     }
@@ -259,18 +261,22 @@ public class GameController {
             case ONGOING:
                 ongoingLogic();
                 break;
-            case ENDGAME:
-
+            case PAUSE:
+                continueGame();
                 break;
-
+            case ENDGAME:
+                break;
             default:
                 break;
         }
 
-        gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
-        if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
-            gameState.setGameOver();
+        if (gameState.getGameState() != gameStates.PAUSE) {
+            gameState.setValidityMask(checkAction.getValidMoves(gameState.getCurrentPlayer(), gameState.getBoard()));
+            if (checkAction.isMaskEmpty(gameState.getValidityMask())) {
+                gameState.setGameOver();
+            }
         }
+
         if (this.localPlay) {
             if (gameState.getCurrentPlayer() instanceof Recruiter) {
                 setRecruiterVisibility(true);
@@ -309,8 +315,8 @@ public class GameController {
     }
 
     private void preGameLogic() {
-        gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
+            gameState.setMovementAvailability(true);
             Recruiter recruiter = (Recruiter) gameState.getCurrentPlayer();
             gameState.incrementTime();
             if (gameState.getCurrentTime() > 4) {
@@ -326,18 +332,37 @@ public class GameController {
             int currentIndex = players.indexOf(gameState.getCurrentPlayer());
             // If we are at the end of players, set game to started
             if (currentIndex == players.size() - 1) {
-                int recruiterIndex = 0;
-                gameState.setCurrentPlayer(recruiterIndex);
-                gameState.setGameState(gameStates.ONGOING);
+                if (localPlay) {
+                    // Open blocker if in couch play mode
+                    gameState.setGameState(gameStates.PAUSE);
+                    gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+                } else {
+                    // Skip blocker if not in couch play mode
+                    continueGame();
+                }
             } else {
                 // Set player to next rogue agent so they can place
+                gameState.setMovementAvailability(true);
                 gameState.setCurrentPlayer(currentIndex + 1);
             }
         }
-
     }
 
     private void ongoingLogic() {
+
+        // Check if the next turn will be the recruiter's
+        if (playerTurnOrder[(gameState.getPlayerTurnCounter() + 1) % playerTurnOrder.length] == 0) {
+            if (localPlay) {
+                // Open blocker if in couch play mode
+                gameState.setGameState(gameStates.PAUSE);
+                gameScreen.showBlockerDialog("Agents look away!\nRecruiter, it's your turn, are you ready?");
+            } else {
+                // Skip blocker if not in couch play mode
+                continueGame();
+            }
+            return;
+        }
+
         gameState.setMovementAvailability(true);
         if (gameState.getCurrentPlayer() instanceof Recruiter) {
             gameState.incrementTime();
@@ -351,12 +376,24 @@ public class GameController {
                 gameState.setGameOver();
             }
         }
-
         gameState.incrementPlayerTurnCounter();
         gameState.setCurrentPlayer(playerTurnOrder[gameState.getPlayerTurnCounter() % playerTurnOrder.length]);
         if (gameState.getCurrentPlayer() instanceof RougeAgent) {
             gameState.setActionAvailability(true);
         } else if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
+            // RECRUITER WIN
+            gameState.setGameOver();
+        }
+    }
+
+    private void continueGame() {
+        gameState.setMovementAvailability(true);
+        if (gameState.getPlayerTurnCounter() != 0) {
+            gameState.incrementPlayerTurnCounter();
+        }
+        gameState.setCurrentPlayer(0);
+        gameState.setGameState(gameStates.ONGOING);
+        if (gameState.getCurrentTime() >= gameState.getMaxTime()) {
             // RECRUITER WIN
             gameState.setGameOver();
         }
