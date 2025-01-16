@@ -28,7 +28,7 @@ public class VisualBoard {
      */
     public VisualBoard(GameController gameInfo, MindMGMT application) {
         this.board = new Table();
-        this.bg = application.assets.get("basic-board.png", Texture.class);
+        this.bg = application.assets.get("board-high-res.png", Texture.class);
         Board boardInfo = gameInfo.getGame().getBoard();
         int[] dimensions = boardInfo.getDims();
         // board.setDebug(true);

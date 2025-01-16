@@ -55,14 +55,14 @@ public class PlayerBar extends Table {
     Table createUserSlot(User user, Skin skin) {
         Table userSlot = new Table();
         if (!user.getUserName().isEmpty()) {
-            Label userLabel = new Label(user.getUserName(), skin, "narration");
-            userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount());
+            Label userLabel = new Label(user.getUserName(), skin, "big");
+            userSlot.add(userLabel).center().expandX().colspan(user.getPlayerAmount()).pad(10);
             userSlot.row();
         }
 
         for (Player player : gameController.getGame().getPlayers()) {
             if (user.ownsPlayerPiece(player)) {
-                Label playerLabel = new Label(player.getName(), skin, "narration");
+                Label playerLabel = new Label(player.getName(), skin, "big");
                 userSlot.add(playerLabel);
 
                 TextureRegion playerImgRegion = new TextureRegion(playersImg, 100 * (player.getId() - 1), 0, 100, 100);
@@ -97,9 +97,11 @@ public class PlayerBar extends Table {
 
                     // Big if, but found it necessary to not duplicate too much code
                     if (user.ownsPlayerPiece(currentPlayer) &&
-                        (playerLabel.textEquals(user.getUserName()) ||
-                         playerLabel.textEquals(currentPlayer.getName()))
-                    ) {
+                            (playerLabel.textEquals(user.getUserName()) ||
+                                    playerLabel.textEquals(currentPlayer.getName()))) {
+                        // playerLabel.setColor(203 / 255f, 122 / 255f, 137 / 255f, 1); // Ligth blue
+                        // playerLabel.setColor(75 / 255f, 104 / 255f, 112 / 255f, 1); // Dark blue
+                        // playerLabel.setColor(173 / 255f, 82 / 255f, 97 / 255f, 1); // Dark pink
                         playerLabel.setColor(Color.GREEN);
                         playerLabel.getColor().a = 1f;
                         if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
@@ -107,6 +109,7 @@ public class PlayerBar extends Table {
                         }
                     } else {
                         playerLabel.setColor(Color.WHITE);
+                        playerLabel.setColor(223 / 255f, 152 / 255f, 165 / 255f, 1); // Light pink
                         playerLabel.getColor().a = 0.3f;
                         if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
                             labels.get(i + 1).getColor().a = 0.3f;

@@ -55,10 +55,12 @@ public class VisualCell extends Actor {
             GameController gameController) {
         initDict();
 
-        Texture highlight = application.assets.get("highlight.png", Texture.class);
+        Texture highlight = application.assets.get("highlight-high-res.png", Texture.class);
         this.highlightdrb = new TextureRegionDrawable(highlight);
         this.featuresImg = application.assets.get("feature_img.png", Texture.class);
         Texture tokensImg = application.assets.get("tokens_temple.png", Texture.class);
+        Texture templeImg = application.assets.get("temple-3.png", Texture.class);
+        this.temple = new TextureRegion(templeImg);
         this.playersImg = application.assets.get("players_tmp.png", Texture.class);
         Texture stepImg = application.assets.get("tokens_3d.png", Texture.class);
         this.gameC = gameController;
@@ -77,8 +79,8 @@ public class VisualCell extends Actor {
 
         // These are currently magic numbers and pretty ugly. Find better way of doing
         // this
-        this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
-        this.footstep = new TextureRegion(stepImg, 170, 360, 70, 70);
+        // this.temple = new TextureRegion(tokensImg, 0, 0, 250, 250);
+        this.footstep = new TextureRegion(tokensImg, 250, 0, 250, 250);
         this.brains = new TextureRegion[2];
         this.brains[0] = new TextureRegion(tokensImg, 0, 250, 250, 250);
         this.brains[1] = new TextureRegion(tokensImg, 250, 250, 250, 250);
@@ -89,7 +91,7 @@ public class VisualCell extends Actor {
         updatePlayers();
         // Bounds needed to render at all. These should be updated based on parent if
         // possible
-        setBounds(0, 0, 100, 100);
+        setBounds(0, 0, 126, 100);
     }
 
     /**
@@ -107,8 +109,10 @@ public class VisualCell extends Actor {
         if (cellInfo instanceof NormalCell) {
             drawFeatures(batch);
         } else {
+            batch.setColor(1, 1, 1, 0.75f); // RGBA (alpha = 75% transparency)
             batch.draw(temple, getX(), getY(), getOriginX(), getOriginY(),
                     getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+            batch.setColor(1, 1, 1, 1); // RGBA (alpha = 100% transparency) RESET
         }
         drawPlayers(batch);
         drawTokens(batch);
@@ -129,8 +133,10 @@ public class VisualCell extends Actor {
         float feature2XPos = getX() + getWidth() - featureSize;
         float feature2YPos = getY();
 
+        batch.setColor(1, 1, 1, 0.75f); // RGBA (alpha = 75% transparency)
         batch.draw(feature1, feature1XPos, feature1YPos, featureSize, featureSize);
         batch.draw(feature2, feature2XPos, feature2YPos, featureSize, featureSize);
+        batch.setColor(1, 1, 1, 1); // RGBA (alpha = 100% transparency) RESET
     }
 
     /**
@@ -143,12 +149,11 @@ public class VisualCell extends Actor {
         updateTokens();
 
         int xVal = 0;
-        int size = tokens.size();
 
         for (TextureRegion token : tokens) {
-            float xPos = getX() + getWidth() / size * xVal;
-            batch.draw(token, xPos, getY() + getHeight() / 2, getOriginX(), getOriginY(),
-                    getWidth() / size, getHeight() / 2, getScaleX(), getScaleY(), getRotation());
+            float xPos = getX() + (getWidth() - (token.getRegionWidth() / 3f)) + token.getRegionWidth() / 8 * xVal;
+            batch.draw(token, xPos, getY() + getHeight() / 3, getOriginX(), getOriginY(),
+                    token.getRegionWidth() / 3, token.getRegionWidth() / 3, getScaleX(), getScaleY(), getRotation());
             xVal++;
         }
     }
