@@ -119,16 +119,15 @@ public class PlayerBar extends Table {
                         playerLabel.getColor().a = 1f;
                         if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
                             labels.get(i + 1).getColor().a = 1f;
-                            continue;
+                        }
+                    } else {
+                        playerLabel.setColor(Color.WHITE);
+                        playerLabel.getColor().a = 0.3f;
+                        if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
+                            labels.get(i + 1).getColor().a = 0.3f;
                         }
                     }
-                    playerLabel.setColor(Color.WHITE);
-                    playerLabel.getColor().a = 0.3f;
-                    if (i < labels.size - 1 && labels.get(i + 1) instanceof Image) {
-                        labels.get(i + 1).getColor().a = 0.3f;
-                    }
                 }
-
             }
         }
         super.draw(batch, parentAlpha); // Important
