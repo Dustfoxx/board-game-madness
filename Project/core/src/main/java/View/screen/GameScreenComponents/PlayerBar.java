@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 import Controller.GameController;
@@ -44,22 +43,6 @@ public class PlayerBar extends Table {
             Table userSlot = createUserSlot(user, application.skin);
             this.add(userSlot).expandX(); // Expand each label equally along the X-axis
         }
-
-        // Create a button to simulate advancing to the next player's turn - TODO:
-        // Remove when not useful anymore
-
-        TextButton nextTurnButton = new TextButton("End Turn", application.skin);
-        nextTurnButton.setColor(new Color(168 / 255f, 193 / 255f, 187 / 255f, 1f));
-
-        this.add(nextTurnButton);
-
-        // Add an event listener to handle button clicks
-        nextTurnButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                gameController.newTurn();
-            }
-        });
     }
 
     /**
