@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.MindMGMT.MindMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -21,11 +22,15 @@ import java.util.ArrayList;
 public class MainMenuScreen implements Screen {
     private final MindMGMTStage stage;
     private final MindMGMT application;
+    private Music music = Gdx.audio.newMusic(Gdx.files.internal("Music/mindingmgmt.mp3"));
 
     public MainMenuScreen(final MindMGMT application) {
         this.application = application;
         stage = new MindMGMTStage(new ScreenViewport(), application.assets);
         Gdx.input.setInputProcessor(stage);
+        music.play();
+        music.setLooping(true);
+        music.setVolume(0.5f);
         setupUI();
     }
 
